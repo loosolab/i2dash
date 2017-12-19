@@ -1100,7 +1100,7 @@ download <- function(file, filename, plot, width, height, ppi = 72, ui = NULL) {
   if(ggplot2::is.ggplot(plot)) {
     # ggplot
 
-    ggplot2::ggsave(plot_file_pdf, plot = plot, width = width, height = height, units = "cm", device = "pdf")
+    ggplot2::ggsave(plot_file_pdf, plot = plot, width = width, height = height, units = "cm", device = "pdf", useDingbats = FALSE)
     ggplot2::ggsave(plot_file_png, plot = plot, width = width, height = height, units = "cm", device = "png", dpi = ppi)
   } else if(class(plot)[1] == "plotly") {
     # plotly
@@ -1112,7 +1112,7 @@ download <- function(file, filename, plot, width, height, ppi = 72, ui = NULL) {
     setwd(wd)
   } else if(class(plot) == "Heatmap") { # TODO: find better way to check for complexHeatmap object
     # complexHeatmap
-    grDevices::pdf(plot_file_pdf, width = width / 2.54, height = height / 2.54) # cm to inch
+    grDevices::pdf(plot_file_pdf, width = width / 2.54, height = height / 2.54, useDingbats = FALSE) # cm to inch
     ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom")
     grDevices::dev.off()
     grDevices::png(plot_file_png, width = width, height = height, units = "cm", res = ppi)
