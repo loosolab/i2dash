@@ -34,7 +34,7 @@ CLARION: generiC fiLe formAt foR quantItative cOmparsions of high throughput scr
 CLARION is a data format especially developed to be used with WIlsON, which relies on a tab-delimited table with a metadata header to describe the following columns. Most results derived from a variety of analyses can thus be easily reformatted to become compatible, without having to modify the code of WIlsON for specific experiments. For details considering CLARION please visit the Introduction pages of our [official demonstration server](http://loosolab.mpi-bn.mpg.de/apps/wilson/). 
 
 ## How to cite
-*Schultheis H, Kuenne C, Preussner J, Wiegandt R, Fust A, Bensen M, Looso M*. WIlsON: Webbased Interactive Omics VisualizatioN. (2018), doi: https://XY
+*Schultheis H, Kuenne C, Preussner J, Wiegandt R, Fust A, Bentsen M, Looso M*. WIlsON: Webbased Interactive Omics VisualizatioN. (2018), doi: https://XY
 
 ## License
 This project is licensed under the MIT license.
