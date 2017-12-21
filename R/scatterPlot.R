@@ -266,7 +266,16 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
 
       result$highlight.color <- markerReac()$color
       if(markerReac()$highlight != "Disabled" & nrow(features.r()) > 0){
-        result$highlight.labels <- markerReac()$label
+        # restrict label to 100 or less
+        if(length(markerReac()$label) <= 100) {
+          result$highlight.labels <- markerReac()$label
+        } else {
+          shiny::showNotification(
+            paste("Warning! Label restricted to 100 or less labels. Currently selected:", length(markerReac()$label)),
+            duration = 10,
+            type = "warning"
+          )
+        }
       }
 
       if(markerReac()$highlight == "Highlight" & nrow(features.r()) > 0){
