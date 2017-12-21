@@ -9,6 +9,7 @@ scatterPlotUI <- function(id) {
   ns <- shiny::NS(id)
 
   shiny::tagList(shiny::fluidPage(
+    shiny::singleton(shiny::tags$head(shiny::tags$link(rel = "stylesheet", type = "text/css", href = "wilson_www/styles.css"))),
     shiny::fluidRow(shinydashboard::box(
       width = 12,
       shiny::div(style = "overflow-y: scroll; overflow-x: scroll; height: 800px; text-align: center",
@@ -271,10 +272,12 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
           result$highlight.labels <- markerReac()$label
         } else {
           shiny::showNotification(
+            id = session$ns("label-limit"),
             paste("Warning! Label restricted to 100 or less labels. Currently selected:", length(markerReac()$label)),
-            duration = 10,
+            duration = NULL,
             type = "warning"
           )
+          shinyjs::addClass(selector = paste0("#shiny-notification-", session$ns("label-limit")), class = "notification-position-center")
         }
       }
 

@@ -1,0 +1,13 @@
+/* notifications */
+
+.notification-position-center {
+  position: fixed;
+  top: 50%;
+  left: 40%;
+  right: 40%;
+  opacity: 1;
+}
+
+/* slider */
+
+/* text input */
