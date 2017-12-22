@@ -8,6 +8,95 @@
   opacity: 1;
 }
 
-/* slider */
+/* slider
+.irs-bar = range between points (inner)/ bar left side of point
+.irs-bar-edge = left edge of bar
+.irs-line = range outside of points (outer)/ bar right side of point
+.irs-slider.single = single point
+.irs-slider.from = left point
+.irs-slider.to = right point
+.irs-from = text above left point
+.irs-to = text above right point
+.irs-min = left text above slider
+.irs-max = right text above slider
+.irs-single = joined texts above points/ text above single point
+*/
+/* ranged slider */
+.inner.irs-bar {
+  background: #428bca;
+  border-top: 1px solid #428bca;
+  border-bottom: 1px solid #428bca;
+}
+
+.inner.irs-from, .inner.irs-to, .inner.irs-single {
+  background: #428bca;
+  color: #FFF;
+}
+
+.inner.irs-line {
+  border: 1px solid #CCC;
+  background: linear-gradient(to bottom, #DDD -50%, #FFF 150%);
+}
+
+.outer.irs-bar {
+  border: 1px solid #CCC;
+  background: linear-gradient(to bottom, #DDD -50%, #FFF 150%);
+}
+
+.outer.irs-from, .outer.irs-to, .outer.irs-single {
+  background: rgba(0,0,0,0.1);
+  color: #333;
+}
+
+.outer.irs-line {
+  background: #428bca;
+  border-top: 1px solid #428bca;
+  border-bottom: 1px solid #428bca;
+}
+
+.outer.irs-min, .outer.irs-max {
+  background: #428bca;
+  color: #FFF;
+}
+
+/* single slider */
+.less.irs-bar, .less.irs-bar-edge {
+  background: #428bca;
+  border-top: 1px solid #428bca;
+  border-bottom: 1px solid #428bca;
+}
+
+.less.irs-min {
+  background: #428bca;
+  color: #FFF;
+}
+
+.equal.irs-single {
+  background: #428bca;
+  color: #FFF;
+}
+
+.greater.irs-line {
+  background: #428bca;
+  border-top: 1px solid #428bca;
+  border-bottom: 1px solid #428bca;
+}
+
+.greater.irs-max {
+  background: #428bca;
+  color: #FFF;
+}
+
+/* empty */
+.empty.irs-bar:not(.less), .empty.irs-bar-edge:not(.less) {
+  background: linear-gradient(to bottom, #DDD -50%, #FFF 150%);
+  border: 1px solid #CCC;
+  border-right: 0;
+}
+
+.empty.irs-single:not(.equal) {
+  background: rgba(0,0,0,0.1);
+  color: #333;
+}
 
 /* text input */
