@@ -405,11 +405,12 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
 #' @param width Set width of plot in cm (Default = "auto").
 #' @param height Set height of plot in cm (Default = "auto").
 #' @param ppi Pixel per inch (default = 72).
+#' @param scale Modify plot size while preserving aspect ratio (Default = 1).
 #'
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
 #'
 #' @return Returns list(plot = complexHeatmap/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max) depending on plot.method.
-create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label = NULL, column.label=T, column.custom.label = NULL, clustering='none', clustdist='auto', clustmethod='auto', colors=NULL, winsorize.colors = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72) {
+create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label = NULL, column.label=T, column.custom.label = NULL, clustering='none', clustdist='auto', clustmethod='auto', colors=NULL, winsorize.colors = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
   requireNamespace("heatmaply", quietly = TRUE)
   requireNamespace("ComplexHeatmap", quietly = TRUE)
   requireNamespace("grDevices", quietly = TRUE)
@@ -570,9 +571,9 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
       column_dend_height = grid::unit(1, "inches"),
       row_names_max_width = grid::unit(8, "inches"),
       column_names_max_height = grid::unit(4, "inches"),
-      row_names_gp = grid::gpar(fontsize = 12),
-      column_names_gp = grid::gpar(fontsize = 12),
-      column_title_gp = grid::gpar(fontsize = 10, units = "in"),
+      row_names_gp = grid::gpar(fontsize = 12 * scale),
+      column_names_gp = grid::gpar(fontsize = 12 * scale),
+      column_title_gp = grid::gpar(fontsize = 10 * scale, units = "in"),
       heatmap_legend_param = list(
         color_bar = "continuous",
         legend_direction = "horizontal"
@@ -580,10 +581,10 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     )
 
     #width/ height calculation
-    col_names_maxlength_label_width=max(sapply(colnames(prep.data), graphics::strwidth, units="in", font=12))	#longest column label when plotted in inches
-    col_names_maxlength_label_height=max(sapply(colnames(prep.data), graphics::strheight, units="in", font=12))	#highest column label when plotted in inches
-    row_names_maxlength_label_width=max(sapply(rownames(prep.data), graphics::strwidth, units="in", font=12))	#longest row label when plotted in inches
-    row_names_maxlength_label_height=max(sapply(rownames(prep.data), graphics::strheight, units="in", font=12))	#highest row label when plotted in inches
+    col_names_maxlength_label_width=max(sapply(colnames(prep.data), graphics::strwidth, units="in", font = 12))	#longest column label when plotted in inches
+    col_names_maxlength_label_height=max(sapply(colnames(prep.data), graphics::strheight, units="in", font = 12))	#highest column label when plotted in inches
+    row_names_maxlength_label_width=max(sapply(rownames(prep.data), graphics::strwidth, units="in", font = 12))	#longest row label when plotted in inches
+    row_names_maxlength_label_height=max(sapply(rownames(prep.data), graphics::strheight, units="in", font = 12))	#highest row label when plotted in inches
 
     # width
     if(row.label){
@@ -631,7 +632,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
       height <- 500
     }
 
-    plot <- list(plot = plot, width = width, height = height, ppi = ppi, exceed_size = exceed_size)
+    plot <- list(plot = plot, width = width * scale, height = height * scale, ppi = ppi, exceed_size = exceed_size)
   }
 
   return(plot)
