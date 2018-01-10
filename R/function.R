@@ -576,7 +576,9 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
       column_title_gp = grid::gpar(fontsize = 10 * scale, units = "in"),
       heatmap_legend_param = list(
         color_bar = "continuous",
-        legend_direction = "horizontal"
+        legend_direction = "horizontal",
+        title_gp = grid::gpar(fontsize = 10 * scale),
+        labels_gp = grid::gpar(fontsize = 8 * scale)
       )
     )
 
