@@ -568,7 +568,9 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
       row_names_side = "left",
       row_dend_side = "right",
       row_dend_width = grid::unit(1 * scale, "inches"),
+      # row_dend_gp = grid::gpar(lwd = 1, lex = scale), # don't seem to work
       column_dend_height = grid::unit(1 * scale, "inches"),
+      # column_dend_gp = grid::gpar(lwd = 1, lex = scale), # don't seem to work
       row_names_max_width = grid::unit(8 * scale, "inches"),
       column_names_max_height = grid::unit(4 * scale, "inches"),
       row_names_gp = grid::gpar(fontsize = 12 * scale),
