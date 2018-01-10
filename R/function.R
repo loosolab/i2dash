@@ -567,10 +567,10 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
       show_column_names = column.label,
       row_names_side = "left",
       row_dend_side = "right",
-      row_dend_width = grid::unit(1, "inches"),
-      column_dend_height = grid::unit(1, "inches"),
-      row_names_max_width = grid::unit(8, "inches"),
-      column_names_max_height = grid::unit(4, "inches"),
+      row_dend_width = grid::unit(1 * scale, "inches"),
+      column_dend_height = grid::unit(1 * scale, "inches"),
+      row_names_max_width = grid::unit(8 * scale, "inches"),
+      column_names_max_height = grid::unit(4 * scale, "inches"),
       row_names_gp = grid::gpar(fontsize = 12 * scale),
       column_names_gp = grid::gpar(fontsize = 12 * scale),
       column_title_gp = grid::gpar(fontsize = 10 * scale, units = "in"),
@@ -578,7 +578,8 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
         color_bar = "continuous",
         legend_direction = "horizontal",
         title_gp = grid::gpar(fontsize = 10 * scale),
-        labels_gp = grid::gpar(fontsize = 8 * scale)
+        labels_gp = grid::gpar(fontsize = 8 * scale),
+        grid_height = grid::unit(0.15 * scale, "inches")
       )
     )
 
