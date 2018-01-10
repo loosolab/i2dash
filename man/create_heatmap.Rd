@@ -8,7 +8,7 @@ create_heatmap(data, unitlabel = "auto", row.label = T,
   row.custom.label = NULL, column.label = T, column.custom.label = NULL,
   clustering = "none", clustdist = "auto", clustmethod = "auto",
   colors = NULL, winsorize.colors = NULL, plot.method = "static",
-  width = "auto", height = "auto", ppi = 72)
+  width = "auto", height = "auto", ppi = 72, scale = 1)
 }
 \arguments{
 \item{data}{data.table containing plot data. First column contains row labels.}
@@ -40,6 +40,8 @@ create_heatmap(data, unitlabel = "auto", row.label = T,
 \item{height}{Set height of plot in cm (Default = "auto").}
 
 \item{ppi}{Pixel per inch (default = 72).}
+
+\item{scale}{Modify plot size while preserving aspect ratio (Default = 1).}
 }
 \value{
 Returns list(plot = complexHeatmap/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max) depending on plot.method.
