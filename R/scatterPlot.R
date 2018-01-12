@@ -122,13 +122,14 @@ scatterPlotUI <- function(id) {
 #' @param width Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param height Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.
+#' @param scale Scale plot size. Defaults to 1, supports reactive.
 #'
 #' @return Returns reactive containing data used for plot.
 #'
 #' @details Make sure to have the same columnnames in data and features.
 #'
 #' @export
-scatterPlot <- function(input, output, session, data, types, features = NULL, markerReac = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72) {
+scatterPlot <- function(input, output, session, data, types, features = NULL, markerReac = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
   #handle reactive data
   data.r <- shiny::reactive({
     if(shiny::is.reactive(data)){
@@ -154,6 +155,7 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
     width <- ifelse(shiny::is.reactive(width), width(), width)
     height <- ifelse(shiny::is.reactive(height), height(), height)
     ppi <- ifelse(shiny::is.reactive(ppi), ppi(), ppi)
+    scale <- ifelse(shiny::is.reactive(scale), scale(), scale)
 
     if(!is.numeric(width) || width <= 0) {
       width <- "auto"
@@ -167,7 +169,8 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
 
     list(width = width,
          height = height,
-         ppi = ppi)
+         ppi = ppi,
+         scale = scale)
   })
 
   #Fetch the reactive guide for this module
@@ -333,7 +336,8 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
       plot.method = plot.method,
       width = size()$width,
       height = size()$height,
-      ppi = size()$ppi
+      ppi = size()$ppi,
+      scale = size()$scale
     )
 
     progress$set(1)
