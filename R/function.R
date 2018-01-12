@@ -281,6 +281,7 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
 #' @param width Set the width of the plot in cm (default = 28).
 #' @param height Set the height of the plot in cm (default = 28).
 #' @param ppi Pixel per inch (default = 72).
+#' @param scale Modify plot size while preserving aspect ratio (Default = 1).
 #'
 #' @details If width and height are the same axis ratio will be set to one (quadratic plot).
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
@@ -288,7 +289,7 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
 #' @import data.table
 #'
 #' @return A named list(plot = ggplot object, data = pca.data, width = width of plot (cm), height = height of plot (cm), ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max).
-create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72) {
+create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72, scale = 1) {
   requireNamespace("FactoMineR", quietly = TRUE)
   requireNamespace("factoextra", quietly = TRUE)
 
@@ -345,16 +346,16 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
     panel.background = ggplot2::element_blank(),
     axis.line.x = ggplot2::element_line(size=.3),
     axis.line.y = ggplot2::element_line(size=.3),
-    axis.title.x = ggplot2::element_text(color="black", size=11),
-    axis.title.y = ggplot2::element_text(color="black", size=11),
+    axis.title.x = ggplot2::element_text(color="black", size = 11 * scale),
+    axis.title.y = ggplot2::element_text(color="black", size = 11 * scale),
     #plot.title = element_text(color="black", size=12),
     plot.title = ggplot2::element_blank(),
-    legend.title= ggplot2::element_blank(),
-    text= ggplot2::element_text(size = 12)						#size for all (legend?) labels
+    legend.title = ggplot2::element_blank(),
+    text = ggplot2::element_text(size = 12 * scale)						#size for all (legend?) labels
     #legend.key = element_rect(fill="white")
   )
 
-  pca_plot <- factoextra::fviz_pca_ind(pca, axes = c(dimensionA, dimensionB), invisible = "none", pointsize = pointsize, label = "none", axes.linetype = "blank", repel = FALSE)
+  pca_plot <- factoextra::fviz_pca_ind(pca, axes = c(dimensionA, dimensionB), invisible = "none", pointsize = pointsize * scale, label = "none", axes.linetype = "blank", repel = FALSE)
   pca_plot <- pca_plot + theme1
 
   if(labels) {
@@ -362,7 +363,7 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
       data = data.frame(pca$ind$coord),
       mapping = ggplot2::aes_(x = pca$ind$coord[, dimensionA], y = pca$ind$coord[, dimensionB], label = rownames(pca$ind$coord)),
       segment.color = "gray65",
-      size = labelsize,
+      size = labelsize * scale,
       force = 2,
       max.iter = 10000,
       point.padding = grid::unit(0.1, "lines")
@@ -373,6 +374,10 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
   # if(width == height){
   #   pca_plot <- pca_plot + ggplot2::coord_fixed(ratio = 1)
   # }
+
+  # add scale factor
+  width <- width * scale
+  height <- height * scale
 
   # size exceeded?
   exceed_size <- FALSE

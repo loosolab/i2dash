@@ -6,7 +6,8 @@
 \usage{
 create_pca(data, dimensionA = 1, dimensionB = 2, dimensions = 6,
   on.columns = TRUE, labels = FALSE, custom.labels = NULL,
-  pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72)
+  pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72,
+  scale = 1)
 }
 \arguments{
 \item{data}{data.table from which the plot is created (First column will be handled as rownames if not numeric).}
@@ -32,6 +33,8 @@ create_pca(data, dimensionA = 1, dimensionB = 2, dimensions = 6,
 \item{height}{Set the height of the plot in cm (default = 28).}
 
 \item{ppi}{Pixel per inch (default = 72).}
+
+\item{scale}{Modify plot size while preserving aspect ratio (Default = 1).}
 }
 \value{
 A named list(plot = ggplot object, data = pca.data, width = width of plot (cm), height = height of plot (cm), ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max).
