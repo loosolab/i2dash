@@ -103,11 +103,12 @@ heatmapUI <- function(id, row.label = TRUE) {
 #' @param width Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param height Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.
+#' @param scale Scale plot size. Defaults to 1, supports reactive.
 #'
 #' @return Reactive containing data used for plotting.
 #'
 #' @export
-heatmap <- function(input, output, session, data, types, plot.method = "static", custom.row.label = NULL, label.sep = ", ", width = "auto", height = "auto", ppi = 72) {
+heatmap <- function(input, output, session, data, types, plot.method = "static", custom.row.label = NULL, label.sep = ", ", width = "auto", height = "auto", ppi = 72, scale = 1) {
   # cluster limitation
   static <- 11000
   interactive <- 3000
@@ -125,6 +126,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
     width <- ifelse(shiny::is.reactive(width), width(), width)
     height <- ifelse(shiny::is.reactive(height), height(), height)
     ppi <- ifelse(shiny::is.reactive(ppi), ppi(), ppi)
+    scale <- ifelse(shiny::is.reactive(scale), scale(), scale)
 
     if(!is.numeric(width) || width <= 0) {
       width <- "auto"
@@ -142,7 +144,8 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
 
     list(width = width,
          height = height,
-         ppi = ppi)
+         ppi = ppi,
+         scale = scale)
   })
 
   # Fetch the reactive guide for this module
@@ -277,6 +280,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
       width = size()$width,
       height = size()$height,
       ppi = size()$ppi,
+      scale = size()$scale,
       plot.method = plot.method,
       winsorize.colors = colorPicker()$winsorize
     )
