@@ -220,6 +220,9 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
   }
 
   # functionality -----------------------------------------------------------
+  # clear plot
+  clearPlot <- shiny::reactiveVal(FALSE)
+
   # reset ui
   shiny::observeEvent(input$reset, {
     shinyjs::reset("calc")
@@ -233,6 +236,7 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     columns <<- shiny::callModule(columnSelector, "select", type.columns = types, columnTypeLabel = "Column types to choose from")
     transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(data_r()[, columns$selectedColumns(), with = FALSE])))
     colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
+    clearPlot(TRUE)
   })
 
   # warning if plot size exceeds limits
@@ -311,6 +315,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
   plot <- shiny::eventReactive(input$plot, {
     # enable downloadButton
     shinyjs::enable("download")
+    # show plot
+    clearPlot(FALSE)
 
     # progress indicator
     progress <- shiny::Progress$new()
@@ -365,34 +371,42 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
+        if(clearPlot()) {
+          return()
+        } else {
+          # progress indicator
+          progress <- shiny::Progress$new()
+          on.exit(progress$close())
+          progress$set(0.2, message = "Rendering plot")
+
+          # get plot
+          plot <- plot()$plot
+
+          # update progress indicator
+          progress$set(1)
+
+          # draw plot
+          return(ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom"))
+        }
+      }
+    )
+  }else if(plot.method == "interactive") {
+    output$interactive <- plotly::renderPlotly({
+      if(clearPlot()) {
+        return()
+      } else {
         # progress indicator
         progress <- shiny::Progress$new()
         on.exit(progress$close())
         progress$set(0.2, message = "Rendering plot")
 
-        # get plot
         plot <- plot()$plot
 
         # update progress indicator
         progress$set(1)
 
-        # draw plot
-        return(ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom"))
+        return(plot)
       }
-    )
-  }else if(plot.method == "interactive") {
-    output$interactive <- plotly::renderPlotly({
-      # progress indicator
-      progress <- shiny::Progress$new()
-      on.exit(progress$close())
-      progress$set(0.2, message = "Rendering plot")
-
-      plot <- plot()$plot
-
-      # update progress indicator
-      progress$set(1)
-
-      return(plot)
     })
   }
 
