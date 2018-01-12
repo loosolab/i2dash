@@ -273,7 +273,7 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
         } else {
           shiny::showNotification(
             id = session$ns("label-limit"),
-            paste("Warning! Label restricted to 100 or less labels. Currently selected:", length(markerReac()$label)),
+            paste("Warning! Label restricted to 100 or less labels. Currently selected:", length(markerReac()$label), "Please select fewer genes to label."),
             duration = NULL,
             type = "warning"
           )
