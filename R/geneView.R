@@ -161,6 +161,10 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
     rintrojs::introjs(session, options = list(steps = guide()))
   })
 
+  # clear plot
+  clearPlot <- shiny::reactiveVal(FALSE)
+
+  # reset
   shiny::observeEvent(input$reset, {
     shinyjs::reset("genes")
     shinyjs::reset("plotType")
@@ -173,6 +177,7 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
       custom_label <<- shiny::callModule(label, "labeller", data = custom.label, sep = label.sep)
     }
     limiter <<- shiny::callModule(limit, "limit", lower = shiny::reactive(get_limits()[1]), upper = shiny::reactive(get_limits()[2]))
+    clearPlot(TRUE)
   })
 
   get_limits <- shiny::reactive({
@@ -255,6 +260,7 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
   plot <- shiny::eventReactive(input$plot, {
     # enable downloadButton
     shinyjs::enable("download")
+    clearPlot(FALSE)
 
     #new progress indicator
     progress <- shiny::Progress$new()
@@ -328,30 +334,38 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
 
   if(plot.method == "interactive") {
     output$interactive <- plotly::renderPlotly({
-      #progress indicator
-      progress <- shiny::Progress$new()
-      on.exit(progress$close())
-      progress$set(message = "Rendering plot", value = 0)
+      if(clearPlot()) {
+        return()
+      } else {
+        #progress indicator
+        progress <- shiny::Progress$new()
+        on.exit(progress$close())
+        progress$set(message = "Rendering plot", value = 0)
 
-      plot <- plot()$plot
+        plot <- plot()$plot
 
-      progress$set(value = 1)
-      return(plot)
+        progress$set(value = 1)
+        return(plot)
+      }
     })
   } else if(plot.method == "static") {
     output$static <- shiny::renderPlot(
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
-        #progress indicator
-        progress <- shiny::Progress$new()
-        on.exit(progress$close())
-        progress$set(message = "Rendering plot", value = 0.3)
+        if(clearPlot()) {
+          return()
+        } else {
+          #progress indicator
+          progress <- shiny::Progress$new()
+          on.exit(progress$close())
+          progress$set(message = "Rendering plot", value = 0.3)
 
-        plot <- plot()$plot
+          plot <- plot()$plot
 
-        progress$set(value = 1)
-        return(plot)
+          progress$set(value = 1)
+          return(plot)
+        }
       })
   }
 
