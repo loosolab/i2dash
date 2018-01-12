@@ -149,6 +149,9 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     rintrojs::introjs(session, options = list(steps = guide()))
   })
 
+  # clear plot
+  clearPlot <- shiny::reactiveVal(value = FALSE)
+
   #reset ui
   shiny::observeEvent(input$reset, {
     shinyjs::reset("label")
@@ -157,6 +160,7 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     shinyjs::reset("pointsize")
     shinyjs::reset("labelsize")
     columnSelect <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(types.r()[level %in% levels.r(), c("key", "level"), with = FALSE]), columnTypeLabel = "Column types to choose from")
+    clearPlot(TRUE)
   })
 
   columnSelect <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(types.r()[level %in% levels.r(), c("key", "level"), with = FALSE]), columnTypeLabel = "Column types to choose from")
@@ -233,6 +237,7 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
   computed.data <- shiny::eventReactive(input$plot, {
     # enable downloadButton
     shinyjs::enable("download")
+    clearPlot(FALSE)
 
     #new progress indicator
     progress <- shiny::Progress$new()
@@ -257,6 +262,9 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
 
     progress$set(1)
 
+    # show plot
+    shinyjs::show("pca")
+
     return(plot)
   })
 
@@ -276,7 +284,11 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     width = plot_width,
     height = plot_height,
     {
-      computed.data()$plot
+      if(clearPlot()){
+        return()
+      } else {
+        computed.data()$plot
+      }
     })
 
   #group data by dimension
