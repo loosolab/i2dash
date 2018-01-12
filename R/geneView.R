@@ -98,6 +98,7 @@ geneViewUI <- function(id, plot.columns = 3){
 #' @param width Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param height Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.
+#' @param scale Scale plot size. Defaults to 1, supports reactive.
 #'
 #' @details Width/ height/ ppi less or equal to default will use default value.
 #' @details Ppi less or equal to zero will use default.
@@ -106,7 +107,7 @@ geneViewUI <- function(id, plot.columns = 3){
 #'
 #' @export
 
-geneView <- function(input, output, session, data, metadata, level = NULL, plot.method = "static", custom.label = NULL, label.sep = ", ", width = "auto", height = "auto", ppi = 72){
+geneView <- function(input, output, session, data, metadata, level = NULL, plot.method = "static", custom.label = NULL, label.sep = ", ", width = "auto", height = "auto", ppi = 72, scale = 1){
   #handle reactive data
   data.r <- shiny::reactive({
     if(shiny::is.reactive(data)){
@@ -136,6 +137,7 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
     width <- ifelse(shiny::is.reactive(width), width(), width)
     height <- ifelse(shiny::is.reactive(height), height(), height)
     ppi <- ifelse(shiny::is.reactive(ppi), ppi(), ppi)
+    scale <- ifelse(shiny::is.reactive(scale), scale(), scale)
 
     if(!is.numeric(width) || width <= 0) {
       width <- "auto"
@@ -149,7 +151,8 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
 
     list(width = width,
          height = height,
-         ppi = ppi)
+         ppi = ppi,
+         scale = scale)
   })
 
   #Fetch the reactive guide for this module
@@ -279,7 +282,8 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
       plot.method = plot.method,
       width = size()$width,
       height = size()$height,
-      ppi = size()$ppi
+      ppi = size()$ppi,
+      scale = size()$scale
     )
 
     progress$set(1, detail = "Return plot")
