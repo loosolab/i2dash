@@ -23,13 +23,14 @@
 #' @param height Set plot height in cm (Default = "auto").
 #' @param ppi Pixel per inch (default = 72).
 #' @param plot.method Whether the plot should be 'interactive' or 'static' (Default = 'static').
+#' @param scale Modify plot size while preserving aspect ratio (Default = 1).
 #'
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
 #'
 #' @import data.table
 #'
 #' @return Returns list(plot = ggplotly/ ggplot, width, height, ppi, exceed_size).
-create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize = 3, colors = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static"){
+create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize = 3, colors = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
   ########## prepare data ##########
   #set labelnames if needed
   x_label <- ifelse(nchar(x_label), x_label, names(data)[2])
@@ -50,10 +51,10 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
   if(ncol(data) >= 4){ z_head <- names(data)[4]}
 
   #delete rows where both 0 or at least one NA
-  rows.to.keep.data <- which(as.logical((data[,2] != 0) + (data[,3] != 0)))
+  rows.to.keep.data <- which(as.logical((data[, 2] != 0) + (data[, 3] != 0)))
   data <- data[rows.to.keep.data]
   if(!is.null(highlight.data)){
-    rows.to.keep.high <- which(as.logical((highlight.data[,2] != 0) + (highlight.data[,3 != 0])))
+    rows.to.keep.high <- which(as.logical((highlight.data[, 2] != 0) + (highlight.data[, 3 != 0])))
     highlight.data <- highlight.data[rows.to.keep.high]
   }
 
@@ -71,11 +72,12 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     panel.grid.minor = ggplot2::element_blank(),
     panel.border = ggplot2::element_blank(),
     panel.background = ggplot2::element_blank(),
-    axis.line.x = ggplot2::element_line(size=.3),
-    axis.line.y = ggplot2::element_line(size=.3),
-    axis.title.x = ggplot2::element_text(face="bold", color="black", size=10),
-    axis.title.y = ggplot2::element_text(face="bold", color="black", size=10),
-    plot.title = ggplot2::element_text(face="bold", color="black", size=12)
+    axis.line.x = ggplot2::element_line(size = .3),
+    axis.line.y = ggplot2::element_line(size = .3),
+    axis.title.x = ggplot2::element_text(face = "bold", color = "black", size = 10 * scale),
+    axis.title.y = ggplot2::element_text(face = "bold", color = "black", size = 10 * scale),
+    plot.title = ggplot2::element_text(face = "bold", color = "black", size = 12 * scale),
+    text = ggplot2::element_text(size = 10 * scale)
     #		legend.background = element_rect(color = "red")			#border color
     #		legend.key = element_rect("green")						#not working!
   )
@@ -148,7 +150,7 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     }
 
     #set points
-    plot <- plot + ggplot2::geom_point(size=pointsize, alpha=transparency, ggplot2::aes(text = hovertext))
+    plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, ggplot2::aes(text = hovertext))
 
     if(!is.null(highlight.data)){
       #set highlighted hovertext
@@ -164,27 +166,27 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
       }
 
       #set highlighted points
-      plot <- plot + ggplot2::geom_point(size = pointsize, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE, ggplot2::aes(text = hovertext.high))
+      plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE, ggplot2::aes(text = hovertext.high))
     }
   # static points without hovertexts
   } else if(plot.method == "static") {
     seed <- Sys.getpid() + Sys.time()
     # set points
-    plot <- plot + ggplot2::geom_point(size = pointsize, alpha = transparency)
+    plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency)
 
     # set highlighted points
     if(!is.null(highlight.data)) {
-      plot <- plot + ggplot2::geom_point(size = pointsize, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE)
+      plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE)
 
       # set repelling point labels
       if(!is.null(highlight.labels)) {
-        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
-        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
+        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
+        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
       }
     # set repelling labels (for only highlighted points shown)
     } else if(!is.null(highlight.labels) & length(highlight.labels) == nrow(data)) {
-      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
-      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
+      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
+      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
     }
   }
 
@@ -234,6 +236,10 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     height <- height * (ppi / 2.54)
   }
 
+  # apply scale factor
+  width <- width * scale
+  height <- height * scale
+
   # size exceeded?
   exceed_size <- FALSE
   limit <- 500 * (ppi / 2.54)
@@ -252,9 +258,9 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     # add labels with arrows
     if(!is.null(highlight.labels)) {
       if(!is.null(highlight.data)) {
-        plot <- plotly::add_annotations(p = plot, x = highlight.data[[x_head]], y = highlight.data[[y_head]], text = highlight.labels, standoff = pointsize, font = list(size = labelsize), bgcolor = 'rgba(255, 255, 255, 0.5)')
+        plot <- plotly::add_annotations(p = plot, x = highlight.data[[x_head]], y = highlight.data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
       } else if(nrow(data) == length(highlight.labels)) {
-        plot <- plotly::add_annotations(p = plot, x = data[[x_head]], y = data[[y_head]], text = highlight.labels, standoff = pointsize, font = list(size = labelsize), bgcolor = 'rgba(255, 255, 255, 0.5)')
+        plot <- plotly::add_annotations(p = plot, x = data[[x_head]], y = data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
       }
     }
   }
