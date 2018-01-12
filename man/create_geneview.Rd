@@ -7,7 +7,7 @@
 create_geneview(data, grouping, plot.type = "line", facet.target = "gene",
   facet.cols = 2, colors = NULL, ylabel = NULL, ylimits = NULL,
   gene.label = NULL, plot.method = "static", width = "auto",
-  height = "auto", ppi = 72)
+  height = "auto", ppi = 72, scale = 1)
 }
 \arguments{
 \item{data}{data.table containing plot data}
@@ -37,6 +37,8 @@ column2 : factor1}
 \item{height}{Set the height of the plot in cm (default = "auto").}
 
 \item{ppi}{Pixel per inch (default = 72).}
+
+\item{scale}{Modify plot size while preserving aspect ratio (Default = 1).}
 }
 \value{
 Returns depending on plot.method list(plot = ggplot/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean).

@@ -442,7 +442,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
   if(plot.method == "interactive"){
     #estimate label sizes
     #row label
-    rowlabel_size <- ifelse(row.label, max(nchar(data[[1]]), na.rm = TRUE) * 8, 0)
+    rowlabel_size <- ifelse(row.label, max(nchar(data[[1]]), na.rm = TRUE) * 8 * scale, 0)
     #column label
     collabel_size <- ifelse(column.label, (2 + log2(max(nchar(names(data)), na.rm = TRUE))^2) * 10, 0)
     #legend
@@ -459,7 +459,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
                                 hclust_method = clustmethod,
                                 dist_method = clustdist,
                                 dendrogram = clustering,
-                                distfun = factoextra::get_dist,
+                                distfun = factoextra::get_dist
                                 #width = width, #not working
                                 #height = height
     )
@@ -467,10 +467,14 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     #layout
     plot <- heatmaply::heatmaply(plot,
                                  plot_method = "ggplot",
-                                 scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colors = colors, name = unitlabel, limits = winsorize.colors, oob = scales::squish)
+                                 scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colors = colors, name = unitlabel, limits = winsorize.colors, oob = scales::squish),
+                                 heatmap_layers = ggplot2::theme(text = ggplot2::element_text(size = 12 * scale))
     )
 
-    plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size))
+    # scale axis ticks
+    ticks <- list(tickfont = list(size = 12 * scale))
+
+    plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size), xaxis = ticks, yaxis2 = ticks)
 
     # decide which sizes should be used
     if(width == "auto") {
@@ -664,13 +668,14 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
 #' @param width Set the width of the plot in cm (default = "auto").
 #' @param height Set the height of the plot in cm (default = "auto").
 #' @param ppi Pixel per inch (default = 72).
+#' @param scale Modify plot size while preserving aspect ratio (Default = 1).
 #'
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
 #'
 #' @import data.table
 #'
 #' @return Returns depending on plot.method list(plot = ggplot/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean).
-create_geneview <- function(data, grouping, plot.type = "line", facet.target = "gene", facet.cols = 2, colors = NULL, ylabel = NULL, ylimits = NULL, gene.label = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72){
+create_geneview <- function(data, grouping, plot.type = "line", facet.target = "gene", facet.cols = 2, colors = NULL, ylabel = NULL, ylimits = NULL, gene.label = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1){
   #grouping
   #group by factor if existing (fill with key if empty)
   grouping[grouping[[2]] == "", 2 := grouping[grouping[[2]] == "", 1]]
@@ -773,7 +778,7 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
       legend.position = "none",														#remove legend
       legend.title = ggplot2::element_blank(),
       axis.title.x = ggplot2::element_blank(),
-      text = ggplot2::element_text(family = "mono", size = 15)
+      text = ggplot2::element_text(family = "mono", size = 15 * scale)
 
       #axis.line.x = element_line(size = .3),
       #axis.line.y = element_line(size = .3),
@@ -966,6 +971,10 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
   if(height == "auto") {
     height <- auto_height
   }
+
+  # add scaleing factor
+  width <- width * scale
+  height <- height * scale
 
   # size exceeded?
   exceed_size <- FALSE
