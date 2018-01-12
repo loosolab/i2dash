@@ -77,6 +77,7 @@ pcaUI <- function(id, show.label = TRUE) {
 #' @param width Width of the plot in cm. Defaults to 28 and supports reactive.
 #' @param height Height of the plot in cm. Defaults to 28 and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.
+#' @param scale Scale plot size. Defaults to 1, supports reactive.
 #'
 #' @details Width/ height/ ppi less or equal to zero will use default value.
 #'
@@ -85,7 +86,7 @@ pcaUI <- function(id, show.label = TRUE) {
 #' @import data.table
 #'
 #' @export
-pca <- function(input, output, session, data, types, levels = NULL, entryLabel = NULL, width = 28, height = 28, ppi = 72) {
+pca <- function(input, output, session, data, types, levels = NULL, entryLabel = NULL, width = 28, height = 28, ppi = 72, scale = 1) {
   #handle reactive data
   data.r <- shiny::reactive({
     if(shiny::is.reactive(data)){
@@ -124,6 +125,7 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     width <- ifelse(shiny::is.reactive(width), width(), width)
     height <- ifelse(shiny::is.reactive(height), height(), height)
     ppi <- ifelse(shiny::is.reactive(ppi), ppi(), ppi)
+    scale <- ifelse(shiny::is.reactive(scale), scale(), scale)
 
     if(!is.numeric(width) | width <= 0) {
       width <- 28
@@ -137,7 +139,8 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
 
     list(width = width,
          height = height,
-         ppi = ppi)
+         ppi = ppi,
+         scale = scale)
   })
 
 
@@ -248,7 +251,8 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
                on.columns = TRUE,
                width = size()$width,
                height = size()$height,
-               ppi = size()$ppi
+               ppi = size()$ppi,
+               scale = size()$scale
     )
 
     progress$set(1)
