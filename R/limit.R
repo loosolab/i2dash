@@ -28,6 +28,11 @@ limitUI <- function(id, label = "Limit"){
 #'
 #' @export
 limit <- function(input, output, session, lower = NULL, upper = NULL){
+  # reset on re-run
+  shinyjs::reset("enable")
+  shinyjs::reset("lowerLimit")
+  shinyjs::reset("upperLimit")
+
   # evaluate reactive parameter
   lower.r <- shiny::reactive({
     if(shiny::is.reactive(lower)) {
