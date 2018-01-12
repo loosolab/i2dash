@@ -459,7 +459,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
                                 hclust_method = clustmethod,
                                 dist_method = clustdist,
                                 dendrogram = clustering,
-                                distfun = factoextra::get_dist
+                                distfun = factoextra::get_dist,
                                 #width = width, #not working
                                 #height = height
     )
@@ -481,6 +481,10 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     if(height == "auto") {
       height <- auto_height
     }
+
+    # add scale
+    width <- width * scale
+    height <- height * scale
 
     # size exceeded?
     exceed_size <- FALSE
