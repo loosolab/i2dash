@@ -182,6 +182,9 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
   data_x <- shiny::reactive(as.matrix(data.r()[, xaxis$selectedColumn(), with = FALSE]))
   data_y <- shiny::reactive(as.matrix(data.r()[, yaxis$selectedColumn(), with = FALSE]))
 
+  # clear plot
+  clearPlot <- shiny::reactiveVal(FALSE)
+
   #reset ui
   shiny::observeEvent(input$reset, {
     shinyjs::reset("density")
@@ -194,8 +197,9 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
     colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = list("sequential", "diverging"), winsorize = winsorize)
     transform_x <<- shiny::callModule(transformation, "transform_x", data = data_x)
     transform_y <<- shiny::callModule(transformation, "transform_y", data = data_y)
-    limit_x <<- shiny::callModule(limit, "xaxis_limit", lower = shiny::reactive(get_x_limit()[1]), upper = shiny::reactive(get_x_limit()[2]))
-    limit_y <<- shiny::callModule(limit, "yaxis_limit", lower = shiny::reactive(get_y_limit()[1]), upper = shiny::reactive(get_y_limit()[2]))
+    limit_x <<- shiny::callModule(limit, "xaxis_limit", lower = shiny::reactive(result.data()$xlim[1]), upper = shiny::reactive(result.data()$xlim[2]))
+    limit_y <<- shiny::callModule(limit, "yaxis_limit", lower = shiny::reactive(result.data()$ylim[1]), upper = shiny::reactive(result.data()$ylim[2]))
+    clearPlot(TRUE)
   })
 
   winsorize <- shiny::reactive({
@@ -297,6 +301,7 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
   plot <- shiny::eventReactive(input$plot, {
     #enable downloadbutton
     shinyjs::enable("download")
+    clearPlot(FALSE)
 
     #new progress indicator
     progress <- shiny::Progress$new()
@@ -362,22 +367,29 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
-        plot()$plot
+        if(clearPlot()) {
+          return()
+        } else {
+          plot()$plot
+        }
       }
     )
   } else if(plot.method == "interactive") {
     output$interactive <- plotly::renderPlotly({
-      #new progress indicator
-      progress <- shiny::Progress$new()
-      on.exit(progress$close())
-      progress$set(0.2, message = "Render plot")
+      if(clearPlot()) {
+        return()
+      } else {
+        #new progress indicator
+        progress <- shiny::Progress$new()
+        on.exit(progress$close())
+        progress$set(0.2, message = "Render plot")
 
-      plot <- plot()$plot
+        plot <- plot()$plot
 
-      progress$set(1)
-      return(plot)
+        progress$set(1)
+        return(plot)
+      }
     })
-
   }
 
   output$download <- shiny::downloadHandler(filename = "scatterPlot.zip",
