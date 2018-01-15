@@ -178,13 +178,13 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
 
       # set repelling point labels
       if(!is.null(highlight.labels)) {
-        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
-        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
+        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
+        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
       }
     # set repelling labels (for only highlighted points shown)
     } else if(!is.null(highlight.labels) & length(highlight.labels) == nrow(data)) {
-      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
-      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 10000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
+      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
+      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
     }
   }
 

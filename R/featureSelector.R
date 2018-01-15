@@ -100,7 +100,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
   })
 
   and_selected <- shiny::callModule(and, "and", data = data.r, show.elements = features.r, element.grouping = feature.grouping.r, delimiter = delimiter, multiple = multiple, contains = contains, ranged = ranged, step = step, reset = shiny::reactive(input$reset))
-  row_selector <- shiny::callModule(orNumeric, "row_selector", choices = choices, value = value_wrapper, label = "Select TopX features:", stepsize = 1)
+  row_selector <- shiny::callModule(orNumeric, "row_selector", choices = choices, value = value_wrapper, label = "Select n features from the top and/or bottom of the list", stepsize = 1)
 
   # row_selector choices
   choices <- shiny::reactive({
@@ -144,7 +144,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
   # reset row_selector
   shiny::observeEvent(input$reset, {
     value(NULL)
-    row_selector <<- shiny::callModule(orNumeric, "row_selector", choices = choices, value = value_wrapper, label = "Select TopX features:", stepsize = 1)
+    row_selector <<- shiny::callModule(orNumeric, "row_selector", choices = choices, value = value_wrapper, label = "Select n features from the top and/or bottom of the list", stepsize = 1)
   })
 
   #Fetch reactive guide for this module
@@ -189,8 +189,8 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
 
   # row selector info
   shiny::observeEvent(input$infobutton, {
-    title <- "Select TopX features"
-    content <- "Subset the TopX features from the currently selected candidates."
+    title <- "Select n features from the top and/or bottom of the list"
+    content <- "Subset the TopX and/or BottomX features from the currently selected candidates."
 
     shiny::showModal(
       shiny::modalDialog(
