@@ -37,7 +37,7 @@ orNumericUI <- function(id){
 #' @param zoomable Boolean to enable zooming. Redefine the sliders range. Defaults to TRUE.
 #' @param reset A reactive which will trigger a module reset on change.
 #'
-#' @return Returns a reactive containing a named list with the label, the selected choices as a character vector (text) and a boolean vector of length \code{length(choices)} (bool), indicating whether a item has been chosen. If no item has been chosen, the return is \code{TRUE} for items.
+#' @return Returns a reactive containing a named list with the label, the selected choices as a character vector (text), a boolean vector of length \code{length(choices)} (bool), and a vector of the selected value(s) (value), indicating whether a item has been chosen. If no item has been chosen, the return is \code{TRUE} for items.
 #'
 #' @export
 orNumeric <- function(input, output, session, choices, value, label = "Column", step = 100, stepsize = NULL, min. = shiny::reactive(min(choices.r(), na.rm = TRUE)), max. = shiny::reactive(max(choices.r(), na.rm = TRUE)), label.slider = NULL, zoomable = TRUE, reset = NULL){
@@ -343,7 +343,8 @@ orNumeric <- function(input, output, session, choices, value, label = "Column", 
     list(
       label = label,
       bool = selected(),
-      text = text
+      text = text,
+      value = input$slider
     )
   })
 
