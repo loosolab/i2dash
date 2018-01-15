@@ -12,7 +12,10 @@ orNumericUI <- function(id){
   ns <- shiny::NS(id)
 
   shiny::tagList(
-    shiny::tagList(shinyjs::useShinyjs(), shiny::uiOutput(ns("label"))),
+    shiny::tagList(shinyjs::useShinyjs(),
+                   shiny::singleton(shiny::tags$head(shiny::tags$link(rel = "stylesheet", type = "text/css", href = "wilson_www/styles.css"))),
+                   shiny::uiOutput(ns("label"))
+    ),
     shiny::uiOutput(ns("options")),
     shiny::uiOutput(ns("slider")),
     shiny::uiOutput(ns("info"))
@@ -37,7 +40,7 @@ orNumericUI <- function(id){
 #' @param zoomable Boolean to enable zooming. Redefine the sliders range. Defaults to TRUE.
 #' @param reset A reactive which will trigger a module reset on change.
 #'
-#' @return Returns a reactive containing a named list with the label, the selected choices as a character vector (text) and a boolean vector of length \code{length(choices)} (bool), indicating whether a item has been chosen. If no item has been chosen, the return is \code{TRUE} for items.
+#' @return Returns a reactive containing a named list with the label, the selected choices as a character vector (text), a boolean vector of length \code{length(choices)} (bool), and a vector of the selected value(s) (value), indicating whether a item has been chosen. If no item has been chosen, the return is \code{TRUE} for items.
 #'
 #' @export
 orNumeric <- function(input, output, session, choices, value, label = "Column", step = 100, stepsize = NULL, min. = shiny::reactive(min(choices.r(), na.rm = TRUE)), max. = shiny::reactive(max(choices.r(), na.rm = TRUE)), label.slider = NULL, zoomable = TRUE, reset = NULL){
@@ -89,142 +92,49 @@ orNumeric <- function(input, output, session, choices, value, label = "Column", 
     }
   })
 
-  css <- shiny::reactive({
-    # range slider?
-    if(length(value.r()) > 1) {
-      shiny::req(input$options)
-      # span.irs-bar = range between points (inner)
-      # span.irs-line = range outside of points (outer)
-      # span.irs-slider.from = left point
-      # span.irs-slider.to = right point
-      # span.irs-from = text above left point
-      # span.irs-to = text above right point
-      # span.irs-min = left text above slider
-      # span.irs-max = right text above slider
-      # span.irs-single = joined texts above points
-
-      # inner css
-      if(input$options == "inner") {
-        css <- shiny::HTML(paste0("<style ", paste0("id=\"", session$ns("slider-style")) ,"\" scoped>"),
-                           "span.irs-bar {
-                             background: #428bca;
-                             border-top: 1px solid #428bca;
-                             border-bottom: 1px solid #428bca;
-                           }
-                           span.irs-from, span.irs-to, span.irs-single {
-                             background: #428bca;
-                             color: #FFF;
-                           }
-                           span.irs-line {
-                             border: 1px solid #CCC;
-                             background: linear-gradient(to bottom, #DDD -50%, #FFF 150%);
-                           }
-                           </style>")
-      # outer css
-      }else if(input$options == "outer") {
-        css <- shiny::HTML(paste0("<style ", paste0("id=\"", session$ns("slider-style")) ,"\" scoped>"),
-                           "span.irs-bar {
-                             border: 1px solid #CCC;
-                             background: linear-gradient(to bottom, #DDD -50%, #FFF 150%);
-                           }
-                           span.irs-from, span.irs-to, span.irs-single {
-                             background: rgba(0,0,0,0.1);
-                             color: #333;
-                           }
-                           span.irs-line {
-                             background: #428bca;
-                             border-top: 1px solid #428bca;
-                             border-bottom: 1px solid #428bca;
-                           }
-                           span.irs-min, span.irs-max {
-                             background: #428bca;
-                             color: #FFF;
-                           }
-                           </style>")
-      }
-    #single slider
-    }else {
-      # span.irs-min = left text above slider
-      # span.irs-max = right text above slider
-      # span.irs-single = text above point
-      # span.irs-slider.single = point
-      # span.irs-bar = bar left side of point
-      # span.irs-bar-edge = left edge of bar
-      # span.irs-line = bar right side of point
-
-      # default for <
-      less <- shiny::HTML(paste0("<style ", paste0("id=\"", session$ns("slider-style")) ,"\" scoped>"),
-                "span.irs-bar, span.irs-bar-edge {
-                  background: linear-gradient(to bottom, #DDD -50%, #FFF 150%);
-                  border: 1px solid #CCC;
-                  border-right: 0;
-
-                }
-               ")
-      # default for =
-      equal <- "span.irs-single {
-                  background: rgba(0,0,0,0.1);
-                  color: #333;
-                }"
-      # default for >
-      greater <- "</style>"
-
-      if(any("<" == input$options)) {
-        less <- shiny::HTML(paste0("<style ", paste0("id=\"", session$ns("slider-style")) ,"\" scoped>"),
-                  "span.irs-bar, span.irs-bar-edge {
-                    background: #428bca;
-                    border-top: 1px solid #428bca;
-                    border-bottom: 1px solid #428bca;
-                  }
-                  span.irs-min {
-                    background: #428bca;
-                    color: #FFF;
-                  }")
-      }
-      if(any("=" == input$options)) {
-        equal <- "span.irs-single {
-                 background: #428bca;
-                 color: #FFF;
-                }"
-      }
-
-      if(any(">" == input$options)) {
-        greater <- "span.irs-line {
-                      background: #428bca;
-                      border-top: 1px solid #428bca;
-                      border-bottom: 1px solid #428bca;
-                    }
-                    span.irs-max {
-                      background: #428bca;
-                      color: #FFF;
-                    }
-                    </style>"
-      }
-      shiny::HTML(less, equal, greater)
-    }
-  })
-
-  # insert style for slider
+  # change css classes so slider visually matches options
   shiny::observe({
-    # re-insert css if slider is re-rendered
-    min.r()
-    max.r()
+      # change css classes if slider is re-rendered
+      min.r()
+      max.r()
 
-    # escape . to get valid css selector
-    # TODO better validation
-    selector <- gsub(pattern = ".", replacement = "\\.", x = session$ns("slider-style"), fixed = TRUE)
-    selector2 <- gsub(pattern = ".", replacement = "\\.", x = session$ns("slider"), fixed = TRUE)
+      if(length(value.r()) > 1){
+        shiny::req(input$options)
 
-    if(length(value.r()) > 1) shiny::req(input$options)
-    shiny::removeUI(
-      selector = paste0("#", selector)
-    )
+        if(input$options == "inner") {
+          shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').removeClass('outer')"))
+          shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').addClass('inner')"))
+        } else if(input$options == "outer") {
+          shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').removeClass('inner')"))
+          shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').addClass('outer')"))
+        }
+      } else {
+        shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').addClass('empty')"))
 
-    shiny::insertUI(
-      selector = paste0("#", selector2),
-      where = "afterBegin",
-      ui = css()
-    )
+        if(shiny::isTruthy(input$options)) {
+          if(any(input$options == ">")) {
+            shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').addClass('greater')"))
+          } else {
+            shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').removeClass('greater')"))
+          }
+
+          if(any(input$options == "=")) {
+            shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').addClass('equal')"))
+          } else {
+            shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').removeClass('equal')"))
+          }
+
+          if(any(input$options == "<")) {
+            shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').addClass('less')"))
+          } else {
+            shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').removeClass('less')"))
+          }
+        } else {
+          shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').removeClass('greater')"))
+          shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').removeClass('equal')"))
+          shinyjs::runjs(paste0("$(document.getElementById('", session$ns("slider"),"')).find('span').removeClass('less')"))
+        }
+      }
   })
 
   output$slider <- shiny::renderUI({
@@ -343,7 +253,8 @@ orNumeric <- function(input, output, session, choices, value, label = "Column", 
     list(
       label = label,
       bool = selected(),
-      text = text
+      text = text,
+      value = input$slider
     )
   })
 

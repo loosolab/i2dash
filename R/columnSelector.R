@@ -13,7 +13,8 @@ columnSelectorUI <- function(id, label = F, title = NULL) {
 
   shiny::tagList(
     shiny::tags$b(title),
-    shiny::HTML("<style scoped> div.selectize-input:not(.has-items) {background: #FFFFE1;} </style>"),
+    shinyjs::useShinyjs(),
+    shiny::singleton(shiny::tags$head(shiny::tags$link(rel = "stylesheet", type = "text/css", href = "wilson_www/styles.css"))),
     shiny::uiOutput(ns("out")),
     {if(label) shiny::uiOutput(ns("showLabel"))}
   )
@@ -78,9 +79,10 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
     if(multiple) {
       columnSelectLabel = paste0(columnSelectLabel, "(s)")
     }
+
     shiny::tagList(
       shiny::selectInput(session$ns("select.type"), label = columnTypeLabel, choices = type.r(), selected = type.r()[1], multiple = FALSE),
-      shiny::selectizeInput(session$ns("select.column"), label = columnSelectLabel, choices = choices, multiple = multiple)
+      shiny::div(shiny::selectizeInput(session$ns("select.column"), label = columnSelectLabel, choices = choices, multiple = multiple), class = "empty") # colored background if empty
     )
   })
 

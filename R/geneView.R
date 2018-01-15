@@ -12,6 +12,7 @@ geneViewUI <- function(id, plot.columns = 3){
   shiny::tagList(
     rintrojs::introjsUI(),
     shinyjs::useShinyjs(),
+    shiny::singleton(shiny::tags$head(shiny::tags$link(rel = "stylesheet", type = "text/css", href = "wilson_www/styles.css"))),
     shiny::fluidPage(
       shiny::fluidRow(
         shinydashboard::box(
@@ -30,7 +31,6 @@ geneViewUI <- function(id, plot.columns = 3){
               width = 3,
 
               shiny::div(id = ns("guide_geneSelection"),
-                         shiny::HTML("<style scoped> div.selectize-input:not(.has-items) {background: #FFFFE1;} </style>"),
                          shiny::uiOutput(ns("genes"))),
               shiny::div(id = ns("guide_genelabel"),
                          labelUI(ns("labeller")))
@@ -196,6 +196,9 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
     output <- shiny::selectizeInput(session$ns("genes"), label = "Select Genes", choices = NULL, multiple = TRUE)
     #only fetch needed data (calculation on server-side)
     shiny::updateSelectizeInput(session, "genes", choices = unique(data.r()[[2]]), server = TRUE)
+
+    # colored if not has item
+    output <- shiny::div(class = "empty", output)
 
     return(output)
   })

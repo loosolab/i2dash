@@ -37,7 +37,7 @@ orNumeric(input, output, session, choices, value, label = "Column",
 \item{reset}{A reactive which will trigger a module reset on change.}
 }
 \value{
-Returns a reactive containing a named list with the label, the selected choices as a character vector (text) and a boolean vector of length \code{length(choices)} (bool), indicating whether a item has been chosen. If no item has been chosen, the return is \code{TRUE} for items.
+Returns a reactive containing a named list with the label, the selected choices as a character vector (text), a boolean vector of length \code{length(choices)} (bool), and a vector of the selected value(s) (value), indicating whether a item has been chosen. If no item has been chosen, the return is \code{TRUE} for items.
 }
 \description{
 Provides server logic for the orNumeric module.
