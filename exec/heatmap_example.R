@@ -18,7 +18,8 @@ names(metadata)[1] <- "key"
 
 ui <- dashboardPage(header = dashboardHeader(), sidebar = dashboardSidebar(
   numericInput(inputId = "width", label = "width in cm", value = 0, min = 0),
-  numericInput(inputId = "height", label = "height in cm", value = 0, min = 0)
+  numericInput(inputId = "height", label = "height in cm", value = 0, min = 0),
+  sliderInput(inputId = "scale", label = "scale plot", value = 1, min = 1, max = 10)
 ), dashboardBody(fluidPage(
   heatmapUI("id")
 )))
@@ -32,7 +33,7 @@ server <- function(input, output) {
     metadata[ type != "annotation"]
   })
 
-  heat <- callModule(heatmap, "id", data = table, types = typ, plot.method = "static", custom.row.label = table, width = reactive(input$width), height = reactive(input$height))
+  heat <- callModule(heatmap, "id", data = table, types = typ, plot.method = "interactive", custom.row.label = table, width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
 
   observe({
     print(heat())

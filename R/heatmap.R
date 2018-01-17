@@ -103,11 +103,12 @@ heatmapUI <- function(id, row.label = TRUE) {
 #' @param width Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param height Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.
+#' @param scale Scale plot size. Defaults to 1, supports reactive.
 #'
 #' @return Reactive containing data used for plotting.
 #'
 #' @export
-heatmap <- function(input, output, session, data, types, plot.method = "static", custom.row.label = NULL, label.sep = ", ", width = "auto", height = "auto", ppi = 72) {
+heatmap <- function(input, output, session, data, types, plot.method = "static", custom.row.label = NULL, label.sep = ", ", width = "auto", height = "auto", ppi = 72, scale = 1) {
   # cluster limitation
   static <- 11000
   interactive <- 3000
@@ -125,6 +126,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
     width <- ifelse(shiny::is.reactive(width), width(), width)
     height <- ifelse(shiny::is.reactive(height), height(), height)
     ppi <- ifelse(shiny::is.reactive(ppi), ppi(), ppi)
+    scale <- ifelse(shiny::is.reactive(scale), scale(), scale)
 
     if(!is.numeric(width) || width <= 0) {
       width <- "auto"
@@ -142,7 +144,8 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
 
     list(width = width,
          height = height,
-         ppi = ppi)
+         ppi = ppi,
+         scale = scale)
   })
 
   # Fetch the reactive guide for this module
@@ -205,7 +208,10 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
     }
   })
 
-  #reset ui
+  # clear plot
+  clearPlot <- shiny::reactiveVal(FALSE)
+
+  # reset ui
   shiny::observeEvent(input$reset, {
     shinyjs::reset("cluster.distance")
     shinyjs::reset("cluster.method")
@@ -220,6 +226,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
     if(!is.null(custom.row.label)) {
       custom_label <<- shiny::callModule(label, "labeller", data = custom.row.label, label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row.label))
     }
+    clearPlot(TRUE)
   })
 
   columns <- shiny::callModule(columnSelector, "select", type.columns = types, columnTypeLabel = "Column types to choose from")
@@ -249,6 +256,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
   plot <- shiny::eventReactive(input$plot, {
     # enable downloadButton
     shinyjs::enable("download")
+    clearPlot(FALSE)
 
     #new progress indicator
     progress <- shiny::Progress$new()
@@ -277,6 +285,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
       width = size()$width,
       height = size()$height,
       ppi = size()$ppi,
+      scale = size()$scale,
       plot.method = plot.method,
       winsorize.colors = colorPicker()$winsorize
     )
@@ -292,16 +301,20 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
     })
 
     output$interactive <- plotly::renderPlotly({
-      #new progress indicator
-      progress <- shiny::Progress$new()
-      on.exit(progress$close())
-      progress$set(0.2, message = "Render plot")
+      if(clearPlot()) {
+        return()
+      } else {
+        #new progress indicator
+        progress <- shiny::Progress$new()
+        on.exit(progress$close())
+        progress$set(0.2, message = "Render plot")
 
-      plot <- plot()$plot
+        plot <- plot()$plot
 
-      progress$set(1)
+        progress$set(1)
 
-      return(plot)
+        return(plot)
+      }
     })
   }else{
     output$heatmap <- shiny::renderUI({
@@ -312,15 +325,19 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
-        #new progress indicator
-        progress <- shiny::Progress$new()
-        on.exit(progress$close())
-        progress$set(0.2, message = "Render plot")
+        if(clearPlot()) {
+          return()
+        } else {
+          #new progress indicator
+          progress <- shiny::Progress$new()
+          on.exit(progress$close())
+          progress$set(0.2, message = "Render plot")
 
-        plot <- plot()$plot
+          plot <- plot()$plot
 
-        progress$set(1)
-        return(ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom"))
+          progress$set(1)
+          return(ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom"))
+        }
     })
   }
 

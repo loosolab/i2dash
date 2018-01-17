@@ -6,7 +6,7 @@
 \usage{
 scatterPlot(input, output, session, data, types, features = NULL,
   markerReac = NULL, plot.method = "static", width = "auto",
-  height = "auto", ppi = 72)
+  height = "auto", ppi = 72, scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object}
@@ -34,6 +34,8 @@ column4: sub_label (optional, added to id/ label)}
 \item{height}{Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.}
 
 \item{ppi}{Pixel per inch. Defaults to 72 and supports reactive.}
+
+\item{scale}{Scale plot size. Defaults to 1, supports reactive.}
 }
 \value{
 Returns reactive containing data used for plot.

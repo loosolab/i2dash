@@ -9,7 +9,7 @@ create_scatterplot(data, transparency = 1, pointsize = 1, labelsize = 3,
   density = T, line = T, categorized = F, highlight.data = NULL,
   highlight.labels = NULL, highlight.color = "#FF0000", xlim = NULL,
   ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto",
-  ppi = 72, plot.method = "static")
+  ppi = 72, plot.method = "static", scale = 1)
 }
 \arguments{
 \item{data}{data.table containing plot data
@@ -55,6 +55,8 @@ column 2, 3(, 4): x, y(, z)}
 \item{ppi}{Pixel per inch (default = 72).}
 
 \item{plot.method}{Whether the plot should be 'interactive' or 'static' (Default = 'static').}
+
+\item{scale}{Modify plot size while preserving aspect ratio (Default = 1).}
 }
 \value{
 Returns list(plot = ggplotly/ ggplot, width, height, ppi, exceed_size).

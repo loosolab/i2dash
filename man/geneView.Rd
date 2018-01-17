@@ -6,7 +6,7 @@
 \usage{
 geneView(input, output, session, data, metadata, level = NULL,
   plot.method = "static", custom.label = NULL, label.sep = ", ",
-  width = "auto", height = "auto", ppi = 72)
+  width = "auto", height = "auto", ppi = 72, scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object.}
@@ -38,6 +38,8 @@ column3: level (condition type)}
 \item{height}{Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.}
 
 \item{ppi}{Pixel per inch. Defaults to 72 and supports reactive.}
+
+\item{scale}{Scale plot size. Defaults to 1, supports reactive.}
 }
 \value{
 Reactive containing data.table used for plotting.

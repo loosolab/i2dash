@@ -17,7 +17,8 @@ ui <- dashboardPage(
   header = dashboardHeader(),
   sidebar = dashboardSidebar(
     numericInput(inputId = "width", label = "width in cm", value = 0, min = 0),
-    numericInput(inputId = "height", label = "height in cm", value = 0, min = 0)
+    numericInput(inputId = "height", label = "height in cm", value = 0, min = 0),
+    sliderInput(inputId = "scale", label = "scale plot", value = 1, min = 1, max = 10)
   ),
   dashboardBody(
     fluidPage(
@@ -27,7 +28,7 @@ ui <- dashboardPage(
 )
 
 server <- function(input, output) {
-  table <- shiny::callModule(global_cor_heatmap, "id", data = data, types = metadata[type %in% c("performance", "design")], plot.method = "static", width = reactive(input$width), height = reactive(input$height))
+  table <- shiny::callModule(global_cor_heatmap, "id", data = data, types = metadata[type %in% c("performance", "design")], plot.method = "static", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
 
   shiny::observe({
     print(table())
