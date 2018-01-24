@@ -44,6 +44,7 @@ Imports: shiny,
     factoextra,
     heatmaply,
     shinyBS,
-    shinythemes
+    shinythemes,
+    log4r
 RoxygenNote: 6.0.1
 biocViews:
