@@ -159,6 +159,8 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
   })
 
   shiny::observeEvent(input$reset, {
+    log_message("GeneView: reset", "INFO", token = session$token)
+
     shinyjs::reset("genes")
     shinyjs::reset("plotType")
     shinyjs::reset("groupby")
@@ -253,6 +255,8 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
   shinyjs::disable("download")
 
   plot <- shiny::eventReactive(input$plot, {
+    log_message("GeneView: computing plot...", "INFO", token = session$token)
+
     # enable downloadButton
     shinyjs::enable("download")
 
@@ -285,6 +289,7 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
       ppi = size()$ppi
     )
 
+    log_message("GeneView: done.", "INFO", token = session$token)
     progress$set(1, detail = "Return plot")
     return(plot)
   })
@@ -327,6 +332,8 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
 
   if(plot.method == "interactive") {
     output$interactive <- plotly::renderPlotly({
+      log_message("GeneView: render plot interactive", "INFO", token = session$token)
+
       #progress indicator
       progress <- shiny::Progress$new()
       on.exit(progress$close())
@@ -342,6 +349,7 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
+        log_message("GeneView: render plot static", "INFO", token = session$token)
         #progress indicator
         progress <- shiny::Progress$new()
         on.exit(progress$close())
@@ -356,6 +364,8 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
 
   output$download <- shiny::downloadHandler(filename = "geneView.zip",
                                             content = function(file) {
+                                              log_message("GeneView: download", "INFO", token = session$token)
+
                                               download(file = file, filename = "geneView.zip", plot = plot()$plot, width = plot()$width, height = plot()$height, ppi = plot()$ppi, ui = user_input())
                                             })
 
