@@ -5,7 +5,7 @@
 \title{pca module server logic}
 \usage{
 pca(input, output, session, data, types, levels = NULL, entryLabel = NULL,
-  width = 28, height = 28, ppi = 72)
+  width = 28, height = 28, ppi = 72, scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object}
@@ -31,6 +31,8 @@ column4: sub_label (optional, added to id/ label)}
 \item{height}{Height of the plot in cm. Defaults to 28 and supports reactive.}
 
 \item{ppi}{Pixel per inch. Defaults to 72 and supports reactive.}
+
+\item{scale}{Scale plot size. Defaults to 1, supports reactive.}
 }
 \value{
 A reactive containing list with dimensions.

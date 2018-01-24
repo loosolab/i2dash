@@ -5,7 +5,8 @@
 \title{global correlation heatmap module server logic}
 \usage{
 global_cor_heatmap(input, output, session, data, types,
-  plot.method = "static", width = "auto", height = "auto", ppi = 72)
+  plot.method = "static", width = "auto", height = "auto", ppi = 72,
+  scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object}
@@ -29,6 +30,8 @@ column4 = sub_label (optional, added to id/ label)}
 \item{height}{Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.}
 
 \item{ppi}{Pixel per inch. Defaults to 72 and supports reactive.}
+
+\item{scale}{Scale plot size. Defaults to 1, supports reactive.}
 }
 \value{
 Reactive containing data used for plotting.

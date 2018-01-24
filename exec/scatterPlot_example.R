@@ -20,7 +20,8 @@ ui <- dashboardPage(header = dashboardHeader(),
                     sidebar = dashboardSidebar(
                       markerUI("marker"),
                       numericInput(inputId = "width", label = "width in cm", value = 0, min = 0),
-                      numericInput(inputId = "height", label = "height in cm", value = 0, min = 0)
+                      numericInput(inputId = "height", label = "height in cm", value = 0, min = 0),
+                      sliderInput(inputId = "scale", label = "scale plot", min = 1, max = 10, value = 1)
                     ),
                     body = dashboardBody(
                       fluidPage(
@@ -32,7 +33,7 @@ ui <- dashboardPage(header = dashboardHeader(),
 server <- function(input, output) {
   marker <- callModule(marker, "marker", data)
   # highlight all manual cars
-  plot <- callModule(scatterPlot, "id", data = data, types = metadata[level != "annotation"], features = data[am == 1], markerReac = marker, plot.method = "static", width = reactive(input$width), height = reactive(input$height))
+  plot <- callModule(scatterPlot, "id", data = data, types = metadata[level != "annotation"], features = data[am == 1], markerReac = marker, plot.method = "interactive", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
 
   observe({
     print(plot())

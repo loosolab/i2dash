@@ -157,13 +157,14 @@ global_cor_heatmapUI <- function(id) {
 #' @param width Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param height Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.
+#' @param scale Scale plot size. Defaults to 1, supports reactive.
 #'
 #'
 #'
 #' @return Reactive containing data used for plotting.
 #'
 #' @export
-global_cor_heatmap <- function(input, output, session, data, types, plot.method = "static", width = "auto", height = "auto", ppi = 72) {
+global_cor_heatmap <- function(input, output, session, data, types, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
   # load module -------------------------------------------------------------
   # handle reactive data
   data_r <- shiny::reactive({
@@ -180,6 +181,7 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     width <- ifelse(shiny::is.reactive(width), width(), width)
     height <- ifelse(shiny::is.reactive(height), height(), height)
     ppi <- ifelse(shiny::is.reactive(ppi), ppi(), ppi)
+    scale <- ifelse(shiny::is.reactive(scale), scale(), scale)
 
     if(!is.numeric(width) || width <= 0) {
       width <- "auto"
@@ -197,7 +199,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
 
     list(width = width,
          height = height,
-         ppi = ppi)
+         ppi = ppi,
+         scale = scale)
   })
 
   # load internal modules
@@ -217,6 +220,9 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
   }
 
   # functionality -----------------------------------------------------------
+  # clear plot
+  clearPlot <- shiny::reactiveVal(FALSE)
+
   # reset ui
   shiny::observeEvent(input$reset, {
     log_message("Global correlation heatmap: reset", "INFO", token = session$token)
@@ -232,6 +238,7 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     columns <<- shiny::callModule(columnSelector, "select", type.columns = types, columnTypeLabel = "Column types to choose from")
     transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(data_r()[, columns$selectedColumns(), with = FALSE])))
     colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
+    clearPlot(TRUE)
   })
 
   # warning if plot size exceeds limits
@@ -312,6 +319,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
 
     # enable downloadButton
     shinyjs::enable("download")
+    # show plot
+    clearPlot(FALSE)
 
     # progress indicator
     progress <- shiny::Progress$new()
@@ -350,7 +359,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
       height = size()$height,
       ppi = size()$ppi,
       plot.method = plot.method,
-      winsorize.colors = colorPicker()$winsorize
+      winsorize.colors = colorPicker()$winsorize,
+      scale = size()$scale
     )
 
     # update progress indicator
@@ -366,38 +376,46 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
-        log_message("Global correlation heatmap: render plot static", "INFO", token = session$token)
+        if(clearPlot()) {
+          return()
+        } else {
+          log_message("Global correlation heatmap: render plot static", "INFO", token = session$token)
+
+          # progress indicator
+          progress <- shiny::Progress$new()
+          on.exit(progress$close())
+          progress$set(0.2, message = "Rendering plot")
+
+          # get plot
+          plot <- plot()$plot
+
+          # update progress indicator
+          progress$set(1)
+
+          # draw plot
+          return(ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom"))
+        }
+      }
+    )
+  }else if(plot.method == "interactive") {
+    output$interactive <- plotly::renderPlotly({
+      if(clearPlot()) {
+        return()
+      } else {
+        log_message("Global correlation heatmap: render plot interactive", "INFO", token = session$token)
 
         # progress indicator
         progress <- shiny::Progress$new()
         on.exit(progress$close())
         progress$set(0.2, message = "Rendering plot")
 
-        # get plot
         plot <- plot()$plot
 
         # update progress indicator
         progress$set(1)
 
-        # draw plot
-        return(ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom"))
+        return(plot)
       }
-    )
-  }else if(plot.method == "interactive") {
-    output$interactive <- plotly::renderPlotly({
-      log_message("Global correlation heatmap: render plot interactive", "INFO", token = session$token)
-
-      # progress indicator
-      progress <- shiny::Progress$new()
-      on.exit(progress$close())
-      progress$set(0.2, message = "Rendering plot")
-
-      plot <- plot()$plot
-
-      # update progress indicator
-      progress$set(1)
-
-      return(plot)
     })
   }
 

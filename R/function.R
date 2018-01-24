@@ -23,13 +23,14 @@
 #' @param height Set plot height in cm (Default = "auto").
 #' @param ppi Pixel per inch (default = 72).
 #' @param plot.method Whether the plot should be 'interactive' or 'static' (Default = 'static').
+#' @param scale Modify plot size while preserving aspect ratio (Default = 1).
 #'
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
 #'
 #' @import data.table
 #'
 #' @return Returns list(plot = ggplotly/ ggplot, width, height, ppi, exceed_size).
-create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize = 3, colors = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static"){
+create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize = 3, colors = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
   ########## prepare data ##########
   #set labelnames if needed
   x_label <- ifelse(nchar(x_label), x_label, names(data)[2])
@@ -50,10 +51,10 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
   if(ncol(data) >= 4){ z_head <- names(data)[4]}
 
   #delete rows where both 0 or at least one NA
-  rows.to.keep.data <- which(as.logical((data[,2] != 0) + (data[,3] != 0)))
+  rows.to.keep.data <- which(as.logical((data[, 2] != 0) + (data[, 3] != 0)))
   data <- data[rows.to.keep.data]
   if(!is.null(highlight.data)){
-    rows.to.keep.high <- which(as.logical((highlight.data[,2] != 0) + (highlight.data[,3 != 0])))
+    rows.to.keep.high <- which(as.logical((highlight.data[, 2] != 0) + (highlight.data[, 3 != 0])))
     highlight.data <- highlight.data[rows.to.keep.high]
   }
 
@@ -71,11 +72,12 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     panel.grid.minor = ggplot2::element_blank(),
     panel.border = ggplot2::element_blank(),
     panel.background = ggplot2::element_blank(),
-    axis.line.x = ggplot2::element_line(size=.3),
-    axis.line.y = ggplot2::element_line(size=.3),
-    axis.title.x = ggplot2::element_text(face="bold", color="black", size=10),
-    axis.title.y = ggplot2::element_text(face="bold", color="black", size=10),
-    plot.title = ggplot2::element_text(face="bold", color="black", size=12)
+    axis.line.x = ggplot2::element_line(size = .3),
+    axis.line.y = ggplot2::element_line(size = .3),
+    axis.title.x = ggplot2::element_text(face = "bold", color = "black", size = 10 * scale),
+    axis.title.y = ggplot2::element_text(face = "bold", color = "black", size = 10 * scale),
+    plot.title = ggplot2::element_text(face = "bold", color = "black", size = 12 * scale),
+    text = ggplot2::element_text(size = 10 * scale)
     #		legend.background = element_rect(color = "red")			#border color
     #		legend.key = element_rect("green")						#not working!
   )
@@ -148,7 +150,7 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     }
 
     #set points
-    plot <- plot + ggplot2::geom_point(size=pointsize, alpha=transparency, ggplot2::aes(text = hovertext))
+    plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, ggplot2::aes(text = hovertext))
 
     if(!is.null(highlight.data)){
       #set highlighted hovertext
@@ -164,27 +166,27 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
       }
 
       #set highlighted points
-      plot <- plot + ggplot2::geom_point(size = pointsize, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE, ggplot2::aes(text = hovertext.high))
+      plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE, ggplot2::aes(text = hovertext.high))
     }
   # static points without hovertexts
   } else if(plot.method == "static") {
     seed <- Sys.getpid() + Sys.time()
     # set points
-    plot <- plot + ggplot2::geom_point(size = pointsize, alpha = transparency)
+    plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency)
 
     # set highlighted points
     if(!is.null(highlight.data)) {
-      plot <- plot + ggplot2::geom_point(size = pointsize, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE)
+      plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE)
 
       # set repelling point labels
       if(!is.null(highlight.labels)) {
-        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
-        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
+        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
+        plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
       }
     # set repelling labels (for only highlighted points shown)
     } else if(!is.null(highlight.labels) & length(highlight.labels) == nrow(data)) {
-      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
-      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
+      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
+      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
     }
   }
 
@@ -234,6 +236,10 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     height <- height * (ppi / 2.54)
   }
 
+  # apply scale factor
+  width <- width * scale
+  height <- height * scale
+
   # size exceeded?
   exceed_size <- FALSE
   limit <- 500 * (ppi / 2.54)
@@ -252,9 +258,9 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     # add labels with arrows
     if(!is.null(highlight.labels)) {
       if(!is.null(highlight.data)) {
-        plot <- plotly::add_annotations(p = plot, x = highlight.data[[x_head]], y = highlight.data[[y_head]], text = highlight.labels, standoff = pointsize, font = list(size = labelsize), bgcolor = 'rgba(255, 255, 255, 0.5)')
+        plot <- plotly::add_annotations(p = plot, x = highlight.data[[x_head]], y = highlight.data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
       } else if(nrow(data) == length(highlight.labels)) {
-        plot <- plotly::add_annotations(p = plot, x = data[[x_head]], y = data[[y_head]], text = highlight.labels, standoff = pointsize, font = list(size = labelsize), bgcolor = 'rgba(255, 255, 255, 0.5)')
+        plot <- plotly::add_annotations(p = plot, x = data[[x_head]], y = data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
       }
     }
   }
@@ -281,6 +287,7 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
 #' @param width Set the width of the plot in cm (default = 28).
 #' @param height Set the height of the plot in cm (default = 28).
 #' @param ppi Pixel per inch (default = 72).
+#' @param scale Modify plot size while preserving aspect ratio (Default = 1).
 #'
 #' @details If width and height are the same axis ratio will be set to one (quadratic plot).
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
@@ -288,7 +295,7 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
 #' @import data.table
 #'
 #' @return A named list(plot = ggplot object, data = pca.data, width = width of plot (cm), height = height of plot (cm), ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max).
-create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72) {
+create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72, scale = 1) {
   requireNamespace("FactoMineR", quietly = TRUE)
   requireNamespace("factoextra", quietly = TRUE)
 
@@ -345,16 +352,16 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
     panel.background = ggplot2::element_blank(),
     axis.line.x = ggplot2::element_line(size=.3),
     axis.line.y = ggplot2::element_line(size=.3),
-    axis.title.x = ggplot2::element_text(color="black", size=11),
-    axis.title.y = ggplot2::element_text(color="black", size=11),
+    axis.title.x = ggplot2::element_text(color="black", size = 11 * scale),
+    axis.title.y = ggplot2::element_text(color="black", size = 11 * scale),
     #plot.title = element_text(color="black", size=12),
     plot.title = ggplot2::element_blank(),
-    legend.title= ggplot2::element_blank(),
-    text= ggplot2::element_text(size = 12)						#size for all (legend?) labels
+    legend.title = ggplot2::element_blank(),
+    text = ggplot2::element_text(size = 12 * scale)						#size for all (legend?) labels
     #legend.key = element_rect(fill="white")
   )
 
-  pca_plot <- factoextra::fviz_pca_ind(pca, axes = c(dimensionA, dimensionB), invisible = "none", pointsize = pointsize, label = "none", axes.linetype = "blank", repel = FALSE)
+  pca_plot <- factoextra::fviz_pca_ind(pca, axes = c(dimensionA, dimensionB), invisible = "none", pointsize = pointsize * scale, label = "none", axes.linetype = "blank", repel = FALSE)
   pca_plot <- pca_plot + theme1
 
   if(labels) {
@@ -362,7 +369,7 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
       data = data.frame(pca$ind$coord),
       mapping = ggplot2::aes_(x = pca$ind$coord[, dimensionA], y = pca$ind$coord[, dimensionB], label = rownames(pca$ind$coord)),
       segment.color = "gray65",
-      size = labelsize,
+      size = labelsize * scale,
       force = 2,
       max.iter = 10000,
       point.padding = grid::unit(0.1, "lines")
@@ -373,6 +380,10 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
   # if(width == height){
   #   pca_plot <- pca_plot + ggplot2::coord_fixed(ratio = 1)
   # }
+
+  # add scale factor
+  width <- width * scale
+  height <- height * scale
 
   # size exceeded?
   exceed_size <- FALSE
@@ -405,11 +416,12 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
 #' @param width Set width of plot in cm (Default = "auto").
 #' @param height Set height of plot in cm (Default = "auto").
 #' @param ppi Pixel per inch (default = 72).
+#' @param scale Modify plot size while preserving aspect ratio (Default = 1).
 #'
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
 #'
 #' @return Returns list(plot = complexHeatmap/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max) depending on plot.method.
-create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label = NULL, column.label=T, column.custom.label = NULL, clustering='none', clustdist='auto', clustmethod='auto', colors=NULL, winsorize.colors = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72) {
+create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label = NULL, column.label=T, column.custom.label = NULL, clustering='none', clustdist='auto', clustmethod='auto', colors=NULL, winsorize.colors = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
   requireNamespace("heatmaply", quietly = TRUE)
   requireNamespace("ComplexHeatmap", quietly = TRUE)
   requireNamespace("grDevices", quietly = TRUE)
@@ -441,7 +453,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
   if(plot.method == "interactive"){
     #estimate label sizes
     #row label
-    rowlabel_size <- ifelse(row.label, max(nchar(data[[1]]), na.rm = TRUE) * 8, 0)
+    rowlabel_size <- ifelse(row.label, max(nchar(data[[1]]), na.rm = TRUE) * 8 * scale, 0)
     #column label
     collabel_size <- ifelse(column.label, (2 + log2(max(nchar(names(data)), na.rm = TRUE))^2) * 10, 0)
     #legend
@@ -466,10 +478,14 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     #layout
     plot <- heatmaply::heatmaply(plot,
                                  plot_method = "ggplot",
-                                 scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colors = colors, name = unitlabel, limits = winsorize.colors, oob = scales::squish)
+                                 scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colors = colors, name = unitlabel, limits = winsorize.colors, oob = scales::squish),
+                                 heatmap_layers = ggplot2::theme(text = ggplot2::element_text(size = 12 * scale))
     )
 
-    plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size))
+    # scale axis ticks
+    ticks <- list(tickfont = list(size = 12 * scale))
+
+    plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size), xaxis = ticks, yaxis2 = ticks)
 
     # decide which sizes should be used
     if(width == "auto") {
@@ -480,6 +496,10 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     if(height == "auto") {
       height <- auto_height
     }
+
+    # add scale
+    width <- width * scale
+    height <- height * scale
 
     # size exceeded?
     exceed_size <- FALSE
@@ -566,24 +586,29 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
       show_column_names = column.label,
       row_names_side = "left",
       row_dend_side = "right",
-      row_dend_width = grid::unit(1, "inches"),
-      column_dend_height = grid::unit(1, "inches"),
-      row_names_max_width = grid::unit(8, "inches"),
-      column_names_max_height = grid::unit(4, "inches"),
-      row_names_gp = grid::gpar(fontsize = 12),
-      column_names_gp = grid::gpar(fontsize = 12),
-      column_title_gp = grid::gpar(fontsize = 10, units = "in"),
+      row_dend_width = grid::unit(1 * scale, "inches"),
+      # row_dend_gp = grid::gpar(lwd = 1, lex = scale), # don't seem to work
+      column_dend_height = grid::unit(1 * scale, "inches"),
+      # column_dend_gp = grid::gpar(lwd = 1, lex = scale), # don't seem to work
+      row_names_max_width = grid::unit(8 * scale, "inches"),
+      column_names_max_height = grid::unit(4 * scale, "inches"),
+      row_names_gp = grid::gpar(fontsize = 12 * scale),
+      column_names_gp = grid::gpar(fontsize = 12 * scale),
+      column_title_gp = grid::gpar(fontsize = 10 * scale, units = "in"),
       heatmap_legend_param = list(
         color_bar = "continuous",
-        legend_direction = "horizontal"
+        legend_direction = "horizontal",
+        title_gp = grid::gpar(fontsize = 10 * scale),
+        labels_gp = grid::gpar(fontsize = 8 * scale),
+        grid_height = grid::unit(0.15 * scale, "inches")
       )
     )
 
     #width/ height calculation
-    col_names_maxlength_label_width=max(sapply(colnames(prep.data), graphics::strwidth, units="in", font=12))	#longest column label when plotted in inches
-    col_names_maxlength_label_height=max(sapply(colnames(prep.data), graphics::strheight, units="in", font=12))	#highest column label when plotted in inches
-    row_names_maxlength_label_width=max(sapply(rownames(prep.data), graphics::strwidth, units="in", font=12))	#longest row label when plotted in inches
-    row_names_maxlength_label_height=max(sapply(rownames(prep.data), graphics::strheight, units="in", font=12))	#highest row label when plotted in inches
+    col_names_maxlength_label_width=max(sapply(colnames(prep.data), graphics::strwidth, units="in", font = 12))	#longest column label when plotted in inches
+    col_names_maxlength_label_height=max(sapply(colnames(prep.data), graphics::strheight, units="in", font = 12))	#highest column label when plotted in inches
+    row_names_maxlength_label_width=max(sapply(rownames(prep.data), graphics::strwidth, units="in", font = 12))	#longest row label when plotted in inches
+    row_names_maxlength_label_height=max(sapply(rownames(prep.data), graphics::strheight, units="in", font = 12))	#highest row label when plotted in inches
 
     # width
     if(row.label){
@@ -631,7 +656,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
       height <- 500
     }
 
-    plot <- list(plot = plot, width = width, height = height, ppi = ppi, exceed_size = exceed_size)
+    plot <- list(plot = plot, width = width * scale, height = height * scale, ppi = ppi, exceed_size = exceed_size)
   }
 
   return(plot)
@@ -654,13 +679,14 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
 #' @param width Set the width of the plot in cm (default = "auto").
 #' @param height Set the height of the plot in cm (default = "auto").
 #' @param ppi Pixel per inch (default = 72).
+#' @param scale Modify plot size while preserving aspect ratio (Default = 1).
 #'
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
 #'
 #' @import data.table
 #'
 #' @return Returns depending on plot.method list(plot = ggplot/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean).
-create_geneview <- function(data, grouping, plot.type = "line", facet.target = "gene", facet.cols = 2, colors = NULL, ylabel = NULL, ylimits = NULL, gene.label = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72){
+create_geneview <- function(data, grouping, plot.type = "line", facet.target = "gene", facet.cols = 2, colors = NULL, ylabel = NULL, ylimits = NULL, gene.label = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1){
   #grouping
   #group by factor if existing (fill with key if empty)
   grouping[grouping[[2]] == "", 2 := grouping[grouping[[2]] == "", 1]]
@@ -763,7 +789,7 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
       legend.position = "none",														#remove legend
       legend.title = ggplot2::element_blank(),
       axis.title.x = ggplot2::element_blank(),
-      text = ggplot2::element_text(family = "mono", size = 15)
+      text = ggplot2::element_text(family = "mono", size = 15 * scale)
 
       #axis.line.x = element_line(size = .3),
       #axis.line.y = element_line(size = .3),
@@ -956,6 +982,10 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
   if(height == "auto") {
     height <- auto_height
   }
+
+  # add scaleing factor
+  width <- width * scale
+  height <- height * scale
 
   # size exceeded?
   exceed_size <- FALSE
