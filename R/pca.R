@@ -148,6 +148,8 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
 
   #reset ui
   shiny::observeEvent(input$reset, {
+    log_message("PCA: reset", "INFO", token = session$token)
+
     shinyjs::reset("label")
     shinyjs::reset("dimA")
     shinyjs::reset("dimB")
@@ -228,6 +230,8 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
   shinyjs::disable("download")
 
   computed.data <- shiny::eventReactive(input$plot, {
+    log_message("PCA: computing plot...", "INFO", token = session$token)
+
     # enable downloadButton
     shinyjs::enable("download")
 
@@ -253,6 +257,8 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
 
     progress$set(1)
 
+    log_message("PCA: done.", "INFO", token = session$token)
+
     return(plot)
   })
 
@@ -272,6 +278,7 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     width = plot_width,
     height = plot_height,
     {
+      log_message("PCA: render plot", "INFO", token = session$token)
       computed.data()$plot
     })
 
@@ -286,6 +293,7 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
 
   output$download <- shiny::downloadHandler(filename = "pca.zip",
                                             content = function(file) {
+                                              log_message("PCA: download", "INFO", token = session$token)
                                               download(file = file, filename = "pca.zip", plot = computed.data()$plot, width = plot_width() / (computed.data()$ppi / 2.54), height = plot_height() / (computed.data()$ppi / 2.54), ppi = computed.data()$ppi, ui = user_input())
                                             })
 
