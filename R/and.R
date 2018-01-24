@@ -254,6 +254,8 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
     on.exit(progress$close())
     progress$set(0, message = "Apply Filter")
 
+    log_message(message = "Applying filter...", level = "INFO", token = session$token)
+
     or.modules <- modules()
 
     step <- 0.9 / length(or.modules)
@@ -279,6 +281,8 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
     or.selection.text <- unlist(or.selection.text)
 
     progress$set(1)
+
+    log_message(message = "Done.", level = "INFO", token = session$token)
 
     return(list(bool = and.selection.bool, text = unlist(or.selection.text)))
   })

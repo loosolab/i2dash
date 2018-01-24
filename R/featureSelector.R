@@ -143,6 +143,8 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
 
   # reset row_selector
   shiny::observeEvent(input$reset, {
+    log_message(message = "Filter reset", level = "INFO", token = session$token)
+
     value(NULL)
     row_selector <<- shiny::callModule(orNumeric, "row_selector", choices = choices, value = value_wrapper, label = "Select n features from the top and/or bottom of the list", stepsize = 1)
   })
@@ -238,6 +240,8 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
 
   # first filter (and) whole set in table
   select <- shiny::eventReactive(eventExpr = input$select, {
+    log_message(message = "Filtering data", level = "INFO", token = session$token)
+
     data <- data.r()[and_selected()$bool]
   })
 
