@@ -211,11 +211,11 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
   # load dynamic ui
   if(plot.method == "static") {
     output$cor_heatmap <- shiny::renderUI({
-      shiny::plotOutput(outputId = session$ns("static"))
+      shinycssloaders::withSpinner(shiny::plotOutput(outputId = session$ns("static")), proxy.height = "800px")
     })
   }else if(plot.method == "interactive") {
     output$cor_heatmap <- shiny::renderUI({
-      plotly::plotlyOutput(outputId = session$ns("interactive"))
+      shinycssloaders::withSpinner(plotly::plotlyOutput(outputId = session$ns("interactive")), proxy.height = "800px")
     })
   }
 
