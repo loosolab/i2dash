@@ -478,6 +478,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     #layout
     plot <- heatmaply::heatmaply(plot,
                                  plot_method = "ggplot",
+                                 node_type = "heatmap",
                                  scale_fill_gradient_fun = ggplot2::scale_fill_gradientn(colors = colors, name = unitlabel, limits = winsorize.colors, oob = scales::squish),
                                  heatmap_layers = ggplot2::theme(text = ggplot2::element_text(size = 12 * scale))
     )
