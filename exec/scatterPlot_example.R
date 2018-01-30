@@ -8,6 +8,7 @@ source("../R/transformation.R")
 source("../R/scatterPlot.R")
 source("../R/marker.R")
 source("../R/limit.R")
+source("../R/label.R")
 
 ####Test Data
 data <- data.table::data.table(id = rownames(mtcars), mtcars)
@@ -33,7 +34,7 @@ ui <- dashboardPage(header = dashboardHeader(),
 server <- function(input, output) {
   marker <- callModule(marker, "marker", data)
   # highlight all manual cars
-  plot <- callModule(scatterPlot, "id", data = data, types = metadata[level != "annotation"], features = data[am == 1], markerReac = marker, plot.method = "interactive", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
+  plot <- callModule(scatterPlot, "id", data = data, types = metadata, x.names = metadata[level != "annotation"][["key"]], y.names = metadata[level != "annotation"][["key"]], features = data[am == 1], markerReac = marker, plot.method = "interactive", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
 
   observe({
     print(plot())
