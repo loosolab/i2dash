@@ -4,9 +4,10 @@
 \alias{scatterPlot}
 \title{scatterPlot module server logic}
 \usage{
-scatterPlot(input, output, session, data, types, features = NULL,
-  markerReac = NULL, plot.method = "static", width = "auto",
-  height = "auto", ppi = 72, scale = 1)
+scatterPlot(input, output, session, data, types, x.names = NULL,
+  y.names = NULL, z.names = NULL, features = NULL, markerReac = NULL,
+  plot.method = "static", width = "auto", height = "auto", ppi = 72,
+  scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object}
@@ -22,6 +23,12 @@ column1: colnames of data
 column2: corresponding column type
 column3: label (optional, used instead of id)
 column4: sub_label (optional, added to id/ label)}
+
+\item{x.names}{Character vector of column names(data column names) which will be available for x-axis. Can be reactive.}
+
+\item{y.names}{Character vector of column names(data column names) which will be available for y-axis. Can be reactive.}
+
+\item{z.names}{Character vector of column names(data column names) which will be available for z-axis. Can be reactive.}
 
 \item{features}{data.table of the features to mark (first column = id)}
 

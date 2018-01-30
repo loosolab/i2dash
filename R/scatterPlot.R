@@ -60,6 +60,11 @@ scatterPlotUI <- function(id) {
                          id = ns("zaxis"),
                          title = "Data on z-axis",
                          label = T
+                       ),
+                       shiny::checkboxInput(
+                         inputId = ns("force_cat"),
+                         label = "Force categories",
+                         value = FALSE
                        )
             )
           ),
@@ -117,6 +122,9 @@ scatterPlotUI <- function(id) {
 #'                        column2: corresponding column type
 #'                        column3: label (optional, used instead of id)
 #'                        column4: sub_label (optional, added to id/ label)
+#' @param x.names Character vector of column names(data column names) which will be available for x-axis. Can be reactive.
+#' @param y.names Character vector of column names(data column names) which will be available for y-axis. Can be reactive.
+#' @param z.names Character vector of column names(data column names) which will be available for z-axis. Can be reactive.
 #' @param features data.table of the features to mark (first column = id)
 #' @param markerReac reactive containing inputs of marker module.
 #' @param plot.method Choose to rather render a 'interactive' or 'static' plot. Defaults to 'static'.
@@ -130,7 +138,7 @@ scatterPlotUI <- function(id) {
 #' @details Make sure to have the same columnnames in data and features.
 #'
 #' @export
-scatterPlot <- function(input, output, session, data, types, features = NULL, markerReac = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
+scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.names = NULL, z.names = NULL, features = NULL, markerReac = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
   #handle reactive data
   data.r <- shiny::reactive({
     if(shiny::is.reactive(data)){
@@ -174,6 +182,58 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
          scale = scale)
   })
 
+  # available types for corresponding axis
+  types_x <- shiny::reactive({
+    if(shiny::is.reactive(types)) {
+      t <- types()
+    } else {
+      t <- types
+    }
+
+    if(shiny::is.reactive(x.names)) {
+      x <- x.names()
+    } else {
+      x <- x.names
+    }
+    if(is.null(x)) return(t)
+
+    t[key %in% x]
+  })
+
+  types_y <- shiny::reactive({
+    if(shiny::is.reactive(types)) {
+      t <- types()
+    } else {
+      t <- types
+    }
+
+    if(shiny::is.reactive(y.names)) {
+      y <- y.names()
+    } else {
+      y <- y.names
+    }
+    if(is.null(y)) return(t)
+
+    t[key %in% y]
+  })
+
+  types_z <- shiny::reactive({
+    if(shiny::is.reactive(types)) {
+      t <- types()
+    } else {
+      t <- types
+    }
+
+    if(shiny::is.reactive(z.names)) {
+      z <- z.names()
+    } else {
+      z <- z.names
+    }
+    if(is.null(z)) return(t)
+
+    t[key %in% z]
+  })
+
   #Fetch the reactive guide for this module
   guide <- scatterPlotGuide(session, !is.null(markerReac))
   shiny::observeEvent(input$guide, {
@@ -192,9 +252,10 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
     shinyjs::reset("line")
     shinyjs::reset("pointsize")
     shinyjs::reset("labelsize")
-    xaxis <<- shiny::callModule(columnSelector, "xaxis", type.columns = types, columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
-    yaxis <<- shiny::callModule(columnSelector, "yaxis", type.columns = types, columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
-    zaxis <<- shiny::callModule(columnSelector, "zaxis", type.columns = types, columnTypeLabel = "Column type to choose from", multiple = FALSE, none = TRUE)
+    shinyjs::reset("force_cat")
+    xaxis <<- shiny::callModule(columnSelector, "xaxis", type.columns = types_x, columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
+    yaxis <<- shiny::callModule(columnSelector, "yaxis", type.columns = types_y, columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
+    zaxis <<- shiny::callModule(columnSelector, "zaxis", type.columns = types_z, columnTypeLabel = "Column type to choose from", multiple = FALSE, none = TRUE)
     colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = list("sequential", "diverging"), winsorize = winsorize)
     transform_x <<- shiny::callModule(transformation, "transform_x", data = data_x)
     transform_y <<- shiny::callModule(transformation, "transform_y", data = data_y)
@@ -211,9 +272,9 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
     }
   })
 
-  xaxis <- shiny::callModule(columnSelector, "xaxis", type.columns = types, columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
-  yaxis <- shiny::callModule(columnSelector, "yaxis", type.columns = types, columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
-  zaxis <- shiny::callModule(columnSelector, "zaxis", type.columns = types, columnTypeLabel = "Column type to choose from", labelLabel = "Color label", multiple = FALSE, none = TRUE)
+  xaxis <- shiny::callModule(columnSelector, "xaxis", type.columns = types_x, columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
+  yaxis <- shiny::callModule(columnSelector, "yaxis", type.columns = types_y, columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
+  zaxis <- shiny::callModule(columnSelector, "zaxis", type.columns = types_z, columnTypeLabel = "Column type to choose from", labelLabel = "Color label", multiple = FALSE, none = TRUE)
 
   colorPicker <- shiny::callModule(colorPicker2, "color", distribution = list("sequential", "diverging"), winsorize = winsorize)
   transform_x <- shiny::callModule(transformation, "transform_x", data = data_x)
@@ -354,7 +415,8 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
       width = size()$width,
       height = size()$height,
       ppi = size()$ppi,
-      scale = size()$scale
+      scale = size()$scale,
+      categorized = if(input$force_cat || ncol(result.data()$processed.data) >= 4 && !is.numeric(result.data()$processed.data[[4]])) TRUE else FALSE
     )
 
     progress$set(1)
@@ -472,7 +534,8 @@ scatterPlotGuide <- function(session, marker = FALSE) {
       Use upper/ lower limit to customize the axis limits.",
     "guide_zaxis" = "<h4>Data selection: z-axis</h4>
       Select a column type for visualization, then select an individual column of the chosen type. The data from the selected column will be mapped onto a color scale. <br />
-      You can also set a customized label for the color bar. If left empty, the column name will be used as default.",
+      You can also set a customized label for the color bar. If left empty, the column name will be used as default.
+      If there is a non numeric column selected scatterplot will attempt to do a categorized coloring approach, whereas numeric data will result in a gradient. Use 'force categories' to achieve categorization with numeric values.",
     "guide_color" = "<h4>Color palettes</h4>
       Based on the data distribution, select either a sequential or diverging color palette.<br/>
       Choose the range of the color legend by defining it's upper and lower limits with 'Winsorize to upper/lower'. Be aware that out of bounds values will be mapped to their nearest color.<br/>
