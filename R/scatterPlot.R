@@ -293,6 +293,36 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
     })
   }
 
+  # show warning if there would more than 10 categories
+  shiny::observe({
+    shiny::req(!is.null(zaxis$selectedColumn()))
+
+    # something selected?
+    if(zaxis$selectedColumn() != "") {
+      # categories used?
+      if(input$force_cat || !is.numeric(data.r()[[zaxis$selectedColumn()]])) {
+        cat_num <- length(unique(data.r()[[zaxis$selectedColumn()]]))
+
+        if(cat_num > 10) {
+          shiny::showNotification(
+            id = session$ns("cat-limit"),
+            paste("Warning! There are", cat_num, "different categories selected. This can result in unexpected behavior. Recommended are 10 or less categories."),
+            duration = NULL,
+            type = "warning"
+          )
+
+          shinyjs::runjs(paste0("$(document.getElementById('", paste0("shiny-notification-", session$ns("cat-limit")), "')).addClass('notification-position-center');"))
+        } else {
+          shiny::removeNotification(session$ns("cat-limit"))
+        }
+      } else {
+        shiny::removeNotification(session$ns("cat-limit"))
+      }
+    } else {
+      shiny::removeNotification(session$ns("cat-limit"))
+    }
+  })
+
   transformed_data <- shiny::reactive({
     #reassemble after transformation
     if(zaxis$selectedColumn() != ""){
@@ -345,7 +375,7 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
             duration = NULL,
             type = "warning"
           )
-          shinyjs::addClass(selector = paste0("#shiny-notification-", session$ns("label-limit")), class = "notification-position-center")
+          shinyjs::runjs(paste0("$(document.getElementById('", paste0("shiny-notification-", session$ns("label-limit")), "')).addClass('notification-position-center');"))
         }
       }
 
