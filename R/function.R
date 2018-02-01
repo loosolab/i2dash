@@ -483,10 +483,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
                                  heatmap_layers = ggplot2::theme(text = ggplot2::element_text(size = 12 * scale))
     )
 
-    # scale axis ticks
-    ticks <- list(tickfont = list(size = 12 * scale))
-
-    plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size), xaxis = ticks, yaxis2 = ticks)
+    plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size))
 
     # decide which sizes should be used
     if(width == "auto") {
@@ -517,14 +514,16 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     plot$x$layout$width <- width
     plot$x$layout$height <- height
 
-    #address correct axis
+    # address correct axis
+    # scale axis tickfont
+    ticks <- list(size = 12 * scale)
     if(clustering == "both" || clustering == "column"){
-      plot <- plotly::layout(plot, xaxis = list(showticklabels = column.label),
-                             yaxis2 = list(showticklabels = row.label)
+      plot <- plotly::layout(plot, xaxis = list(showticklabels = column.label, tickfont = ticks),
+                             yaxis2 = list(showticklabels = row.label, tickfont = ticks)
       )
     }else if(clustering == "row" || clustering == "none"){
-      plot <- plotly::layout(plot, xaxis = list(showticklabels = column.label),
-                             yaxis = list(showticklabels = row.label)
+      plot <- plotly::layout(plot, xaxis = list(showticklabels = column.label, tickfont = ticks),
+                             yaxis = list(showticklabels = row.label, tickfont = ticks)
       )
     }
 
