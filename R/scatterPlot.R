@@ -323,6 +323,15 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
     }
   })
 
+  # disable plot if mandatory x- or y-axis missing
+  shiny::observe({
+    if(!isTruthy(xaxis$selectedColumn()) || !isTruthy(yaxis$selectedColumn())) {
+      shinyjs::disable("plot")
+    } else {
+      shinyjs::enable("plot")
+    }
+  })
+
   transformed_data <- shiny::reactive({
     #reassemble after transformation
     if(zaxis$selectedColumn() != ""){
