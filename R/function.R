@@ -483,7 +483,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
                                  heatmap_layers = ggplot2::theme(text = ggplot2::element_text(size = 12 * scale))
     )
 
-    plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size))
+    plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size), showlegend = FALSE)
 
     # decide which sizes should be used
     if(width == "auto") {
