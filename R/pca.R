@@ -171,21 +171,16 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
 
   #update dimension inputs
   shiny::observe({
-    col.num <- length(columnSelect$selectedColumns())
-    if(col.num < 3 | nrow(data.r()) < 3 | is.na(input$dimA) | is.na(input$dimB)){
+    col.num <- length(shiny::req(columnSelect$selectedColumns()))
+    if(col.num < 3 || nrow(shiny::isolate(data.r())) < 3 || is.na(input$dimA) || is.na(input$dimB)){
       shinyjs::disable("plot")
 
       # show warning if not enough selected
-      if(col.num > 0) {
-        shiny::showNotification(
-          ui = "Not enough columns selected! At least 3 needed for plotting.",
-          id = "warning",
-          type = "warning"
-        )
-      }else {
-        shiny::removeNotification("warning")
-      }
-
+      shiny::showNotification(
+        ui = "Not enough columns/ rows selected! At least 3 of each needed for plotting.",
+        id = "warning",
+        type = "warning"
+      )
     }else{
       shiny::removeNotification("warning")
       shinyjs::enable("plot")
