@@ -336,6 +336,12 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
 
           plot <- plot()$plot
 
+          # handle error
+          if(is(plot, "try-error")) {
+            # TODO add logging
+            stop("An error occured! Please try a different dataset.")
+          }
+
           progress$set(1)
           return(ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom"))
         }

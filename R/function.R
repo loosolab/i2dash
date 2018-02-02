@@ -572,7 +572,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     row.names(prep.data) <- row.label.strings
     colnames(prep.data) <- column.label.strings
 
-    plot <- ComplexHeatmap::Heatmap(
+    plot <- try(ComplexHeatmap::Heatmap(
       prep.data,
       name = unitlabel,
       col = colors,
@@ -602,7 +602,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
         labels_gp = grid::gpar(fontsize = 8 * scale),
         grid_height = grid::unit(0.15 * scale, "inches")
       )
-    )
+    ))
 
     #width/ height calculation
     col_names_maxlength_label_width=max(sapply(colnames(prep.data), graphics::strwidth, units="in", font = 12))	#longest column label when plotted in inches
