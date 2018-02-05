@@ -334,9 +334,9 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
 
   output$geneView <- shiny::renderUI({
     if(plot.method == "interactive"){
-      plotly::plotlyOutput(session$ns("interactive"))
+      shinycssloaders::withSpinner(plotly::plotlyOutput(session$ns("interactive")), proxy.height = "800px")
     }else if (plot.method == "static"){
-      shiny::plotOutput(session$ns("static"))
+      shinycssloaders::withSpinner(shiny::plotOutput(session$ns("static")), proxy.height = "800px")
     }
   })
 

@@ -14,7 +14,7 @@ featureSelectorUI <- function(id){
       shiny::fluidRow(
         shinydashboard::box(width = 12, collapsible = TRUE,
           shiny::div(id = ns("guide_table"),
-            DT::dataTableOutput(ns("table")),
+            shinycssloaders::withSpinner(DT::dataTableOutput(ns("table"))),
             shiny::br(),
             shiny::uiOutput(ns("row_select"))
           )

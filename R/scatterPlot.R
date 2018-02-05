@@ -226,11 +226,11 @@ scatterPlot <- function(input, output, session, data, types, features = NULL, ma
   # select container dependend on plot.method
   if(plot.method == "static") {
     output$scatter <- shiny::renderUI({
-      shiny::plotOutput(outputId = session$ns("static"))
+      shinycssloaders::withSpinner(shiny::plotOutput(outputId = session$ns("static")), proxy.height = "800px")
     })
   }else if(plot.method == "interactive") {
     output$scatter <- shiny::renderUI({
-      plotly::plotlyOutput(outputId = session$ns("interactive"))
+      shinycssloaders::withSpinner(plotly::plotlyOutput(outputId = session$ns("interactive")), proxy.height = "800px")
     })
   }
 

@@ -302,7 +302,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
   #render choosen plotUI
   if(plot.method == "interactive"){
     output$heatmap <- shiny::renderUI({
-      plotly::plotlyOutput(session$ns("interactive"))
+      shinycssloaders::withSpinner(plotly::plotlyOutput(session$ns("interactive")), proxy.height = "800px")
     })
 
     output$interactive <- plotly::renderPlotly({
@@ -325,7 +325,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
     })
   }else{
     output$heatmap <- shiny::renderUI({
-      shiny::plotOutput(session$ns("static"))
+      shinycssloaders::withSpinner(shiny::plotOutput(session$ns("static")), proxy.height = "800px")
     })
 
     output$static <- shiny::renderPlot(
