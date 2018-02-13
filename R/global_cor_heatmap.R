@@ -225,6 +225,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
 
   # reset ui
   shiny::observeEvent(input$reset, {
+    log_message("Global correlation heatmap: reset", "INFO", token = session$token)
+
     shinyjs::reset("calc")
     shinyjs::reset("calc_method")
     shinyjs::reset("distance")
@@ -328,6 +330,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
 
   # build plot object
   plot <- shiny::eventReactive(input$plot, {
+    log_message("Global correlation heatmap: computing plot...", "INFO", token = session$token)
+
     # enable downloadButton
     shinyjs::enable("download")
     # show plot
@@ -377,6 +381,7 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     # update progress indicator
     progress$set(1)
 
+    log_message("Global correlation heatmap: done.", "INFO", token = session$token)
     return(plot)
   })
 
@@ -389,6 +394,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
         if(clearPlot()) {
           return()
         } else {
+          log_message("Global correlation heatmap: render plot static", "INFO", token = session$token)
+
           # progress indicator
           progress <- shiny::Progress$new()
           on.exit(progress$close())
@@ -410,6 +417,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
       if(clearPlot()) {
         return()
       } else {
+        log_message("Global correlation heatmap: render plot interactive", "INFO", token = session$token)
+
         # progress indicator
         progress <- shiny::Progress$new()
         on.exit(progress$close())
@@ -427,6 +436,8 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
 
   output$download <- shiny::downloadHandler(filename = "global_correlation_heatmap.zip",
                                             content = function(file) {
+                                              log_message("Global correlation heatmap: download", "INFO", token = session$token)
+
                                               download(file = file, filename = "global_correlation_heatmap.zip", plot = plot()$plot, width = plot()$width, height = plot()$height, ppi = plot()$ppi, ui = user_input())
                                             })
 

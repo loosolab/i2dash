@@ -248,6 +248,8 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
 
   #reset ui
   shiny::observeEvent(input$reset, {
+    log_message("Scatterplot: reset", "INFO", token = session$token)
+
     shinyjs::reset("density")
     shinyjs::reset("line")
     shinyjs::reset("pointsize")
@@ -411,6 +413,8 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
   shinyjs::disable("download")
 
   plot <- shiny::eventReactive(input$plot, {
+    log_message("Scatterplot: computing plot...", "INFO", token = session$token)
+
     #enable downloadbutton
     shinyjs::enable("download")
     clearPlot(FALSE)
@@ -459,6 +463,7 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
     )
 
     progress$set(1)
+    log_message("Scatterplot: done.", "INFO", token = session$token)
     return(plot)
   })
 
@@ -483,6 +488,8 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
         if(clearPlot()) {
           return()
         } else {
+          log_message("Scatterplot: render plot static", "INFO", token = session$token)
+
           plot()$plot
         }
       }
@@ -492,6 +499,8 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
       if(clearPlot()) {
         return()
       } else {
+        log_message("Scatterplot: render plot interactive", "INFO", token = session$token)
+
         #new progress indicator
         progress <- shiny::Progress$new()
         on.exit(progress$close())
@@ -507,6 +516,7 @@ scatterPlot <- function(input, output, session, data, types, x.names = NULL, y.n
 
   output$download <- shiny::downloadHandler(filename = "scatterPlot.zip",
     content = function(file) {
+      log_message("Scatterplot: download", "INFO", token = session$token)
       download(file = file, filename = "scatterPlot.zip", plot = plot()$plot, width = plot()$width, height = plot()$height, ppi = plot()$ppi, ui = user_input())
     }
   )

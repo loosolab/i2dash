@@ -213,6 +213,8 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
 
   # reset ui
   shiny::observeEvent(input$reset, {
+    log_message("Heatmap: reset", "INFO", token = session$token)
+
     shinyjs::reset("cluster.distance")
     shinyjs::reset("cluster.method")
     shinyjs::reset("clustering")
@@ -254,6 +256,8 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
   shinyjs::disable("download")
 
   plot <- shiny::eventReactive(input$plot, {
+    log_message("Heatmap: computing plot...", "INFO", token = session$token)
+
     # enable downloadButton
     shinyjs::enable("download")
     clearPlot(FALSE)
@@ -292,6 +296,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
 
     progress$set(1)
 
+    log_message("Heatmap: done.", "INFO", token = session$token)
     return(plot)
   })
 
@@ -305,6 +310,8 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
       if(clearPlot()) {
         return()
       } else {
+        log_message("Heatmap: render plot interactive", "INFO", token = session$token)
+
         #new progress indicator
         progress <- shiny::Progress$new()
         on.exit(progress$close())
@@ -329,6 +336,8 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
         if(clearPlot()) {
           return()
         } else {
+          log_message("Heatmap: render plot static", "INFO", token = session$token)
+
           #new progress indicator
           progress <- shiny::Progress$new()
           on.exit(progress$close())
@@ -350,6 +359,8 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
 
   output$download <- shiny::downloadHandler(filename = "heatmap.zip",
                                             content = function(file) {
+                                              log_message("Heatmap: download", "INFO", token = session$token)
+
                                               download(file = file, filename = "heatmap.zip", plot = plot()$plot, width = plot()$width, height = plot()$height, ppi = plot()$ppi, ui = user_input())
                                             })
 
