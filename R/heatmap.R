@@ -158,7 +158,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
   shiny::observe({
     shiny::req(data.r())
 
-    if(length(columns$selectedColumns()) > 0){
+    if(shiny::isTruthy(columns$selectedColumns())){
       if(input$clustering != "none") { # clustering
         if(plot.method == "static" && nrow(data.r()) > static) { # cluster limitation (static)
           shiny::showNotification(
@@ -289,6 +289,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
       plot.method = plot.method,
       winsorize.colors = colorPicker()$winsorize
     )
+
     progress$set(1)
 
     return(plot)
@@ -335,6 +336,12 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
 
           plot <- plot()$plot
 
+          # handle error
+          if(is(plot, "try-error")) {
+            # TODO add logging
+            stop("An error occured! Please try a different dataset.")
+          }
+
           progress$set(1)
           return(ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom"))
         }
@@ -372,20 +379,45 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
     all <- list(selection = selection, clustering = clustering, options = options)
   })
 
-  #enable/ disable plot button
+  # enable/ disable plot button
+  # show warning if disabled
   shiny::observe({
-    if(length(columns$selectedColumns()) <= 0){ # columns selected
-      shinyjs::disable("plot")
-    } else {
-      # clustering
-      if(input$clustering != "none") {
-        if(plot.method == "static" && nrow(data.r()) > static || plot.method == "interactive" && nrow(data.r()) > interactive) {
-          shinyjs::disable("plot")
-        } else {
+    shinyjs::disable("plot")
+    show_warning <- TRUE
+
+    # are columns selected?
+    if(shiny::isTruthy(columns$selectedColumns())) {
+      row.num <- nrow(shiny::isolate(data.r()))
+      col.num <- length(columns$selectedColumns())
+
+      # minimal heatmap possible (greater 1x1)?
+      if(row.num > 1 || col.num > 1) {
+        # no clustering for single rows or columns
+        if(row.num == 1 && !is.element(input$clustering, c("both", "row"))) {
+          show_warning <- FALSE
+          shinyjs::enable("plot")
+        } else if(col.num == 1 && !is.element(input$clustering, c("both", "column"))) {
+          show_warning <- FALSE
+          shinyjs::enable("plot")
+        } else if(row.num > 1 && col.num > 1) { # no border case heatmaps
+          show_warning <- FALSE
           shinyjs::enable("plot")
         }
+      }
+
+      if(show_warning) {
+        shiny::showNotification(
+          ui = "Warning! Insufficient columns/ rows. Either disable the respective clustering or expand the dataset.",
+          id = "insuf_data",
+          type = "warning"
+        )
       } else {
-        shinyjs::enable("plot")
+        shiny::removeNotification("insuf_data")
+      }
+
+      # maximum heatmap reached?
+      if(plot.method == "static" && row.num > static || plot.method == "interactive" && row.num > interactive) {
+        shinyjs::disable("plot")
       }
     }
   })

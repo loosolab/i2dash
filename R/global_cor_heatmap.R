@@ -258,9 +258,24 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     rintrojs::introjs(session, options = list(steps = guide()))
   })
 
+  # show warning if not enough columns selected
+  shiny::observe({
+    shiny::req(columns$selectedColumns())
+
+    if(length(columns$selectedColumns()) < 2) {
+      shiny::showNotification(
+        ui = "Warning! At least two columns needed. Please select more.",
+        id = "less_data_warning",
+        type = "warning"
+      )
+    } else {
+      shiny::removeNotification("less_data_warning")
+    }
+  })
+
   # enable/ disable plot button
   shiny::observe({
-    if(length(columns$selectedColumns()) <= 1) {
+    if(!shiny::isTruthy(columns$selectedColumns()) || length(columns$selectedColumns()) < 2) {
       shinyjs::disable("plot")
     }else {
       shinyjs::enable("plot")

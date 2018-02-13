@@ -141,7 +141,7 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
   })
 
   out.type <- shiny::reactive(input$select.type)
-  out.selectedColumns <- shiny::reactive(ifelse(input$select.column == "None", "", input$select.column))
+  out.selectedColumns <- shiny::reactive(if(shiny::isTruthy(input$select.column) && input$select.column != "None") input$select.column else "")
   out.label <- shiny::reactive({
     if(is.null(input$select.label)) {
       label <- create_label()

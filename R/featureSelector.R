@@ -204,7 +204,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
   })
 
   # access data table information
-  proxy <- DT::dataTableProxy(session$ns("table"))
+  proxy <- DT::dataTableProxy("table")
 
   # select rows via row_selector
   shiny::observe({
