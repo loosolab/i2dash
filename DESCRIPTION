@@ -42,7 +42,7 @@ Imports: shiny,
     rjson,
     FactoMineR,
     factoextra,
-    heatmaply (>= 0.14.0),
+    heatmaply (>= 0.14.1),
     shinyBS,
     shinythemes
 RoxygenNote: 6.0.1
