@@ -22,10 +22,12 @@ set_logger <- function(logger, token = NULL) {
 #' @param level Set priority level of the message (number or character). See \code{\link[log4r]{levellog}}.
 #' @param token Use token bound to this identifier.
 #'
+#' @details Does nothing if logger doesn't exist.
+#'
 log_message <- function(message, level = c("DEBUG", "INFO", "WARN", "ERROR", "FATAL"), token = NULL) {
-  logger <- get(paste0("logger", token), envir = wilson.globals)
+  if(exists(paste0("logger", token), envir = wilson.globals)) {
+    logger <- get(paste0("logger", token), envir = wilson.globals)
 
-  if(!is.null(logger)) {
     switch(level,
       DEBUG = log4r::debug(logger, message),
       INFO = log4r::info(logger, message),
