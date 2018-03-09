@@ -3,6 +3,7 @@ source("../R/and.R")
 source("../R/orNumeric.R")
 source("../R/orTextual.R")
 source("../R/function.R")
+source("../R/global.R")
 
 ###Test Data
 table <- data.table::data.table(w = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 11),
@@ -34,7 +35,7 @@ server <- function(input, output, session) {
     table
   })
 
-  mod <-callModule(and, "id", data = data, show.elements = reactive(input$column), delimiter = delimiter, multiple = multiple, contains = contains, ranged = ranged, step = step, selection.default = "all", reset = reactive(input$reset))
+  mod <-callModule(and, "id", data = data, show.elements = reactive(input$column), delimiter = delimiter, multiple = multiple, contains = contains, ranged = ranged, step = step, reset = reactive(input$reset))
 
   output$id.out <- renderPrint({
     print(mod())

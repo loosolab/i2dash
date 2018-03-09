@@ -346,7 +346,7 @@ heatmap <- function(input, output, session, data, types, plot.method = "static",
           plot <- plot()$plot
 
           # handle error
-          if(is(plot, "try-error")) {
+          if(methods::is(plot, "try-error")) {
             # TODO add logging
             stop("An error occured! Please try a different dataset.")
           }

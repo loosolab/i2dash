@@ -8,6 +8,7 @@ source("../R/transformation.R")
 source("../R/heatmap.R")
 source("../R/label.R")
 source("../R/limit.R")
+source("../R/global.R")
 
 ####Test Data
 data <- data.table::as.data.table(mtcars, keep.rowname = "id")

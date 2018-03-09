@@ -17,3 +17,6 @@ log_message(message, level = c("DEBUG", "INFO", "WARN", "ERROR", "FATAL"),
 \description{
 logger message convenience function
 }
+\details{
+Does nothing if logger doesn't exist.
+}

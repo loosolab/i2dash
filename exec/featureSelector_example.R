@@ -5,6 +5,7 @@ source("../R/orNumeric.R")
 source("../R/orTextual.R")
 source("../R/featureSelector.R")
 source("../R/function.R")
+source("../R/global.R")
 
 # test data
 data <- data.table::as.data.table(mtcars, keep.rowname = "id")

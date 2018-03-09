@@ -46,6 +46,8 @@ Imports: shiny,
     shinyBS,
     shinythemes,
     shinycssloaders,
-    log4r
+    log4r,
+    openssl,
+    methods
 RoxygenNote: 6.0.1
 biocViews:
