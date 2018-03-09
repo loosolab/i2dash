@@ -9,6 +9,7 @@ source("../R/scatterPlot.R")
 source("../R/marker.R")
 source("../R/limit.R")
 source("../R/label.R")
+source("../R/global.R")
 
 ####Test Data
 data <- data.table::data.table(id = rownames(mtcars), mtcars)
