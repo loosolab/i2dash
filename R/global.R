@@ -11,7 +11,7 @@ wilson.globals <- new.env(parent = emptyenv())
 #'
 #' @export
 set_logger <- function(logger, token = NULL) {
-  if(is.null(logger) || is(logger, "logger")) {
+  if(is.null(logger) || methods::is(logger, "logger")) {
     assign(x = paste0("logger", token), value = logger, envir = wilson.globals)
   }
 }
