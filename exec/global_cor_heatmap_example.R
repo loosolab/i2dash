@@ -6,6 +6,7 @@ source("../R/columnSelector.R")
 source("../R/transformation.R")
 source("../R/global_cor_heatmap.R")
 source("../R/limit.R")
+source("../R/global.R")
 
 # test data
 data <- data.table::as.data.table(mtcars, keep.rowname = "id")
