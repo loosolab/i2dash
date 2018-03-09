@@ -8,6 +8,7 @@ source("../R/geneView.R")
 source("../R/columnSelector.R")
 source("../R/label.R")
 source("../R/limit.R")
+source("../R/global.R")
 
 ####Test Data
 data <- data.table::data.table(id = rownames(mtcars), names = rownames(mtcars), mtcars)
