@@ -37,7 +37,7 @@ andUI <- function(id) {
 #'
 #' @export
 and <- function(input, output, session, data, show.elements = NULL, element.grouping = NULL, column.labels = NULL, delimiter = NULL, multiple = TRUE, contains = FALSE, ranged = FALSE, step = 100, reset = NULL) {
-  #handle reactive data
+  # handle reactive data
   data.r <- shiny::reactive({
     if(shiny::is.reactive(data)){
       data()
@@ -60,7 +60,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
     return(show.elements)
   })
 
-  #handle reactive grouping
+  # handle reactive grouping
   element.grouping.r <- shiny::reactive({
     if(shiny::is.reactive(element.grouping)){
       element.grouping()
@@ -70,41 +70,41 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
   })
 
   parameter <- shiny::reactive({
-    #get column labels
+    # get column labels
     if(is.null(column.labels)){
       column.labels <- names(data.r())
     }else{
       column.labels <- column.labels
     }
-    #fill multiple if vector is too small
+    # fill multiple if vector is too small
     if(shiny::is.reactive(multiple)) {
       multiple <- multiple()
     }
     if (length(multiple) < ncol(data.r())) {
       multiple <- rep(multiple, length.out = ncol(data.r()))
     }
-    #fill contains if vector is too small
+    # fill contains if vector is too small
     if(shiny::is.reactive(contains)) {
       contains <- contains()
     }
     if (length(contains) < ncol(data.r())) {
       contains <- rep(contains, length.out = ncol(data.r()))
     }
-    #fill ranged if vector is too small
+    # fill ranged if vector is too small
     if(shiny::is.reactive(ranged)) {
       ranged <- ranged()
     }
     if (length(ranged) < ncol(data.r())) {
       ranged <- rep(ranged, length.out = ncol(data.r()))
     }
-    #fill delimiter if vector is too small
+    # fill delimiter if vector is too small
     if(shiny::is.reactive(delimiter)) {
       delimiter <- delimiter()
     }
     if (length(delimiter) < ncol(data.r()) & !is.null(delimiter)) {
       delimiter <- rep(delimiter, length.out = ncol(data.r()))
     }
-    #fill step if vector is too small
+    # fill step if vector is too small
     if(shiny::is.reactive(step)) {
       step <- step()
     }
@@ -116,7 +116,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
   })
 
   output$and <- shiny::renderUI({
-    #new progress indicator
+    # new progress indicator
     progress <- shiny::Progress$new()
     on.exit(progress$close())
     progress$set(0, message = "Render orModules:")
@@ -139,18 +139,18 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
           progress$inc(step, detail = x)
 
           if(is.numeric(data[[x]])){
-            ui <- orNumericUI(id = session$ns(paste0("orN-", make.names(x))))
+            ui <- orNumericUI(id = session$ns(openssl::sha1(x)))
           }else{
-            ui <- orTextualUI(id = session$ns(paste0("orT-", make.names(x))))
+            ui <- orTextualUI(id = session$ns(openssl::sha1(x)))
           }
 
-          if(length(ui) < 4){ #orTextual
+          if(length(ui) < 4){ # orTextual
             shiny::tagList(shiny::fluidRow(
               shiny::column(width = 4, ui[1]),
               shiny::column(width = 3, ui[2]),
               shiny::column(width = 1, offset = 4, ui[3])
             ))
-          }else{ #orNumeric
+          }else{ # orNumeric
             shiny::tagList(shiny::fluidRow(
               shiny::column(width = 4, ui[1]),
               shiny::column(width = 1, ui[2]),
@@ -167,19 +167,19 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
       return <- lapply(1:ncol(data), function(x) {
         progress$inc(step, detail = names(data)[x])
         if (is.numeric(data[[x]])) {
-          ui <- orNumericUI(id = session$ns(paste0("orN-", make.names(names(data)[x]))))
+          ui <- orNumericUI(id = session$ns(openssl::sha1(names(data)[x])))
 
         } else{
-          ui <- orTextualUI(id = session$ns(paste0("orT-", make.names(names(data)[x]))))
+          ui <- orTextualUI(id = session$ns(openssl::sha1(names(data)[x])))
         }
 
-        if(length(ui) < 4){ #orTextual
+        if(length(ui) < 4){ # orTextual
           shiny::tagList(shiny::fluidRow(
             shiny::column(width = 4, ui[1]),
             shiny::column(width = 3, ui[2]),
             shiny::column(width = 1, offset = 4, ui[3])
           ))
-        }else{ #orNumeric
+        }else{ # orNumeric
           shiny::tagList(shiny::fluidRow(
             shiny::column(width = 4, ui[1]),
             shiny::column(width = 1, ui[2]),
@@ -190,7 +190,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
       })
     }
 
-    #initialize new modules
+    # initialize new modules
     modules()
 
     shiny::tagList(return)
@@ -199,7 +199,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
   # initialize or modules
   # returns a vector containing modules
   modules <- shiny::reactive({
-    #new progress indicator
+    # new progress indicator
     progress <- shiny::Progress$new()
     on.exit(progress$close())
     progress$set(0, message = "Filtering Module:")
@@ -211,7 +211,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
         if (parameter()$ranged[x]) {
           shiny::callModule(
             module = orNumeric,
-            id = paste0("orN-", make.names(names(data.r())[x])),
+            id = openssl::sha1(names(data.r())[x]),
             choices = data.r()[[x]],
             value = c(floor(min(data.r()[[x]], na.rm = TRUE)), ceiling(max(data.r()[[x]], na.rm = TRUE))),
             label = parameter()$column.labels[x],
@@ -223,7 +223,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
         } else{
           shiny::callModule(
             module = orNumeric,
-            id = paste0("orN-", make.names(names(data.r())[x])),
+            id = openssl::sha1(names(data.r())[x]),
             choices = data.r()[[x]],
             value = mean(data.r()[[x]], na.rm = TRUE),
             label = parameter()$column.labels[x],
@@ -236,7 +236,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
       } else{
         shiny::callModule(
           module = orTextual,
-          id = paste0("orT-", make.names(names(data.r())[x])),
+          id = openssl::sha1(names(data.r())[x]),
           choices = data.r()[[x]],
           label = parameter()$column.labels[x],
           delimiter = parameter()$delimiter[x],
@@ -249,7 +249,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
   })
 
   selection <- shiny::reactive({
-    #new progress indicator
+    # new progress indicator
     progress <- shiny::Progress$new()
     on.exit(progress$close())
     progress$set(0, message = "Apply Filter")
@@ -259,7 +259,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
     or.modules <- modules()
 
     step <- 0.9 / length(or.modules)
-    #OR modules selection
+    # OR modules selection
     or.selection.bool <- sapply(or.modules, function(x) {
       progress$inc(step, detail = x()$label)
       x()$bool
@@ -270,12 +270,12 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
       }
     })
 
-    #cast to matrix if sapply returns vector
+    # cast to matrix if sapply returns vector
     if(is.vector(or.selection.bool)){
       or.selection.bool <- t(as.matrix(or.selection.bool))
     }
 
-    #selected rows (and selection)
+    # selected rows (and selection)
     and.selection.bool <- apply(or.selection.bool, 1, all)
 
     or.selection.text <- unlist(or.selection.text)
