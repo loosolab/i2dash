@@ -120,6 +120,7 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
       }
     }
   })
+
   # handle reactive sizes
   size <- shiny::reactive({
     width <- ifelse(shiny::is.reactive(width), width(), width)
@@ -171,9 +172,12 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     shiny::selectInput(session$ns("select"), label = "select data level", choices = unique(levels.r()))
   })
 
-  #update dimension inputs
+  # disable plot button on init
+  shinyjs::disable("plot")
+  # update dimension inputs
   shiny::observe({
     col.num <- length(shiny::req(columnSelect$selectedColumns()))
+
     if(col.num < 3 || nrow(shiny::isolate(data.r())) < 3 || is.na(input$dimA) || is.na(input$dimB)){
       shinyjs::disable("plot")
 
