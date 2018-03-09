@@ -34,7 +34,7 @@ featureSelectorUI <- function(id){
           ),
           shiny::div(id = ns("guide_and"),
                      shiny::br(),
-                     shiny::uiOutput(ns("and.container"))
+                     shiny::uiOutput(ns("and_container"))
                      )
         )
       )
@@ -64,7 +64,7 @@ featureSelectorUI <- function(id){
 #'
 #' @export
 featureSelector <- function(input, output, session, data, features = NULL, feature.grouping = NULL, delimiter = "|", multiple = TRUE, contains = FALSE, ranged = TRUE, step = 100, truncate = 30, selection.default = "all"){
-  #handle reactive data
+  # handle reactive data
   data.r <- shiny::reactive({
     if(shiny::is.reactive(data)){
       data.table::copy(data())
@@ -73,7 +73,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     }
   })
 
-  #handle reactive features
+  # handle reactive features
   features.r <- shiny::reactive({
     if(is.null(features)){
       names(data.r())
@@ -90,7 +90,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     }
   })
 
-  #handle reactive grouping
+  # handle reactive grouping
   feature.grouping.r <- shiny::reactive({
     if(shiny::is.reactive(feature.grouping)){
       feature.grouping()
@@ -149,13 +149,13 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     row_selector <<- shiny::callModule(orNumeric, "row_selector", choices = choices, value = value_wrapper, label = "Select n features from the top and/or bottom of the list", stepsize = 1)
   })
 
-  #Fetch reactive guide for this module
+  # Fetch reactive guide for this module
   guide <- featureSelectorGuide(session, !is.null(feature.grouping))
   shiny::observeEvent(input$guide, {
     rintrojs::introjs(session, options = list(steps = guide(), scrollToElement = FALSE))
   })
 
-  output$and.container <- shiny::renderUI({
+  output$and_container <- shiny::renderUI({
     andUI(session$ns("and"))
   })
 
@@ -172,7 +172,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
           ),
           shiny::column(
             width = 1,
-            #added css so that padding won't be added everytime (sums up) modal is shown
+            # added css so that padding won't be added everytime (sums up) modal is shown
             shiny::tags$style(type="text/css", "body {padding-right: 0px !important;}"),
             shiny::actionLink(session$ns("infobutton"), label = NULL, icon = shiny::icon("question-circle"))
           )
@@ -223,7 +223,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     }
   })
 
-  output$table <- DT::renderDataTable(options = list(pageLength = 5, scrollX = TRUE, deferRender = TRUE, processing = FALSE, #deferRender = only render visible part of table
+  output$table <- DT::renderDataTable(options = list(pageLength = 5, scrollX = TRUE, deferRender = TRUE, processing = FALSE, # deferRender = only render visible part of table
                                                         columnDefs = list(list(
                                                           targets = "_all",
                                                           render = DT::JS(
@@ -266,7 +266,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
                        )
     }
 
-    #TODO add order information to filter
+    # TODO add order information to filter
 
     # search text
     if(!is.null(input$table_search)) {
