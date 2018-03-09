@@ -4,6 +4,7 @@ library(shinydashboard)
 source("../R/columnSelector.R")
 source("../R/function.R")
 source("../R/pca.R")
+source("../R/global.R")
 
 #### Test Data
 data <- data.table::as.data.table(mtcars, keep.rowname = "id")
