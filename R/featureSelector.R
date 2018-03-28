@@ -229,7 +229,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
                                                           render = DT::JS(
                                                             "function(data, type, row) {",
                                                             paste("var length =", truncate),
-                                                            "return typeof data !== 'number' && type === 'display' && data.length > length ?",
+                                                            "return typeof data !== 'number' && data !== null && type === 'display' && data.length > length ?",
                                                             "'<span title=\"' + data + '\">' + data.substr(0, length) + '...</span>' : data;",
                                                             "}"
                                                           )
