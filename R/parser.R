@@ -303,7 +303,7 @@ parser <- function(file, dec = ".") {
   message(paste("Parsing file:", file))
 
   #number of rows for each part
-  file.lines <- Kmisc::readlines(file)
+  file.lines <- data.table::fread(file, header = FALSE, fill = TRUE, select = 1)[[1]]
   num.header <- length(grep("^!", file.lines))
   num.metadata <- length(grep("^#", file.lines))
 
