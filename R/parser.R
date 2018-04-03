@@ -303,9 +303,25 @@ parser <- function(file, dec = ".") {
   message(paste("Parsing file:", file))
 
   #number of rows for each part
-  file.lines <- data.table::fread(file, header = FALSE, fill = TRUE, select = 1)[[1]]
-  num.header <- length(grep("^!", file.lines))
-  num.metadata <- length(grep("^#", file.lines))
+  con <- file(file, open = "r")
+  num.header <- 0
+  num.metadata <- 0
+
+  tryCatch(expr = {
+    while(TRUE) {
+      line <- readLines(con = con, n = 1)
+
+      if(grepl("^!", line, perl = TRUE)) {
+        num.header <- num.header + 1
+      } else if(grepl("^#", line, perl = TRUE)) {
+        num.metadata <- num.metadata + 1
+      } else {
+        break
+      }
+    }
+  }, finally = {
+    close(con = con)
+  })
 
   ###parse header
   header <- data.table::fread(input = file, fill = TRUE, header = FALSE, dec = dec, nrows = num.header, integer64 = "double")
