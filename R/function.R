@@ -563,8 +563,10 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     #
     if(!is.null(winsorize.colors)) {
       breaks <- seq(winsorize.colors[1], winsorize.colors[2], length = length(colors))
-      colors <- circlize::colorRamp2(breaks, colors)
+    } else {
+      breaks <- seq(min(apply(data[, -1], 2, function(x) {min(x, na.rm = TRUE)})), max(apply(data[, -1], 2, function(x) {max(x, na.rm = TRUE)})), length = length(colors))
     }
+    colors <- circlize::colorRamp2(breaks, colors)
 
     #convert data to data.frame so rownames can be used for annotation
     prep.data <- as.data.frame(data[, -1])
