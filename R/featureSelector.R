@@ -28,7 +28,7 @@ featureSelectorUI <- function(id){
                             shiny::actionButton(ns("select"), "Select", style = "color: #fff; background-color: #3c8dbc"),
                             shiny::actionButton(ns("reset"), "Reset", style = "color: #fff; background-color: #3c8dbc"),
                             shiny::actionButton(ns("guide"), "Launch guide", style = "color: #fff; background-color: #3c8dbc", icon = shiny::icon("question-circle")),
-                            shiny::br("The SELECT button only evaluates the filter below. All selections in the table above will reset!")
+                            shiny::br("The SELECT button only evaluates the filter(s) below. Sorting or sub-selections based on the table above will reset!")
                             )
 
                         )
