@@ -331,6 +331,10 @@ parser <- function(file, dec = ".") {
   header.names <- gsub("=.*$", "", header, perl = TRUE)
   header <- as.list(gsub("^.*?=", "", header, perl = TRUE))
   names(header) <- header.names
+  # remove quotes from delimiter
+  if (!is.null(header$delimiter) && grepl(header$delimiter, pattern = '^".*"$', perl = TRUE)) {
+    header$delimiter <- substr(header$delimiter, start = 2, stop = nchar(header$delimiter) - 1)
+  }
 
   ###parse metadata
   metadata <- data.table::fread(input = file, skip = num.header, header = FALSE, nrows = num.metadata, fill = TRUE, dec = dec, integer64 = "double")
