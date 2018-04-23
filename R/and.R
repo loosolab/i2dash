@@ -237,7 +237,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
         shiny::callModule(
           module = orTextual,
           id = openssl::sha1(names(data.r())[x]),
-          choices = data.r()[[x]],
+          choices = as.character(data.r()[[x]]),
           label = parameter()$column.labels[x],
           delimiter = parameter()$delimiter[x],
           multiple = parameter()$multiple[x],
