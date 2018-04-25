@@ -162,11 +162,11 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     shinyjs::reset("dimB")
     shinyjs::reset("pointsize")
     shinyjs::reset("labelsize")
-    columnSelect <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(types.r()[level %in% levels.r(), c("key", "level"), with = FALSE]), columnTypeLabel = "Column types to choose from")
+    columnSelect <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(types.r()[level %in% levels.r()]), columnTypeLabel = "Column types to choose from")
     clearPlot(TRUE)
   })
 
-  columnSelect <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(types.r()[level %in% levels.r(), c("key", "level"), with = FALSE]), columnTypeLabel = "Column types to choose from")
+  columnSelect <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(types.r()[level %in% levels.r()]), columnTypeLabel = "Column types to choose from")
 
   output$datalevel <- shiny::renderUI({
     shiny::selectInput(session$ns("select"), label = "select data level", choices = unique(levels.r()))
