@@ -111,7 +111,7 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
   })
   levels.r <- shiny::reactive({
     if(is.null(levels)){
-      metadata.r()[["level"]]
+      types.r()[["level"]]
     }else{
       if(shiny::is.reactive(levels)){
         levels()
