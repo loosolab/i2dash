@@ -324,16 +324,20 @@ parser <- function(file, dec = ".") {
   })
 
   ### parse header
-  header <- data.table::fread(input = file, fill = TRUE, header = FALSE, dec = dec, nrows = num.header, integer64 = "double")
-  # cut of leading !
-  header <- as.list(gsub("^!", "", header[[1]]))
-  # make named list
-  header.names <- gsub("=.*$", "", header, perl = TRUE)
-  header <- as.list(gsub("^.*?=", "", header, perl = TRUE))
-  names(header) <- header.names
-  # remove quotes from delimiter
-  if (!is.null(header$delimiter) && grepl(header$delimiter, pattern = '^".*"$', perl = TRUE)) {
-    header$delimiter <- substr(header$delimiter, start = 2, stop = nchar(header$delimiter) - 1)
+  if (num.header > 0) {
+    header <- data.table::fread(input = file, fill = TRUE, header = FALSE, dec = dec, nrows = num.header, integer64 = "double")
+    # cut of leading !
+    header <- as.list(gsub("^!", "", header[[1]]))
+    # make named list
+    header.names <- gsub("=.*$", "", header, perl = TRUE)
+    header <- as.list(gsub("^.*?=", "", header, perl = TRUE))
+    names(header) <- header.names
+    # remove quotes from delimiter
+    if (!is.null(header$delimiter) && grepl(header$delimiter, pattern = '^".*"$', perl = TRUE)) {
+      header$delimiter <- substr(header$delimiter, start = 2, stop = nchar(header$delimiter) - 1)
+    }
+  } else {
+    header <- NULL
   }
 
   ### parse metadata
