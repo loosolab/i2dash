@@ -8,8 +8,6 @@ featureSelectorGuide(session, grouping = FALSE)
 }
 \arguments{
 \item{session}{The shiny session}
-
-\item{grouping}{Logical if Text for grouping should be displayed (Default = FALSE).}
 }
 \value{
 A shiny reactive that contains the texts for the guide steps.
