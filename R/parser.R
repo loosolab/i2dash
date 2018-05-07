@@ -294,7 +294,7 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
 #' @param file Path to file that needs parsing.
 #' @param dec The decimal separator. See \code{\link[data.table]{fread}}.
 #'
-#' @return named list containing list(header = list(), metadata = data.table, data = data.table)
+#' @return Clarion object. See \code{\link[wilson]{Clarion}}
 #'
 #' @import data.table
 #'
@@ -302,18 +302,18 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
 parser <- function(file, dec = ".") {
   message(paste("Parsing file:", file))
 
-  #number of rows for each part
+  # number of rows for each part
   con <- file(file, open = "r")
   num.header <- 0
   num.metadata <- 0
 
   tryCatch(expr = {
-    while(TRUE) {
+    while (TRUE) {
       line <- readLines(con = con, n = 1)
 
-      if(grepl("^!", line, perl = TRUE)) {
+      if (grepl("^!", line, perl = TRUE)) {
         num.header <- num.header + 1
-      } else if(grepl("^#", line, perl = TRUE)) {
+      } else if (grepl("^#", line, perl = TRUE)) {
         num.metadata <- num.metadata + 1
       } else {
         break
@@ -323,11 +323,11 @@ parser <- function(file, dec = ".") {
     close(con = con)
   })
 
-  ###parse header
+  ### parse header
   header <- data.table::fread(input = file, fill = TRUE, header = FALSE, dec = dec, nrows = num.header, integer64 = "double")
-  #cut of leading !
+  # cut of leading !
   header <- as.list(gsub("^!", "", header[[1]]))
-  #make named list
+  # make named list
   header.names <- gsub("=.*$", "", header, perl = TRUE)
   header <- as.list(gsub("^.*?=", "", header, perl = TRUE))
   names(header) <- header.names
@@ -336,104 +336,24 @@ parser <- function(file, dec = ".") {
     header$delimiter <- substr(header$delimiter, start = 2, stop = nchar(header$delimiter) - 1)
   }
 
-  ###parse metadata
+  ### parse metadata
   metadata <- data.table::fread(input = file, skip = num.header, header = FALSE, nrows = num.metadata, fill = TRUE, dec = dec, integer64 = "double")
-  #cut off leading #
+  # cut off leading #
   metadata[, names(metadata)[1] := gsub("^#", "", metadata[[1]])]
-  #set first line as header
+  # set first line as header
   names(metadata) <- as.character(metadata[1])
 
   # remove empty columns
   metadata <- metadata[, which(unlist(lapply(metadata, function(x) !all(is.na(x) || x == "")))), with = FALSE]
 
-  #check for unexpected columns
-  accepted_columns <- c("key", "factor\\d+", "level", "type", "label", "sub_label")
-  regex <- paste0(paste0("^", accepted_columns, "$"), collapse = "|")
-  invalid <- grep(regex, names(metadata), invert = TRUE, perl = TRUE)
-  if(length(invalid) > 0){
-    warning(paste("Metadata: Unexpected columnames detected: ", paste0(names(metadata)[invalid], collapse = ", ")))
-  }
-  # check mandatory columns
-  check_columns <- c("key", "level")
-  mandatory <- check_columns %in% names(metadata)
-  if(!all(mandatory)) {
-    stop(paste0("Metadata: Mandatory column(s) are missing! ", paste0(check_columns[!mandatory], collapse = ", ")))
-  }
-
-  #delete first line
+  # delete first line
   metadata <- metadata[-1]
-  # duplicated keys?
-  meta_duplicants <- duplicated(metadata[["key"]])
-  if(any(meta_duplicants)) {
-    stop(paste0("Metadata: Duplicate(s) in key detected! The following keys occur more than once: ", paste0(unique(metadata[["key"]][meta_duplicants]), collapse = ", ")))
-  }
 
-  # check levels
-  known_level <- c("feature", "sample", "condition", "contrast")
-  unknown_level <- metadata[!level %in% known_level][["level"]]
-  if(length(unknown_level) > 0) {
-    warning(paste0("Metadata: Unkown level found: ", paste0(unknown_level, collapse = ", ")))
-  }
-  # check if type fits corresponding level
-  if(is.element("type", names(metadata))) {
-    # if type contains array delimiter mandatory
-    if(is.element("array", metadata[["type"]])) {
-      if(!is.element("delimiter", names(header))) {
-        stop("Found array but no delimiter! Multi-value fields require delimiter (in header) and type (in metadata).")
-      }
-    }
-    # feature
-    feature_types <- c("unique_id", "name", "category", "array")
-    # sample, condition, contrast
-    samp_cond_cont_types <- c("score", "ratio", "probability", "array")
-
-    keys <- metadata[level == "feature" & !type %in% feature_types][["key"]]
-    keys <- append(keys, metadata[level %in% c("sample", "condition", "contrast") & !type %in% samp_cond_cont_types][["key"]])
-
-    # unique_id defined?
-    if(!is.element("unique_id", metadata[["type"]])) {
-      stop("Metadata: No unique_id found in type! Please define an unique_id.")
-    }
-
-    if(length(keys) > 0) {
-      warning(paste0("Metadata: Level doesn't match type: ", paste0(keys, collapse = ", ")))
-    }
-  }
-
-  ###parse data
-  # check for inconsistency
-  col_data <- data.table::fread(input = file, header = TRUE, skip = num.header + num.metadata, fill = FALSE, nrows = 0, dec = dec, integer64 = "double")
-  col_names <- names(col_data)
-  missing_refs <- setdiff(col_names, metadata[[1]])
-  missing_cols <- setdiff(metadata[[1]], col_names)
-  if(length(missing_refs) > 0) {
-    warning(paste0("Metadata rows and data columns differ! Following rows are missing in metadata: ", paste(missing_refs, collapse = ", ")))
-  }
-  if(length(missing_cols) > 0) {
-    warning(paste0("Metadata rows and data columns differ! Following columns are not definded in data: ", paste(missing_refs, collapse = ", ")))
-  }
-  # duplicated columnnames?
-  data_duplicants <- duplicated(col_names)
-  if(any(data_duplicants)) {
-    stop(paste0("Data: Duplicated column name(s) detected! The following names are duplicated: ", paste0(unique(col_names[data_duplicants]), collapse = ", ")))
-  }
-
+  ### parse data
   data <- data.table::fread(input = file, header = TRUE, skip = num.header + num.metadata, fill = FALSE, dec = dec, integer64 = "double")
-
-  # unexpected columntypes?; sample, condition & contrast numeric?
-  if(is.element("type", names(metadata))) {
-    columns <- metadata[level %in% c("sample", "condition", "contrast") & type != "array"][["key"]]
-  } else {
-    columns <- metadata[level %in% c("sample", "condition", "contrast")][["key"]]
-  }
-  not_num_cols <- names(data[, columns, with = FALSE][, which(!sapply(data[, columns, with = FALSE], is.numeric))])
-  if(length(not_num_cols) > 0) {
-    stop(paste0("Column(s): ", paste0(not_num_cols, collapse = ", "), " not numeric! Probably wrong decimal separator."))
-  }
 
   data.table::setindexv(metadata, names(metadata)[1])
   data.table::setindexv(data, names(data)[1])
 
-  return(list(header = header, metadata = metadata, data = data))
+  return(Clarion$new(header = header, metadata = metadata, data = data))
 }
-
