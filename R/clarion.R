@@ -41,6 +41,13 @@ Clarion <- R6::R6Class("Clarion",
                          get_delimiter = function() {
                            self$header$delimiter
                          },
+                         is_delimited = function(x) {
+                           if (is.element("type", names(self$metadata))) {
+                             return(self$metadata[key == x] == "array")
+                           } else {
+                             return(FALSE)
+                           }
+                         },
                          validate = function() {
                            # validate header
                            private$check_delimiter()
