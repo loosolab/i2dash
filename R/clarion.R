@@ -48,6 +48,9 @@ Clarion <- R6::R6Class("Clarion",
                              return(FALSE)
                            }
                          },
+                         get_factors = function() {
+                           grep("^factor\\d+", names(self$metadata), perl = TRUE, value = TRUE)
+                         },
                          validate = function() {
                            # validate header
                            private$check_delimiter()
