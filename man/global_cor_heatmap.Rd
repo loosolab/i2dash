@@ -4,9 +4,8 @@
 \alias{global_cor_heatmap}
 \title{global correlation heatmap module server logic}
 \usage{
-global_cor_heatmap(input, output, session, data, types,
-  plot.method = "static", width = "auto", height = "auto", ppi = 72,
-  scale = 1)
+global_cor_heatmap(input, output, session, clarion, plot.method = "static",
+  width = "auto", height = "auto", ppi = 72, scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object}
@@ -15,13 +14,7 @@ global_cor_heatmap(input, output, session, data, types,
 
 \item{session}{Shiny's session object}
 
-\item{data}{data.table data visualized in plot (supports reactive).}
-
-\item{types}{data.table: (supports reactive)
-column1: colnames of data
-column2: corresponding column type
-column3 = label (optional, used instead of id)
-column4 = sub_label (optional, added to id/ label)}
+\item{clarion}{A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)}
 
 \item{plot.method}{Choose which method is used for plotting. Either "static" or "interactive" (Default = "static").}
 

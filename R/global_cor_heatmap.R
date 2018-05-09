@@ -147,35 +147,37 @@ global_cor_heatmapUI <- function(id) {
 #' @param input Shiny's input object
 #' @param output Shiny's output object
 #' @param session Shiny's session object
-#' @param data data.table data visualized in plot (supports reactive).
-#' @param types data.table: (supports reactive)
-#'                        column1: colnames of data
-#'                        column2: corresponding column type
-#'                        column3 = label (optional, used instead of id)
-#'                        column4 = sub_label (optional, added to id/ label)
+#' @param clarion A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)
 #' @param plot.method Choose which method is used for plotting. Either "static" or "interactive" (Default = "static").
 #' @param width Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param height Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.
 #' @param scale Scale plot size. Defaults to 1, supports reactive.
 #'
-#'
-#'
 #' @return Reactive containing data used for plotting.
 #'
 #' @export
-global_cor_heatmap <- function(input, output, session, data, types, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
-  # load module -------------------------------------------------------------
-  # handle reactive data
-  data_r <- shiny::reactive({
-    if(shiny::is.reactive(data)) {
-      data <- data.table::copy(data())
-    }else {
-      data <- data.table::copy(data)
-    }
+global_cor_heatmap <- function(input, output, session, clarion, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
+  # globals -----------------------------------------------------------------
+  # clear plot
+  clearPlot <- shiny::reactiveVal(FALSE)
+  # disable downloadButton on init
+  shinyjs::disable("download")
 
-    return(data)
+  # load module -------------------------------------------------------------
+  object <- shiny::reactive({
+    # support reactive
+    if (shiny::is.reactive(clarion)) {
+      if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
+
+      obj <- clarion()$clone(deep = TRUE)
+    } else {
+      if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
+
+      obj <- clarion$clone(deep = TRUE)
+    }
   })
+
   # handle reactive sizes
   size <- shiny::reactive({
     width <- ifelse(shiny::is.reactive(width), width(), width)
@@ -183,17 +185,17 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     ppi <- ifelse(shiny::is.reactive(ppi), ppi(), ppi)
     scale <- ifelse(shiny::is.reactive(scale), scale(), scale)
 
-    if(!is.numeric(width) || width <= 0) {
+    if (!is.numeric(width) || width <= 0) {
       width <- "auto"
     }
-    if(!is.numeric(height) || height <= 0) {
-      if(plot.method == "interactive") {
+    if (!is.numeric(height) || height <= 0) {
+      if (plot.method == "interactive") {
         height <- 28
-      }else {
+      } else {
         height <- "auto"
       }
     }
-    if(!is.numeric(ppi) || ppi <= 0) {
+    if (!is.numeric(ppi) || ppi <= 0) {
       ppi <- 72
     }
 
@@ -204,25 +206,22 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
   })
 
   # load internal modules
-  columns <- shiny::callModule(columnSelector, "select", type.columns = types, columnTypeLabel = "Column types to choose from")
-  transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(data_r()[, columns$selectedColumns(), with = FALSE])))
+  columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
+  transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selectedColumns(), with = FALSE])))
   colorPicker <- shiny::callModule(colorPicker2, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
 
   # load dynamic ui
-  if(plot.method == "static") {
+  if (plot.method == "static") {
     output$cor_heatmap <- shiny::renderUI({
       shinycssloaders::withSpinner(shiny::plotOutput(outputId = session$ns("static")), proxy.height = "800px")
     })
-  }else if(plot.method == "interactive") {
+  } else if (plot.method == "interactive") {
     output$cor_heatmap <- shiny::renderUI({
       shinycssloaders::withSpinner(plotly::plotlyOutput(outputId = session$ns("interactive")), proxy.height = "800px")
     })
   }
 
   # functionality -----------------------------------------------------------
-  # clear plot
-  clearPlot <- shiny::reactiveVal(FALSE)
-
   # reset ui
   shiny::observeEvent(input$reset, {
     log_message("Global correlation heatmap: reset", "INFO", token = session$token)
@@ -235,15 +234,15 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     shinyjs::reset("label")
     shinyjs::reset("row_label")
     shinyjs::reset("column_label")
-    columns <<- shiny::callModule(columnSelector, "select", type.columns = types, columnTypeLabel = "Column types to choose from")
-    transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(data_r()[, columns$selectedColumns(), with = FALSE])))
+    columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
+    transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selectedColumns(), with = FALSE])))
     colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
     clearPlot(TRUE)
   })
 
   # warning if plot size exceeds limits
   shiny::observe({
-    if(plot()$exceed_size) {
+    if (plot()$exceed_size) {
       shiny::showNotification(
         ui = "Width and/ or height exceed limit. Using 500 cm instead.",
         id = "limit",
@@ -264,7 +263,7 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
   shiny::observe({
     shiny::req(columns$selectedColumns())
 
-    if(length(columns$selectedColumns()) < 2) {
+    if (length(columns$selectedColumns()) < 2) {
       shiny::showNotification(
         ui = "Warning! At least two columns needed. Please select more.",
         id = "less_data_warning",
@@ -277,7 +276,7 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
 
   # enable/ disable plot button
   shiny::observe({
-    if(!shiny::isTruthy(columns$selectedColumns()) || length(columns$selectedColumns()) < 2) {
+    if (!shiny::isTruthy(columns$selectedColumns()) || length(columns$selectedColumns()) < 2) {
       shinyjs::disable("plot")
     }else {
       shinyjs::enable("plot")
@@ -291,10 +290,10 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
 
   # show right methods
   shiny::observe({
-    if(input$calc == "distance") {
+    if (input$calc == "distance") {
       shiny::updateSelectInput(session = session, inputId = "calc_method",
                                choices = c("euclidean", "maximum", "manhattan", "canberra", "minkowski"))
-    }else if(input$calc == "correlation") {
+    } else if (input$calc == "correlation") {
       shiny::updateSelectInput(session = session, inputId = "calc_method", choices = c("spearman", "pearson", "kendall"))
     }
   })
@@ -307,16 +306,11 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     on.exit(progress$close())
     progress$set(0.2, message = "Compute data")
 
-    # process data
-    processed_data <- data.table::as.data.table(transform$data())
-    processed_data <- processed_data[, columns$selectedColumns(), with = FALSE]
-    processed_data <- data.table::data.table(data_r()[, 1], processed_data)
-
     # corellate data
-    if(input$calc == "distance") {
-      processed_data <- data.table::as.data.table(as.matrix(stats::dist(t(processed_data[, -1]), method = input$calc_method)), keep.rownames = "Names")
-    }else if(input$calc == "correlation") {
-      processed_data <- data.table::as.data.table(stats::cor(processed_data[, -1], method = input$calc_method), keep.rownames = "Names")
+    if (input$calc == "distance") {
+      processed_data <- data.table::as.data.table(as.matrix(stats::dist(t(transform$data()), method = input$calc_method)), keep.rownames = "Names")
+    } else if (input$calc == "correlation") {
+      processed_data <- data.table::as.data.table(stats::cor(transform$data(), method = input$calc_method), keep.rownames = "Names")
     }
 
     # update progress indicator
@@ -324,9 +318,6 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
 
     return(processed_data)
   })
-
-  # disable downloadButton on init
-  shinyjs::disable("download")
 
   # build plot object
   plot <- shiny::eventReactive(input$plot, {
@@ -343,12 +334,12 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
     progress$set(0.2, message = "Building plot")
 
     # check if rlog failed
-    if(is.null(attr(transform$data(), "betaPriorVar")) && is.null(attr(transform$data(), "intercept")) && transform$method() == "rlog") {
+    if (is.null(attr(transform$data(), "betaPriorVar")) && is.null(attr(transform$data(), "intercept")) && transform$method() == "rlog") {
       shiny::showNotification("Regularized log failed (dispersion within 2 orders of magnitude)! Performing log2 instead.",
                               duration = 5,
                               type = "warning")
 
-      if(input$label == "rlog") {
+      if (input$label == "rlog") {
         unitlabel <- "log2"
         shiny::updateTextInput(session = session, inputId = "label", value = unitlabel)
       } else {
@@ -386,12 +377,12 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
   })
 
   # render plot
-  if(plot.method == "static") {
+  if (plot.method == "static") {
     output$static <- shiny::renderPlot(
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
-        if(clearPlot()) {
+        if (clearPlot()) {
           return()
         } else {
           log_message("Global correlation heatmap: render plot static", "INFO", token = session$token)
@@ -412,9 +403,9 @@ global_cor_heatmap <- function(input, output, session, data, types, plot.method 
         }
       }
     )
-  }else if(plot.method == "interactive") {
+  } else if (plot.method == "interactive") {
     output$interactive <- plotly::renderPlotly({
-      if(clearPlot()) {
+      if (clearPlot()) {
         return()
       } else {
         log_message("Global correlation heatmap: render plot interactive", "INFO", token = session$token)
