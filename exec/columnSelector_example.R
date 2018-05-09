@@ -2,7 +2,8 @@ library(shiny)
 source("../R/columnSelector.R")
 
 ###Test Data
-table <- data.table::data.table(names = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"), type = c("sample", "codition", "contrast"))
+table <- data.table::data.table(id = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"), level = c("sample", "condition", "contrast"), sub_label = "sub")
+names(table)[1] <- "key"
 
 ui <- fluidPage(
   fluidRow(

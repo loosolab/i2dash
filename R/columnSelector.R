@@ -26,10 +26,10 @@ columnSelectorUI <- function(id, label = F, title = NULL) {
 #' @param output Shiny's output object
 #' @param session Shiny's session object
 #' @param type.columns data.table: (Supports reactive)
-#'                                column1 = columnnames (id)
-#'                                column2 = type (datalevel)
-#'                                column3 = label (optional, used instead of id)
-#'                                column4 = sub_label (optional, added to id/ label)
+#'                                key = columnnames (id)
+#'                                level = datalevel/ type of column
+#'                                label = optional, used instead of id
+#'                                sub_label = optional, added to id/ label
 #' @param type The type (contrast/group/sample of the type dropdown menu, selected in step 1 (upper dropdown). Defaults to unique(type.columns[,2]) (Supports reactive)
 #' @param columnTypeLabel Changes the label of the first UI element
 #' @param labelLabel Change label above label text input.
@@ -42,27 +42,27 @@ columnSelectorUI <- function(id, label = F, title = NULL) {
 #'
 #' @export
 columnSelector <- function(input, output, session, type.columns, type = NULL, columnTypeLabel = "Type of Column", labelLabel = "Label", multiple = TRUE, none = FALSE, sep = ", ", suffix = NULL) {
-  #handle reactive input
+  # handle reactive input
   type.columns.r <- shiny::reactive({
-    if(shiny::is.reactive(type.columns)){
+    if (shiny::is.reactive(type.columns)) {
       type.columns()
-    }else{
+    } else {
       type.columns
     }
   })
   type.r <- shiny::reactive({
-    if(!is.null(type)){
-      if(shiny::is.reactive(type)){
+    if (!is.null(type)) {
+      if (shiny::is.reactive(type)) {
         type()
-      }else{
+      } else {
         type
       }
-    }else{
+    } else {
       unique(type.columns.r()[[2]])
     }
   })
   suffix.r <- shiny::reactive({
-    if(shiny::is.reactive(suffix)) {
+    if (shiny::is.reactive(suffix)) {
       suffix()
     } else {
       suffix
@@ -70,13 +70,13 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
   })
 
   output$out <- shiny::renderUI({
-    if(none){
-      choices <- c("None", type.columns.r()[type.columns.r()[[2]] %in% type.r()[1]][[1]])
+    if (none) {
+      choices <- c("None", type.columns.r()[type.columns.r()[["level"]] %in% type.r()[1]][["key"]])
     }else{
-      choices <- type.columns.r()[type.columns.r()[[2]] %in% type.r()[1]][[1]]
+      choices <- type.columns.r()[type.columns.r()[["level"]] %in% type.r()[1]][["key"]]
     }
     columnSelectLabel = "Select individual column"
-    if(multiple) {
+    if (multiple) {
       columnSelectLabel = paste0(columnSelectLabel, "(s)")
     }
 
@@ -86,25 +86,31 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
     )
   })
 
-  #show label textInput
+  # show label textInput
   output$showLabel <- shiny::renderUI({
     shiny::textInput(session$ns("select.label"), label = labelLabel)
   })
 
   # make label
   create_label <- shiny::reactive({
-    if(ncol(type.columns.r()) > 2) {
+    shiny::req(input$select.type)
+    # empty label on 'None'
+    if (none && input$select.column == "None") return("")
+
+    if (is.element("label", names(type.columns.r()))) {
       label_id <- input$select.column
-      label_label <- type.columns.r()[type.columns.r()[[1]] %in% input$select.column][[3]]
+      label_label <- type.columns.r()[type.columns.r()[["key"]] %in% input$select.column][["label"]]
 
       # replace id with label
       label <- ifelse(label_label == "", label_id, label_label)
 
-      if(ncol(type.columns.r()) > 3) {
-        label <- paste(label, type.columns.r()[type.columns.r()[[1]] %in% input$select.column][[4]])
-      }
     } else {
       label <- input$select.column
+    }
+
+    # add sub_label
+    if (is.element("sub_label", names(type.columns.r()))) {
+      label <- paste(label, type.columns.r()[type.columns.r()[["key"]] %in% input$select.column][["sub_label"]])
     }
 
     label <- paste(label, collapse = sep)
@@ -118,8 +124,8 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
     suffix.r()
 
     shiny::isolate({
-      if(!is.null(input$select.label)) {
-        if(!multiple && !is.null(suffix.r())) {
+      if (!is.null(input$select.label)) {
+        if (!multiple && !is.null(suffix.r())) {
           value <- paste(create_label(), suffix.r(), sep = sep)
         } else {
           value <- create_label()
@@ -129,27 +135,27 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
     })
   })
 
-  #show columns based on selected type
+  # show columns based on selected type
   shiny::observe({
-    if(none){
-      columns <- c("None", type.columns.r()[type.columns.r()[[2]] %in% input$select.type][[1]])
-    }else{
-      columns <- type.columns.r()[type.columns.r()[[2]] %in% input$select.type][[1]]
+    if (none) {
+      columns <- c("None", type.columns.r()[type.columns.r()[["level"]] %in% input$select.type][["key"]])
+    } else {
+      columns <- type.columns.r()[type.columns.r()[["level"]] %in% input$select.type][["key"]]
     }
 
     shiny::updateSelectizeInput(session = session, inputId = "select.column", choices = columns)
   })
 
   out.type <- shiny::reactive(input$select.type)
-  out.selectedColumns <- shiny::reactive(if(shiny::isTruthy(input$select.column) && input$select.column != "None") input$select.column else "")
+  out.selectedColumns <- shiny::reactive(if (shiny::isTruthy(input$select.column) && input$select.column != "None") input$select.column else "")
   out.label <- shiny::reactive({
-    if(is.null(input$select.label)) {
+    if (is.null(input$select.label)) {
       label <- create_label()
     } else {
       label <- input$select.label
     }
 
-    if(multiple) {
+    if (multiple) {
       label <- unlist(strsplit(label, split = sep, fixed = TRUE))
     }
 
@@ -157,5 +163,4 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
   })
 
   return(list(type = out.type, selectedColumns = out.selectedColumns, label = out.label))
-
 }

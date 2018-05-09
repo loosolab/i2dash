@@ -16,10 +16,10 @@ columnSelector(input, output, session, type.columns, type = NULL,
 \item{session}{Shiny's session object}
 
 \item{type.columns}{data.table: (Supports reactive)
-column1 = columnnames (id)
-column2 = type (datalevel)
-column3 = label (optional, used instead of id)
-column4 = sub_label (optional, added to id/ label)}
+key = columnnames (id)
+level = datalevel/ type of column
+label = optional, used instead of id
+sub_label = optional, added to id/ label}
 
 \item{type}{The type (contrast/group/sample of the type dropdown menu, selected in step 1 (upper dropdown). Defaults to unique(type.columns[,2]) (Supports reactive)}
 
