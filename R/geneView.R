@@ -230,7 +230,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
 
     # plot
     plot <- create_geneview(
-      data = if (object()$get_uniqueID() == object()$get_name()) result.data()$data[, -2] else result.data()$data, # without name column
+      data = if (object()$get_uniqueID() == object()$get_name()) result.data()$data else result.data()$data[, -2], # without name column
       grouping = grouping,
       plot.type = input$plotType,
       facet.target = input$groupby,
