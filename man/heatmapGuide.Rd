@@ -4,12 +4,10 @@
 \alias{heatmapGuide}
 \title{heatmap module guide}
 \usage{
-heatmapGuide(session, custom.row.label = FALSE)
+heatmapGuide(session)
 }
 \arguments{
 \item{session}{The shiny session}
-
-\item{custom.row.label}{Boolean. Show additional info. Default = FALSE.}
 }
 \value{
 A shiny reactive that contains the texts for the Guide steps.

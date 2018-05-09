@@ -1,4 +1,3 @@
-
 library(shiny)
 library(shinydashboard)
 source("../R/function.R")
@@ -9,12 +8,14 @@ source("../R/heatmap.R")
 source("../R/label.R")
 source("../R/limit.R")
 source("../R/global.R")
+source("../R/clarion.R")
 
 ####Test Data
 data <- data.table::as.data.table(mtcars, keep.rowname = "id")
 # create metadata
-metadata <- data.table::data.table(names(data), type = c("annotation", rep("performance", 7), rep("design", 4)))
+metadata <- data.table::data.table(names(data), level = c("feature", rep("sample", 7), rep("condition", 4)))
 names(metadata)[1] <- "key"
+clarion <- Clarion$new(data = data, metadata = metadata)
 ####
 
 
@@ -27,15 +28,7 @@ ui <- dashboardPage(header = dashboardHeader(), sidebar = dashboardSidebar(
 )))
 
 server <- function(input, output) {
-  table <- reactive({
-    data
-  })
-  typ <- reactive({
-    # without annotation
-    metadata[ type != "annotation"]
-  })
-
-  heat <- callModule(heatmap, "id", data = table, types = typ, plot.method = "interactive", custom.row.label = table, width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
+  heat <- callModule(heatmap, "id", clarion = clarion, plot.method = "interactive", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
 
   observe({
     print(heat())
