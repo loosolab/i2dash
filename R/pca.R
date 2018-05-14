@@ -66,14 +66,7 @@ pcaUI <- function(id, show.label = TRUE) {
 #' @param input Shiny's input object
 #' @param output Shiny's output object
 #' @param session Shiny's session object
-#' @param data data.table data visualized in plot. (Supports Reactive)
-#' @param types data.table: (Supports reactive)
-#'                        column1: colnames of data
-#'                        column2: corresponding column typ
-#'                        column3: label (optional, used instead of id)
-#'                        column4: sub_label (optional, added to id/ label)
-#' @param levels Levels from which data is selected (Defaults to unique(metadata[["level"]])). (Supports Reactive)
-#' @param entryLabel Define additional columns added to each entry (Default = NULL). Use a vector containing the desired columnnames e.g. c("column1", "column2").
+#' @param clarion A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)
 #' @param width Width of the plot in cm. Defaults to 28 and supports reactive.
 #' @param height Height of the plot in cm. Defaults to 28 and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.
@@ -86,38 +79,26 @@ pcaUI <- function(id, show.label = TRUE) {
 #' @import data.table
 #'
 #' @export
-pca <- function(input, output, session, data, types, levels = NULL, entryLabel = NULL, width = 28, height = 28, ppi = 72, scale = 1) {
-  #handle reactive data
-  data.r <- shiny::reactive({
-    if(shiny::is.reactive(data)){
-      data <- data.table::copy(data())
-    }else{
-      data <- data.table::copy(data)
-    }
-    #merge columns for additional label info
-    if(!is.null(entryLabel)){
-      data[, 1 := apply(data[, c(names(data)[1], entryLabel), with = FALSE], 1, paste, collapse = ", ")]
-      names(data)[1] <- paste(names(data)[1], paste(entryLabel, collapse = ", "), sep = ", ")
-    }
+pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 72, scale = 1) {
+  # globals/ initialization #####
+  # clear plot
+  clearPlot <- shiny::reactiveVal(value = FALSE)
+  # disable downloadButton on init
+  shinyjs::disable("download")
+  # disable plot button on init
+  shinyjs::disable("plot")
 
-    return(data)
-  })
-  types.r <- shiny::reactive({
-    if(shiny::is.reactive(types)){
-      types()
-    }else{
-      types
-    }
-  })
-  levels.r <- shiny::reactive({
-    if(is.null(levels)){
-      metadata.r()[["level"]]
-    }else{
-      if(shiny::is.reactive(levels)){
-        levels()
-      }else{
-        levels
-      }
+  # input preparation #####
+  object <- shiny::reactive({
+    # support reactive
+    if (shiny::is.reactive(clarion)) {
+      if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
+
+      obj <- clarion()$clone(deep = TRUE)
+    } else {
+      if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
+
+      obj <- clarion$clone(deep = TRUE)
     }
   })
 
@@ -128,13 +109,13 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     ppi <- ifelse(shiny::is.reactive(ppi), ppi(), ppi)
     scale <- ifelse(shiny::is.reactive(scale), scale(), scale)
 
-    if(!is.numeric(width) | width <= 0) {
+    if (!is.numeric(width) | width <= 0) {
       width <- 28
     }
-    if(!is.numeric(height) | height <= 0) {
+    if (!is.numeric(height) | height <= 0) {
       height <- 28
     }
-    if(!is.numeric(ppi) | ppi <= 0) {
+    if (!is.numeric(ppi) | ppi <= 0) {
       ppi <- 72
     }
 
@@ -144,16 +125,24 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
          scale = scale)
   })
 
+  # modules/ ui #####
+  columnSelect <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
 
-  guide <- pcaGuide(session)
-  shiny::observeEvent(input$guide, {
-    rintrojs::introjs(session, options = list(steps = guide()))
+  # update dimension inputs
+  shiny::observe({
+    col_num <- length(shiny::req(columnSelect$selectedColumns()))
+
+    if (col_num >= 3) {
+      valueA <- ifelse(col_num <= input$dimA, col_num - 1, input$dimA)
+      valueB <- ifelse(col_num <= input$dimB, col_num - 1, input$dimB)
+
+      shiny::updateNumericInput(session = session, inputId = "dimA", max = col_num - 1, value = valueA)
+      shiny::updateNumericInput(session = session, inputId = "dimB", max = col_num - 1, value = valueB)
+    }
   })
 
-  # clear plot
-  clearPlot <- shiny::reactiveVal(value = FALSE)
-
-  #reset ui
+  # functionality/ plotting #####
+  # reset ui
   shiny::observeEvent(input$reset, {
     log_message("PCA: reset", "INFO", token = session$token)
 
@@ -162,80 +151,24 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     shinyjs::reset("dimB")
     shinyjs::reset("pointsize")
     shinyjs::reset("labelsize")
-    columnSelect <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(types.r()[level %in% levels.r(), c("key", "level"), with = FALSE]), columnTypeLabel = "Column types to choose from")
+    columnSelect <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
     clearPlot(TRUE)
   })
 
-  columnSelect <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(types.r()[level %in% levels.r(), c("key", "level"), with = FALSE]), columnTypeLabel = "Column types to choose from")
-
-  output$datalevel <- shiny::renderUI({
-    shiny::selectInput(session$ns("select"), label = "select data level", choices = unique(levels.r()))
-  })
-
-  # disable plot button on init
-  shinyjs::disable("plot")
-  # update dimension inputs
-  shiny::observe({
-    col.num <- length(shiny::req(columnSelect$selectedColumns()))
-
-    if(col.num < 3 || nrow(shiny::isolate(data.r())) < 3 || is.na(input$dimA) || is.na(input$dimB)){
-      shinyjs::disable("plot")
-
-      # show warning if not enough selected
-      shiny::showNotification(
-        ui = "Not enough columns/ rows selected! At least 3 of each needed for plotting.",
-        id = "warning",
-        type = "warning"
-      )
-    }else{
-      shiny::removeNotification("warning")
-      shinyjs::enable("plot")
-
-      if(col.num <= input$dimA){
-        valueA <- col.num - 1
-      }else{
-        valueA <- input$dimA
-      }
-      if(col.num <= input$dimB){
-        valueB <- col.num - 1
-      }else{
-        valueB <- input$dimB
-      }
-      shiny::updateNumericInput(inputId = "dimA", session = session, max = col.num - 1, value = valueA)
-      shiny::updateNumericInput(inputId = "dimB", session = session, max = col.num - 1, value = valueB)
-    }
-  })
-
-  # warning if plot size exceeds limits
-  shiny::observe({
-    if(computed.data()$exceed_size) {
-      shiny::showNotification(
-        ui = "Width and/ or height exceed limit. Using 500 cm instead.",
-        id = "limit",
-        type = "warning"
-      )
-    } else {
-      shiny::removeNotification("limit")
-    }
-  })
-
-  selected <- shiny::reactive({
+  result_data <- shiny::reactive({
     #new progress indicator
     progress <- shiny::Progress$new()
     on.exit(progress$close())
     progress$set(0.2, message = "Select data")
 
-    selected <- data.r()[, c(names(data.r())[1], columnSelect$selectedColumns()), with = FALSE]
+    selected <- object()$data[, c(object()$get_uniqueID(), columnSelect$selectedColumns()), with = FALSE]
 
     progress$set(1)
 
     return(selected)
   })
 
-  # disable downloadButton on init
-  shinyjs::disable("download")
-
-  computed.data <- shiny::eventReactive(input$plot, {
+  plot <- shiny::eventReactive(input$plot, {
     log_message("PCA: computing plot...", "INFO", token = session$token)
 
     # enable downloadButton
@@ -248,7 +181,7 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     progress$set(0.2, message = "Render plot")
 
     plot <- create_pca(
-               data = selected(),
+               data = result_data(),
                dimensionA = input$dimA,
                dimensionB = input$dimB,
                dimensions = length(columnSelect$selectedColumns()) - 1,
@@ -267,21 +200,19 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
 
     log_message("PCA: done.", "INFO", token = session$token)
 
-    # show plot
-    shinyjs::show("pca")
-
     return(plot)
   })
 
+  # render plot #####
   # get width in pixel
   plot_width <- shiny::reactive({
-    width <- computed.data()$width * (computed.data()$ppi / 2.54)
+    width <- plot()$width * (plot()$ppi / 2.54)
     ifelse(width < 50, 50, width)
   })
 
   # get height in pixel
   plot_height <- shiny::reactive({
-    height <- computed.data()$height * (computed.data()$ppi / 2.54)
+    height <- plot()$height * (plot()$ppi / 2.54)
     ifelse(height < 50, 50, height)
   })
 
@@ -289,28 +220,29 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     width = plot_width,
     height = plot_height,
     {
-      if(clearPlot()){
+      if (clearPlot()) {
         return()
       } else {
         log_message("PCA: render plot", "INFO", token = session$token)
 
-        computed.data()$plot
+        plot()$plot
       }
     })
 
-  #group data by dimension
-  reorganized.data <- shiny::reactive({
-    sapply(colnames(computed.data()$data$var$coord), USE.NAMES = TRUE, simplify = FALSE, function(dim) {
-      sapply(computed.data()$data$var, function(table) {
+  # group data by dimension
+  reorganized_data <- shiny::reactive({
+    sapply(colnames(plot()$data$var$coord), USE.NAMES = TRUE, simplify = FALSE, function(dim) {
+      sapply(plot()$data$var, function(table) {
         table[, dim]
       })
     })
   })
 
+  # download #####
   output$download <- shiny::downloadHandler(filename = "pca.zip",
                                             content = function(file) {
                                               log_message("PCA: download", "INFO", token = session$token)
-                                              download(file = file, filename = "pca.zip", plot = computed.data()$plot, width = plot_width() / (computed.data()$ppi / 2.54), height = plot_height() / (computed.data()$ppi / 2.54), ppi = computed.data()$ppi, ui = user_input())
+                                              download(file = file, filename = "pca.zip", plot = plot()$plot, width = plot_width() / (plot()$ppi / 2.54), height = plot_height() / (plot()$ppi / 2.54), ppi = plot()$ppi, ui = user_input())
                                             })
 
   user_input <- shiny::reactive({
@@ -331,7 +263,61 @@ pca <- function(input, output, session, data, types, levels = NULL, entryLabel =
     all <- list(selection = selection, options = options)
   })
 
-  return(reorganized.data)
+  # notifications #####
+  # insufficient data/ invalid dimension warnings
+  shiny::observe({
+    shinyjs::enable("plot")
+
+    col_num <- length(shiny::req(columnSelect$selectedColumns()))
+
+    # invalid dimension
+    if (col_num >= 3 && (is.na(input$dimA) || is.na(input$dimB) || input$dimA <= 0 || input$dimA >= col_num || input$dimB <= 0 || input$dimB >= col_num)) {
+      shinyjs::disable("plot")
+
+      shiny::showNotification(
+        ui = "Invalid dimension(s)! Please select an integer value between 1 and number of selected columns - 1.",
+        id = "dimension",
+        type = "warning"
+      )
+    } else {
+      shiny::removeNotification("dimension")
+    }
+
+    # insufficient data
+    if (col_num < 3 || nrow(shiny::isolate(object()$data)) < 3) {
+      shinyjs::disable("plot")
+
+      shiny::showNotification(
+        ui = "Not enough columns/ rows selected! At least 3 of each needed for plotting.",
+        id = "data",
+        type = "warning"
+      )
+
+
+    } else {
+      shiny::removeNotification("data")
+    }
+  })
+
+  # warning if plot size exceeds limits
+  shiny::observe({
+    if (plot()$exceed_size) {
+      shiny::showNotification(
+        ui = "Width and/ or height exceed limit. Using 500 cm instead.",
+        id = "limit",
+        type = "warning"
+      )
+    } else {
+      shiny::removeNotification("limit")
+    }
+  })
+
+  guide <- pcaGuide(session)
+  shiny::observeEvent(input$guide, {
+    rintrojs::introjs(session, options = list(steps = guide()))
+  })
+
+  return(reorganized_data)
 }
 
 #' pca module guide
