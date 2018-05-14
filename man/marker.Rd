@@ -4,7 +4,7 @@
 \alias{marker}
 \title{marker module server logic}
 \usage{
-marker(input, output, session, highlight.labels)
+marker(input, output, session, clarion)
 }
 \arguments{
 \item{input}{Shiny's input object.}
@@ -13,10 +13,10 @@ marker(input, output, session, highlight.labels)
 
 \item{session}{Shiny's session object.}
 
-\item{highlight.labels}{Data.table from which labels are provided (Supports reactive).}
+\item{clarion}{A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)}
 }
 \value{
-A reactive which contains a named list (highlight, color, labelColumn, label).
+A reactive which contains a named list (highlight, color, labelColumn, label, clarion).
 }
 \description{
 marker module server logic
