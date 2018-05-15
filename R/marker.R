@@ -24,7 +24,7 @@ markerUI <- function(id, label = "Highlight/ Label Selected Features"){
 #' @param session Shiny's session object.
 #' @param clarion A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)
 #'
-#' @return A reactive which contains a named list (highlight, color, labelColumn, label, clarion).
+#' @return A named list containing reactives (highlight, color, labelColumn, label, clarion).
 #'
 #' @export
 marker <- function(input, output, session, clarion){
@@ -46,9 +46,13 @@ marker <- function(input, output, session, clarion){
   color <- shiny::callModule(colorPicker2, "color")
   labeller <-  shiny::callModule(label, "label", data = shiny::reactive(object()$data), unique = FALSE)
 
-  shiny::reactive({
-    shiny::req(input$highlight, color()$palette)
-
-    list(highlight = input$highlight, color = color()$palette, labelColumn = labeller()$selected, label = labeller()$label, clarion = object())
-  })
+  return(
+    list(
+      highlight = shiny::reactive(input$highlight),
+      color = shiny::reactive(color()$palette),
+      labelColumn = shiny::reactive(labeller()$selected),
+      label = shiny::reactive(labeller()$label),
+      clarion = object
+    )
+  )
 }

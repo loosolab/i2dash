@@ -20,10 +20,16 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  marker <-callModule(marker, "mark", clarion = clarion)
+  marker <- callModule(marker, "mark", clarion = clarion)
 
   output$output <- renderPrint({
-    marker()
+    list(
+      highlight = marker$highlight(),
+      color = marker$color(),
+      labelColumn = marker$labelColumn(),
+      label = marker$label(),
+      clarion = marker$clarion()
+    )
   })
 }
 

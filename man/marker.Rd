@@ -16,7 +16,7 @@ marker(input, output, session, clarion)
 \item{clarion}{A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)}
 }
 \value{
-A reactive which contains a named list (highlight, color, labelColumn, label, clarion).
+A named list containing reactives (highlight, color, labelColumn, label, clarion).
 }
 \description{
 marker module server logic
