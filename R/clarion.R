@@ -70,8 +70,13 @@ Clarion <- R6::R6Class("Clarion",
                            self$metadata <- metadata
                            self$data <- data
 
-                           # coerce unique_id to character
-                           self$data[, (self$get_uniqueID()) := sapply(.SD, as.character), .SDcols = self$get_uniqueID()]
+                           # coerce unique_id and name to character
+                           if (self$get_uniqueID() == self$get_name()) {
+                             cols <- self$get_uniqueID()
+                           } else {
+                             cols <- c(self$get_uniqueID(), self$get_name())
+                           }
+                           self$data[, (cols) := lapply(.SD, as.character), .SDcols = cols]
 
                            if (validate) self$validate()
                          }
