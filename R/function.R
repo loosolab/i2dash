@@ -3,18 +3,19 @@
 #' @param data data.table containing plot data
 #'             column 1: id
 #'             column 2, 3(, 4): x, y(, z)
+#' @param data.labels Vector of labels used for data. Length has to be equal to nrow(data).
 #' @param transparency Set point transparency. See \code{\link[ggplot2]{geom_point}}.
 #' @param pointsize Set point size. See \code{\link[ggplot2]{geom_point}}.
 #' @param labelsize Set label size. See \code{\link[ggplot2]{geom_text}}.
-#' @param colors Vector of colors used for color palette
+#' @param color Vector of colors used for color palette.
 #' @param x_label Label x-Axis
 #' @param y_label Label Y-Axis
 #' @param z_label Label Z-Axis
 #' @param density Boolean value, perform 2d density estimate.
 #' @param line Boolean value, add reference line.
 #' @param categorized Z-Axis (if exists) as categories.
-#' @param highlight.data data.table containing data to highlight.
-#' @param highlight.labels Vector of labels used for highlighted data.
+#' @param highlight.data data.table containing data to highlight. Same structure as data.
+#' @param highlight.labels Vector of labels used for highlighted data. Length has to be equal to nrow(data).
 #' @param highlight.color String with hexadecimal color-code.
 #' @param xlim Numeric vector of two setting min and max limit of x-axis. See \code{\link[ggplot2]{lims}}.
 #' @param ylim Numeric vector of two setting min and max limit of y-axis. See \code{\link[ggplot2]{lims}}.
@@ -30,43 +31,42 @@
 #' @import data.table
 #'
 #' @return Returns list(plot = ggplotly/ ggplot, width, height, ppi, exceed_size).
-create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize = 3, colors = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
+create_scatterplot <- function(data, data.labels = NULL, transparency = 1, pointsize = 1, labelsize = 3, color = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
   ########## prepare data ##########
-  #set labelnames if needed
+  # set labelnames if needed
   x_label <- ifelse(nchar(x_label), x_label, names(data)[2])
   y_label <- ifelse(nchar(y_label), y_label, names(data)[3])
-  if(ncol(data) >= 4){ z_label <- ifelse(nchar(z_label), z_label, names(data)[4])}
+  if (ncol(data) >= 4) z_label <- ifelse(nchar(z_label), z_label, names(data)[4])
 
-  # make column names unqiue to prevent overwrite
+  # make column names unique to prevent overwrite
   columnnames <- names(data)
   names(data) <- make.unique(columnnames)
-  if(!is.null(highlight.data)) {
+  if (!is.null(highlight.data)) {
     columnnames.highlight <- names(highlight.data)
     names(highlight.data) <- make.unique(columnnames.highlight)
   }
 
-  # get intern columnnames
+  # get internal columnnames
   x_head <- names(data)[2]
   y_head <- names(data)[3]
-  if(ncol(data) >= 4){ z_head <- names(data)[4]}
+  if (ncol(data) >= 4) z_head <- names(data)[4]
 
-  #delete rows where both 0 or at least one NA
+  # delete rows where both 0 or at least one NA
   rows.to.keep.data <- which(as.logical((data[, 2] != 0) + (data[, 3] != 0)))
   data <- data[rows.to.keep.data]
-  if(!is.null(highlight.data)){
+  if (!is.null(highlight.data)) {
     rows.to.keep.high <- which(as.logical((highlight.data[, 2] != 0) + (highlight.data[, 3 != 0])))
     highlight.data <- highlight.data[rows.to.keep.high]
   }
 
-  #delete labels accordingly
-  if(is.null(highlight.data)){
-    highlight.labels <- highlight.labels[rows.to.keep.data]
-  }else{
+  # delete labels accordingly
+  data.labels <- data.labels[rows.to.keep.data]
+  if (!is.null(highlight.data)) {
     highlight.labels <- highlight.labels[rows.to.keep.high]
   }
 
   ########## assemble plot ##########
-  theme1 <- ggplot2::theme (											#no gray background or helper lines
+  theme1 <- ggplot2::theme(											# no gray background or helper lines
     plot.background = ggplot2::element_blank(),
     panel.grid.major = ggplot2::element_blank(),
     panel.grid.minor = ggplot2::element_blank(),
@@ -78,123 +78,123 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     axis.title.y = ggplot2::element_text(face = "bold", color = "black", size = 10 * scale),
     plot.title = ggplot2::element_text(face = "bold", color = "black", size = 12 * scale),
     text = ggplot2::element_text(size = 10 * scale)
-    #		legend.background = element_rect(color = "red")			#border color
-    #		legend.key = element_rect("green")						#not working!
+    # legend.background = element_rect(color = "red")			# border color
+    # legend.key = element_rect("green")						# not working!
   )
 
-  ###z-axis exists?
-  if(ncol(data) >= 4){
+  ### z-axis exists?
+  if (ncol(data) >= 4) {
     plot <- ggplot2::ggplot(data = data)
 
-    ###scatter with color axis
-    if(categorized == FALSE){
+    ### scatter with color axis
+    if (!categorized) {
       plot <- plot +
-        ###color_gradient
-        ggplot2::scale_color_gradientn(colors = colors, name = z_label, limits = colorbar.limits, oob = scales::squish)
+        ### color_gradient
+        ggplot2::scale_color_gradientn(colors = color, name = z_label, limits = colorbar.limits, oob = scales::squish)
 
-      ###scatter with categories
-    }else if(categorized == TRUE){
-      #change categorized column to factor
+      ### scatter with categories
+    } else if (categorized == TRUE) {
+      # change categorized column to factor
       data <- data[, (z_head) := as.factor(data[[z_head]])]
 
-      ###categorized plot
+      ### categorized plot
       plot <- plot +
 
-        ggplot2::scale_color_manual (
-          #labels = data[,z_head],
-          values = grDevices::colorRampPalette(colors)(length(unique(data[[z_head]]))), #get color for each value,
-          #breaks = ,
-          drop=FALSE,								#to avoid dropping empty factors
+        ggplot2::scale_color_manual(
+          # labels = data[, z_head],
+          values = grDevices::colorRampPalette(color)(length(unique(data[[z_head]]))), # get color for each value
+          # breaks = ,
+          drop = FALSE,								# to avoid dropping empty factors
           name = z_label
-          #			guide=guide_legend(title="sdsds" )					#legend for points
+          # guide=guide_legend(title="sdsds")					# legend for points
         )
     }
-    #set names
+    # set names
     plot <- plot + ggplot2::aes_(x = as.name(x_head), y = as.name(y_head), color = as.name(z_head))
-  }else{
-    plot <- ggplot2::ggplot(data = data, ggplot2::aes_(x = as.name(x_head),y = as.name(y_head)))
+  } else {
+    plot <- ggplot2::ggplot(data = data, ggplot2::aes_(x = as.name(x_head), y = as.name(y_head)))
   }
 
-  if(density == TRUE){
+  if (density) {
     ### kernel density
-    #plot$layers <- c(stat_density2d(geom="tile", aes(fill=..density..^0.25), n=200, contour=FALSE,) + aes_(fill=as.name(var)), plot$layers)#n=resolution; density less sparse
-    plot <- plot + ggplot2::stat_density2d(geom="tile", ggplot2::aes(fill=..density..^0.25), n=200, contour=FALSE)
+    # plot$layers <- c(stat_density2d(geom = "tile", aes(fill = ..density..^0.25), n=200, contour=FALSE) + aes_(fill = as.name(var)), plot$layers) # n = resolution; density less sparse
+    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes(fill = ..density..^0.25), n = 200, contour = FALSE)
 
-    plot <- plot + ggplot2::scale_fill_gradient(low="white", high="black") +
-      #guides(fill=FALSE) +		#remove density legend
-
-      ggplot2::labs(fill="Density")
+    plot <- plot + ggplot2::scale_fill_gradient(low = "white", high = "black") +
+      # guides(fill=FALSE) +		# remove density legend
+      ggplot2::labs(fill = "Density")
   }
 
-  if(line == TRUE){
+  if (line) {
     ### diagonal line
-    plot <- plot + ggplot2::geom_abline(intercept=0, slope=1)
+    plot <- plot + ggplot2::geom_abline(intercept = 0, slope = 1)
   }
 
   plot <- plot +
-    ggplot2::xlab(x_label) +								#axis labels
+    ggplot2::xlab(x_label) +								# axis labels
     ggplot2::ylab(y_label)
 
   # interactive points with hovertexts
-  if(plot.method == "interactive") {
-    #set hovertext
-    if(ncol(data) >=4){
+  if (plot.method == "interactive") {
+    # set hovertext
+    if (ncol(data) >= 4) {
       hovertext <- paste0("</br>", data[[1]],
                           "</br>", x_label, ": ", data[[x_head]],
                           "</br>", y_label, ": ", data[[y_head]],
                           "</br>", z_label, ": ", data[[z_head]])
-    }else{
+    } else {
       hovertext <- paste0("</br>", data[[1]],
                           "</br>", x_label, ": ", data[[x_head]],
                           "</br>", y_label, ": ", data[[y_head]])
     }
 
-    #set points
+    # set points
+    # color if no z-axis
     plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, ggplot2::aes(text = hovertext))
 
-    if(!is.null(highlight.data)){
-      #set highlighted hovertext
-      if(ncol(data) >=4){
+    if (!is.null(highlight.data)) {
+      # set highlighted hovertext
+      if (ncol(data) >= 4) {
         hovertext.high <- paste0("</br>", highlight.data[[1]],
                                  "</br>", x_label, ": ", highlight.data[[x_head]],
                                  "</br>", y_label, ": ", highlight.data[[y_head]],
                                  "</br>", z_label, ": ", highlight.data[[z_head]])
-      }else{
+      } else {
         hovertext.high <- paste0("</br>", highlight.data[[1]],
                                  "</br>", x_label, ": ", highlight.data[[x_head]],
                                  "</br>", y_label, ": ", highlight.data[[y_head]])
       }
 
-      #set highlighted points
+      # set highlighted points
       plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE, ggplot2::aes(text = hovertext.high))
     }
   # static points without hovertexts
-  } else if(plot.method == "static") {
+  } else if (plot.method == "static") {
     seed <- Sys.getpid() + Sys.time()
     # set points
     plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency)
 
     # set highlighted points
-    if(!is.null(highlight.data)) {
+    if (!is.null(highlight.data)) {
       plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE)
 
       # set repelling point labels
-      if(!is.null(highlight.labels)) {
+      if (!is.null(highlight.labels)) {
         plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
         plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
       }
-    # set repelling labels (for only highlighted points shown)
-    } else if(!is.null(highlight.labels) & length(highlight.labels) == nrow(data)) {
-      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
-      plot <- plot + ggrepel::geom_label_repel(data = highlight.data, mapping = ggplot2::aes(label = highlight.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
+    # set repelling labels (for data)
+    } else if (!is.null(data.labels)) {
+      plot <- plot + ggrepel::geom_label_repel(mapping = ggplot2::aes(label = data.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, alpha = 0.5, seed = seed)
+      plot <- plot + ggrepel::geom_label_repel(mapping = ggplot2::aes(label = data.labels), size = labelsize * scale, color = "black", segment.color = "gray65", force = 2, max.iter = 1000, point.padding = grid::unit(0.1, "lines"), label.size = NA, fill = NA, seed = seed)
     }
   }
 
-  #set axis limits
-  if(!is.null(xlim)){
+  # set axis limits
+  if (!is.null(xlim)) {
     plot <- plot + ggplot2::xlim(xlim)
   }
-  if(!is.null(ylim)){
+  if (!is.null(ylim)) {
     plot <- plot + ggplot2::ylim(ylim)
   }
 
@@ -202,18 +202,18 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
 
 
 
-  #estimate legend width
+  # estimate legend width
   legend.width <- 0
   legend.padding <- 20 # 10 on both sides
   legend.thickness <- 30
-  if(density){
+  if (density) {
     legend.width <- nchar("Density")
   }
-  if(ncol(data) > 3){
+  if (ncol(data) > 3) {
     legend.width <- ifelse(legend.width > nchar(z_label), legend.width, nchar(z_label))
   }
-  if(density | ncol(data) > 3){
-    #estimate tickwidth
+  if (density | ncol(data) > 3) {
+    # estimate tickwidth
     min.tick <- nchar(as.character(min(data[[3]], na.rm = TRUE))) * 8.75
     max.tick <- nchar(as.character(max(data[[3]], na.rm = TRUE))) * 8.75
     legend.thickness <- legend.thickness + ifelse(min.tick < max.tick, max.tick, min.tick)
@@ -222,14 +222,14 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
     legend.width <- ifelse(legend.width > legend.thickness, legend.width, legend.thickness) + legend.padding
   }
 
-  #set width/ height
-  if(width == "auto"){
+  # set width/ height
+  if (width == "auto") {
     # cm to px
     width <- 28 * (ppi / 2.54) + legend.width
   } else {
     width <- width * (ppi / 2.54)
   }
-  if(height == "auto"){
+  if (height == "auto") {
     # cm to px
     height <- 28 * (ppi / 2.54)
   } else {
@@ -243,25 +243,24 @@ create_scatterplot <- function(data, transparency = 1, pointsize = 1, labelsize 
   # size exceeded?
   exceed_size <- FALSE
   limit <- 500 * (ppi / 2.54)
-  if(width > limit) {
+  if (width > limit) {
     exceed_size <- TRUE
     width <- limit
   }
-  if(height > limit) {
+  if (height > limit) {
     exceed_size <- TRUE
     height <- limit
   }
 
-  if(plot.method == "interactive") {
+  if (plot.method == "interactive") {
     plot <- plotly::ggplotly(plot, width = width + legend.width, height = height, tooltip = "text")
 
     # add labels with arrows
-    if(!is.null(highlight.labels)) {
-      if(!is.null(highlight.data)) {
-        plot <- plotly::add_annotations(p = plot, x = highlight.data[[x_head]], y = highlight.data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
-      } else if(nrow(data) == length(highlight.labels)) {
-        plot <- plotly::add_annotations(p = plot, x = data[[x_head]], y = data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
-      }
+    if (!is.null(highlight.labels) && !is.null(highlight.data)) {
+      plot <- plotly::add_annotations(p = plot, x = highlight.data[[x_head]], y = highlight.data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
+    }
+    if (!is.null(data.labels)) {
+      plot <- plotly::add_annotations(p = plot, x = data[[x_head]], y = data[[y_head]], text = data.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
     }
   }
 

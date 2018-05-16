@@ -10,12 +10,14 @@ source("../R/marker.R")
 source("../R/limit.R")
 source("../R/label.R")
 source("../R/global.R")
+source("../R/clarion.R")
 
 ####Test Data
-data <- data.table::data.table(id = rownames(mtcars), mtcars)
+data <- data.table::as.data.table(mtcars, keep.rowname = "id")
 # create metadata
-metadata <- data.table::data.table(names(data), level = c("annotation", rep("performance", 7), rep("design", 4)))
+metadata <- data.table::data.table(names(data), level = c("feature", rep("sample", 7), rep("condition", 4)))
 names(metadata)[1] <- "key"
+clarion <- Clarion$new(data = data, metadata = metadata)
 ####
 
 ui <- dashboardPage(header = dashboardHeader(),
@@ -33,9 +35,11 @@ ui <- dashboardPage(header = dashboardHeader(),
 )
 
 server <- function(input, output) {
-  marker <- callModule(marker, "marker", data)
-  # highlight all manual cars
-  plot <- callModule(scatterPlot, "id", data = data, types = metadata, x.names = metadata[level != "annotation"][["key"]], y.names = metadata[level != "annotation"][["key"]], features = data[am == 1], markerReac = marker, plot.method = "interactive", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
+  # highlight first 10 cars
+  marked <- Clarion$new(metadata = metadata, data = data[1:10])
+  marker <- callModule(marker, "marker", clarion = marked)
+
+  plot <- callModule(scatterPlot, "id", clarion = clarion, markerOutput = marker, plot.method = "interactive", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
 
   observe({
     print(plot())
