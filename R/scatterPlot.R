@@ -265,7 +265,7 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
       # reassemble after transformation
       # columns: unique_id, x, y(, z)
       if (shiny::isTruthy(zaxis$selectedColumn())) {
-        z <- object()$data[, zaxis$selectedColumn(), with = FALSE]
+        z <- marker_object()$data[, zaxis$selectedColumn(), with = FALSE]
         pre.data <- data.table::data.table(marker_object()$data[, marker_object()$get_uniqueID(), with = FALSE], highlight_transform_x$data(), highlight_transform_y$data(), z)
       } else {
         pre.data <- data.table::data.table(marker_object()$data[, marker_object()$get_uniqueID(), with = FALSE], highlight_transform_x$data(), highlight_transform_y$data())
@@ -284,8 +284,10 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
     result <- list(
       processed.data = NULL,
       data.label = NULL,
+      data.hovertext = NULL,
       highlight.color = NULL,
       highlight.label = NULL,
+      highlight.hovertext = NULL,
       highlight.data = NULL,
       xlim = NULL,
       ylim = NULL
@@ -301,6 +303,11 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
       # get axis limits
       result$xlim <- c(min(processed.data[, 2], na.rm = TRUE), max(processed.data[, 2], na.rm = TRUE))
       result$ylim <- c(min(processed.data[, 3], na.rm = TRUE), max(processed.data[, 3], na.rm = TRUE))
+
+      # add name to hovertext
+      if (plot.method == "interactive" && object()$get_name() != object()$get_uniqueID()) {
+        result$data.hovertext <- object()$data[[object()$get_name()]]
+      }
 
       result$processed.data <- processed.data
     } else {
@@ -330,8 +337,23 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
           # show notification in center
           shinyjs::runjs(paste0("$(document.getElementById('", paste0("shiny-notification-", session$ns("full_highlight")), "')).addClass('notification-position-center');"))
 
+          # add name to hovertext
+          if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_uniqueID()) {
+            result$data.hovertext <- marker_object()$data[[marker_object()$get_name()]]
+          }
+
           result$processed.data <- highlight.data
         } else {
+          # add name to hovertext
+          if (plot.method == "interactive" && object()$get_name() != object()$get_uniqueID()) {
+            # only keep selected rows
+            result$data.hovertext <- object()$data[processed.data, on = object()$get_uniqueID()][[object()$get_name()]]
+          }
+          # add name to hovertext
+          if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_uniqueID()) {
+            result$highlight.hovertext <- marker_object()$data[[marker_object()$get_name()]]
+          }
+
           result$processed.data <- processed.data
           result$highlight.data <- highlight.data
         }
@@ -345,6 +367,11 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
           }
         }
       } else if (markerOutput$highlight() == "Exclusive") {
+        # add name to hovertext
+        if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_uniqueID()) {
+          result$data.hovertext <- marker_object()$data[[marker_object()$get_name()]]
+        }
+
         result$processed.data <- highlight.data
 
         # set label; ignore if more than 100
@@ -384,6 +411,7 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
     plot <- create_scatterplot(
       data = result.data()$processed.data,
       data.labels = result.data()$data.label,
+      data.hovertext <- result.data()$data.hovertext,
       color = colorPicker()$palette,
       x_label = xaxis$label(),
       y_label = yaxis$label(),
@@ -396,6 +424,7 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
       highlight.data = result.data()$highlight.data,
       highlight.color = result.data()$highlight.color,
       highlight.labels = result.data()$highlight.label,
+      highlight.hovertext = result.data()$highlight.hovertext,
       xlim = xlimit,
       ylim = ylimit,
       colorbar.limits = colorPicker()$winsorize,

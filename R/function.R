@@ -4,6 +4,7 @@
 #'             column 1: id
 #'             column 2, 3(, 4): x, y(, z)
 #' @param data.labels Vector of labels used for data. Length has to be equal to nrow(data).
+#' @param data.hovertext Character vector with additional hovertext. Length has to be equal to nrow(data).
 #' @param transparency Set point transparency. See \code{\link[ggplot2]{geom_point}}.
 #' @param pointsize Set point size. See \code{\link[ggplot2]{geom_point}}.
 #' @param labelsize Set label size. See \code{\link[ggplot2]{geom_text}}.
@@ -15,7 +16,8 @@
 #' @param line Boolean value, add reference line.
 #' @param categorized Z-Axis (if exists) as categories.
 #' @param highlight.data data.table containing data to highlight. Same structure as data.
-#' @param highlight.labels Vector of labels used for highlighted data. Length has to be equal to nrow(data).
+#' @param highlight.labels Vector of labels used for highlighted data. Length has to be equal to nrow(highlight.data).
+#' @param highlight.hovertext Character vector with additional hovertext. Length has to be equal to nrow(highlight.data).
 #' @param highlight.color String with hexadecimal color-code.
 #' @param xlim Numeric vector of two setting min and max limit of x-axis. See \code{\link[ggplot2]{lims}}.
 #' @param ylim Numeric vector of two setting min and max limit of y-axis. See \code{\link[ggplot2]{lims}}.
@@ -31,7 +33,7 @@
 #' @import data.table
 #'
 #' @return Returns list(plot = ggplotly/ ggplot, width, height, ppi, exceed_size).
-create_scatterplot <- function(data, data.labels = NULL, transparency = 1, pointsize = 1, labelsize = 3, color = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
+create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, transparency = 1, pointsize = 1, labelsize = 3, color = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.hovertext = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
   ########## prepare data ##########
   # set labelnames if needed
   x_label <- ifelse(nchar(x_label), x_label, names(data)[2])
@@ -59,10 +61,12 @@ create_scatterplot <- function(data, data.labels = NULL, transparency = 1, point
     highlight.data <- highlight.data[rows.to.keep.high]
   }
 
-  # delete labels accordingly
+  # delete labels & hovertext accordingly
   data.labels <- data.labels[rows.to.keep.data]
+  data.hovertext <- data.hovertext[rows.to.keep.data]
   if (!is.null(highlight.data)) {
     highlight.labels <- highlight.labels[rows.to.keep.high]
+    highlight.hovertext <- highlight.hovertext[rows.to.keep.high]
   }
 
   ########## assemble plot ##########
@@ -137,36 +141,51 @@ create_scatterplot <- function(data, data.labels = NULL, transparency = 1, point
   # interactive points with hovertexts
   if (plot.method == "interactive") {
     # set hovertext
+    # list of arguments for paste0
+    args <- list(
+      "</br>", data[[1]],
+      "</br>", x_label, ": ", data[[x_head]],
+      "</br>", y_label, ": ", data[[y_head]]
+    )
+
+    # append z-axis
     if (ncol(data) >= 4) {
-      hovertext <- paste0("</br>", data[[1]],
-                          "</br>", x_label, ": ", data[[x_head]],
-                          "</br>", y_label, ": ", data[[y_head]],
-                          "</br>", z_label, ": ", data[[z_head]])
-    } else {
-      hovertext <- paste0("</br>", data[[1]],
-                          "</br>", x_label, ": ", data[[x_head]],
-                          "</br>", y_label, ": ", data[[y_head]])
+      args <- append(args, list("</br>", z_label, ": ", data[[z_head]]))
+    }
+    # append additional hovertext
+    if (!is.null(data.hovertext)) {
+      args <- append(args, list("</br>", data.hovertext), after = 2)
     }
 
+    # eval arguments with paste0
+    hovertext <- do.call(paste0, args)
+
     # set points
-    # color if no z-axis
     plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, ggplot2::aes(text = hovertext))
 
     if (!is.null(highlight.data)) {
       # set highlighted hovertext
+      # list of arguments for paste0
+      highlight.args <- list(
+        "</br>", highlight.data[[1]],
+        "</br>", x_label, ": ", highlight.data[[x_head]],
+        "</br>", y_label, ": ", highlight.data[[y_head]]
+      )
+
+      # append z-axis
       if (ncol(data) >= 4) {
-        hovertext.high <- paste0("</br>", highlight.data[[1]],
-                                 "</br>", x_label, ": ", highlight.data[[x_head]],
-                                 "</br>", y_label, ": ", highlight.data[[y_head]],
-                                 "</br>", z_label, ": ", highlight.data[[z_head]])
-      } else {
-        hovertext.high <- paste0("</br>", highlight.data[[1]],
-                                 "</br>", x_label, ": ", highlight.data[[x_head]],
-                                 "</br>", y_label, ": ", highlight.data[[y_head]])
+        highlight.args <- append(highlight.args, list("</br>", z_label, ": ", highlight.data[[z_head]]))
+      }
+      # append additional hovertext
+      if (!is.null(highlight.hovertext)) {
+        highlight.args <- append(highlight.args, list("</br>", highlight.hovertext), after = 2)
       }
 
+      # eval arguments with paste0
+      highlight.hovertext <- do.call(paste0, highlight.args)
+
       # set highlighted points
-      plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE, ggplot2::aes(text = hovertext.high))
+      plot <- plot + ggplot2::geom_point(size = pointsize * scale, alpha = transparency, inherit.aes = TRUE, data = highlight.data, color = highlight.color, show.legend = FALSE, ggplot2::aes(text = highlight.hovertext))
     }
   # static points without hovertexts
   } else if (plot.method == "static") {

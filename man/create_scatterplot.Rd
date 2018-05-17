@@ -4,13 +4,13 @@
 \alias{create_scatterplot}
 \title{Method for scatter plot creation}
 \usage{
-create_scatterplot(data, data.labels = NULL, transparency = 1,
-  pointsize = 1, labelsize = 3, color = NULL, x_label = "",
-  y_label = "", z_label = "", density = T, line = T, categorized = F,
-  highlight.data = NULL, highlight.labels = NULL,
-  highlight.color = "#FF0000", xlim = NULL, ylim = NULL,
-  colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72,
-  plot.method = "static", scale = 1)
+create_scatterplot(data, data.labels = NULL, data.hovertext = NULL,
+  transparency = 1, pointsize = 1, labelsize = 3, color = NULL,
+  x_label = "", y_label = "", z_label = "", density = T, line = T,
+  categorized = F, highlight.data = NULL, highlight.labels = NULL,
+  highlight.hovertext = NULL, highlight.color = "#FF0000", xlim = NULL,
+  ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto",
+  ppi = 72, plot.method = "static", scale = 1)
 }
 \arguments{
 \item{data}{data.table containing plot data
@@ -18,6 +18,8 @@ column 1: id
 column 2, 3(, 4): x, y(, z)}
 
 \item{data.labels}{Vector of labels used for data. Length has to be equal to nrow(data).}
+
+\item{data.hovertext}{Character vector with additional hovertext. Length has to be equal to nrow(data).}
 
 \item{transparency}{Set point transparency. See \code{\link[ggplot2]{geom_point}}.}
 
@@ -41,7 +43,9 @@ column 2, 3(, 4): x, y(, z)}
 
 \item{highlight.data}{data.table containing data to highlight. Same structure as data.}
 
-\item{highlight.labels}{Vector of labels used for highlighted data. Length has to be equal to nrow(data).}
+\item{highlight.labels}{Vector of labels used for highlighted data. Length has to be equal to nrow(highlight.data).}
+
+\item{highlight.hovertext}{Character vector with additional hovertext. Length has to be equal to nrow(highlight.data).}
 
 \item{highlight.color}{String with hexadecimal color-code.}
 
