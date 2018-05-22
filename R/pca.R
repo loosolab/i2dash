@@ -35,6 +35,10 @@ pcaUI <- function(id, show.label = TRUE) {
             shiny::div(id = ns("guide_dimensions"),
                        shiny::numericInput(ns("dimA"), label = "PCA dimension (x-axis)", min = 1, max = 6, step = 1, value = 1),
                        shiny::numericInput(ns("dimB"), label = "PCA dimension (y-axis)", min = 1, max = 6, step = 1, value = 2)
+            ),
+            shiny::div(id = ns("guide_grouping"),
+                       labelUI(ns("group")),
+                       labelUI(ns("group2"))
             )
           ),
           shiny::column(
@@ -42,6 +46,9 @@ pcaUI <- function(id, show.label = TRUE) {
             shiny::div(id = ns("guide_pointsize"),
                        shiny::sliderInput(ns("pointsize"),label = "Point size", min = 0.1, max = 10, value = 2),
                        shiny::sliderInput(ns("labelsize"), label = "Label size", min = 1, max = 20, value = 5, round = TRUE)
+            ),
+            shiny::div(id = ns("guide_color"),
+                       colorPicker2UI(id = ns("colorPicker"), show.scaleoptions = FALSE, show.transparency = FALSE)
             )
           )
         ),
@@ -127,6 +134,9 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
 
   # modules/ ui #####
   columnSelect <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
+  factor_data <- shiny::callModule(label, "group", label = "Select color grouping factors", data = shiny::reactive(object()$metadata[key %in% columnSelect$selectedColumns(), c(object()$get_factors())]), unique = FALSE)
+  factor_data2 <- shiny::callModule(label, "group2", label = "Select shape grouping factors", data = shiny::reactive(object()$metadata[key %in% columnSelect$selectedColumns(), c(object()$get_factors())]), unique = FALSE)
+  colorPicker <- shiny::callModule(colorPicker2, "colorPicker",  distribution = "categorical", selected = "Dark2")
 
   # update dimension inputs
   shiny::observe({
@@ -152,6 +162,9 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     shinyjs::reset("pointsize")
     shinyjs::reset("labelsize")
     columnSelect <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
+    factor_data <<- shiny::callModule(label, "group", label = "Select color grouping factors", data = shiny::reactive(object()$metadata[key %in% columnSelect$selectedColumns(), c(object()$get_factors())]), unique = FALSE)
+    factor_data2 <<- shiny::callModule(label, "group2", label = "Select shape grouping factors", data = shiny::reactive(object()$metadata[key %in% columnSelect$selectedColumns(), c(object()$get_factors())]), unique = FALSE)
+    colorPicker <<- shiny::callModule(colorPicker2, "colorPicker",  distribution = "categorical", selected = "Dark2")
     clearPlot(TRUE)
   })
 
@@ -182,6 +195,11 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
 
     plot <- create_pca(
                data = result_data(),
+               color.group = factor_data()$label,
+               color.title = paste0(factor_data()$selected, collapse = ", "),
+               palette = colorPicker()$palette,
+               shape.group = factor_data2()$label,
+               shape.title = paste0(factor_data2()$selected, collapse = ", "),
                dimensionA = input$dimA,
                dimensionB = input$dimB,
                dimensions = length(columnSelect$selectedColumns()) - 1,
@@ -249,14 +267,17 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     # format selection
     selection <- list(
       data = list(type = columnSelect$type(), selectedColumns = columnSelect$selectedColumns()),
-      dimensions = list(xaxis = input$dimA, yaxis = input$dimB)
+      dimensions = list(xaxis = input$dimA, yaxis = input$dimB),
+      colorGrouping = factor_data()$selected,
+      shapeGrouping = factor_data2()$selected
     )
 
     # format options
     options <- list(
       show_label = input$label,
       pointsize = input$pointsize,
-      labelsize = input$labelsize
+      labelsize = input$labelsize,
+      colorOptions = list(scheme = colorPicker()$name, reverse = colorPicker()$reverse)
     )
 
     # merge all
@@ -264,38 +285,39 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
   })
 
   # notifications #####
-  # insufficient data/ invalid dimension warnings
+  # invalid dimension/ insufficient data warnings
+  # enable/ disable plot button
   shiny::observe({
     shinyjs::enable("plot")
 
-    col_num <- length(shiny::req(columnSelect$selectedColumns()))
-
-    # invalid dimension
-    if (col_num >= 3 && (is.na(input$dimA) || is.na(input$dimB) || input$dimA <= 0 || input$dimA >= col_num || input$dimB <= 0 || input$dimB >= col_num)) {
+    # no selection
+    if (!shiny::isTruthy(columnSelect$selectedColumns())) {
       shinyjs::disable("plot")
-
-      shiny::showNotification(
-        ui = "Invalid dimension(s)! Please select an integer value between 1 and number of selected columns - 1.",
-        id = "dimension",
-        type = "warning"
-      )
     } else {
-      shiny::removeNotification("dimension")
-    }
+      col_num <- length(columnSelect$selectedColumns())
+      # insufficient data
+      if (col_num < 3 || nrow(shiny::isolate(object()$data)) < 3) {
+        shinyjs::disable("plot")
+        shiny::showNotification(
+          ui = "Not enough columns/ rows selected! At least 3 of each needed for plotting.",
+          id = session$ns("data"),
+          type = "warning"
+        )
+      } else {
+        shiny::removeNotification(session$ns("data"))
+      }
 
-    # insufficient data
-    if (col_num < 3 || nrow(shiny::isolate(object()$data)) < 3) {
-      shinyjs::disable("plot")
-
-      shiny::showNotification(
-        ui = "Not enough columns/ rows selected! At least 3 of each needed for plotting.",
-        id = "data",
-        type = "warning"
-      )
-
-
-    } else {
-      shiny::removeNotification("data")
+      # invalid dimension
+      if (col_num >= 3 && (is.na(input$dimA) || is.na(input$dimB) || input$dimA <= 0 || input$dimA >= col_num || input$dimB <= 0 || input$dimB >= col_num)) {
+        shinyjs::disable("plot")
+        shiny::showNotification(
+          ui = "Invalid dimension(s)! Please select an integer value between 1 and number of selected columns - 1.",
+          id = session$ns("dimension"),
+          type = "warning"
+        )
+      } else {
+        shiny::removeNotification(session$ns("dimension"))
+      }
     }
   })
 
@@ -304,11 +326,11 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     if (plot()$exceed_size) {
       shiny::showNotification(
         ui = "Width and/ or height exceed limit. Using 500 cm instead.",
-        id = "limit",
+        id = session$ns("limit"),
         type = "warning"
       )
     } else {
-      shiny::removeNotification("limit")
+      shiny::removeNotification(session$ns("limit"))
     }
   })
 
@@ -334,8 +356,13 @@ pcaGuide <- function(session) {
     "guide_dimensions" = "<h4>PCA dimensions</h4>
     Choose which PCA dimensions are shown on the x-axis and y-axis.<br/>
     The number of PCA dimensions available for visualization is one less than the number of selected columns in the previous step.",
+    "guide_grouping" = "<h4>Grouping</h4>
+    Use the provided factor(s) to show groups based on colors and/ or shapes of the datapoints.<br/>
+    Multi-factor selections will be merged and evaluated as a single factor.",
     "guide_pointsize" = "<h4>Additional options</h4>
     You can increase or decrease the point size by dragging the slider to the right or to the left. The same goes for the label size and it's respecting slider.",
+    "guide_color" = "<h4>Color palettes</h4>
+    Choose a color palette used for color grouping. The selected pallette can also be reversed.",
     "guide_buttons" = "<h4>Create the plot</h4>
     As a final step, a click on the 'Plot' button will render the plot, while a click on the 'Reset' button will reset the parameters to default."
   )

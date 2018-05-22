@@ -4,13 +4,26 @@
 \alias{create_pca}
 \title{Method for pca creation.}
 \usage{
-create_pca(data, dimensionA = 1, dimensionB = 2, dimensions = 6,
-  on.columns = TRUE, labels = FALSE, custom.labels = NULL,
-  pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72,
-  scale = 1)
+create_pca(data, color.group = NULL, color.title = NULL, palette = NULL,
+  shape.group = NULL, shape.title = NULL, shapes = c(15:25),
+  dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE,
+  labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3,
+  width = 28, height = 28, ppi = 72, scale = 1)
 }
 \arguments{
 \item{data}{data.table from which the plot is created (First column will be handled as rownames if not numeric).}
+
+\item{color.group}{Vector of groups according to samples (= column names).}
+
+\item{color.title}{Title of the color legend.}
+
+\item{palette}{Vector of colors used for color palette.}
+
+\item{shape.group}{Vector of groups according to samples (= column names).}
+
+\item{shape.title}{Title of the shape legend.}
+
+\item{shapes}{Vector of shapes see \code{\link[graphics]{points}}. Will recycle/ cut off shapes if needed. Default = c(15:25)}
 
 \item{dimensionA}{Number of dimension displayed on X-Axis.}
 

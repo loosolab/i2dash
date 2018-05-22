@@ -6,11 +6,14 @@ source("../R/function.R")
 source("../R/pca.R")
 source("../R/global.R")
 source("../R/clarion.R")
+source("../R/label.R")
+source("../R/colorPicker2.R")
+source("../R/limit.R")
 
 ####Test Data
 data <- data.table::as.data.table(mtcars, keep.rowname = "id")
 # create metadata
-metadata <- data.table::data.table(names(data), level = c("feature", rep("sample", 7), rep("condition", 4)))
+metadata <- data.table::data.table(names(data), level = c("feature", rep("sample", 7), rep("condition", 4)), factor1 = c(rep("group_a", 6), rep("group_b", 6)), factor2 = c(rep("group_1", 3), rep("group_2", 3), rep("group_3", 6)))
 names(metadata)[1] <- "key"
 clarion <- Clarion$new(data = data, metadata = metadata)
 ####

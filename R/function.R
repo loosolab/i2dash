@@ -294,6 +294,12 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
 #' Method for pca creation.
 #'
 #' @param data data.table from which the plot is created (First column will be handled as rownames if not numeric).
+#' @param color.group Vector of groups according to samples (= column names).
+#' @param color.title Title of the color legend.
+#' @param palette Vector of colors used for color palette.
+#' @param shape.group Vector of groups according to samples (= column names).
+#' @param shape.title Title of the shape legend.
+#' @param shapes Vector of shapes see \code{\link[graphics]{points}}. Will recycle/ cut off shapes if needed. Default = c(15:25)
 #' @param dimensionA Number of dimension displayed on X-Axis.
 #' @param dimensionB Number of dimension displayed on Y-Axis.
 #' @param dimensions Number of dimesions to create.
@@ -313,76 +319,124 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
 #' @import data.table
 #'
 #' @return A named list(plot = ggplot object, data = pca.data, width = width of plot (cm), height = height of plot (cm), ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max).
-create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72, scale = 1) {
+create_pca <- function(data, color.group = NULL, color.title = NULL, palette = NULL, shape.group = NULL, shape.title = NULL, shapes = c(15:25), dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72, scale = 1) {
   requireNamespace("FactoMineR", quietly = TRUE)
   requireNamespace("factoextra", quietly = TRUE)
 
   # prepare data ------------------------------------------------------------
   # set custom labels
-  if(!is.null(custom.labels)) {
-    if(!is.numeric(data[[1]])) {
+  if (!is.null(custom.labels)) {
+    if (!is.numeric(data[[1]])) {
       colnames(data)[-1] <- custom.labels
     } else {
       colnames(data) <- custom.labels
     }
   }
 
-  #remove rows with NA
+  # remove rows with NA
   data <- stats::na.omit(data)
 
-  #check for rownames
-  if(!is.numeric(data[[1]])){
+  # check for rownames
+  if (!is.numeric(data[[1]])) {
     rownames <- data[[1]]
     data[, 1 := NULL]
-  }else{
+  } else {
     rownames <- NULL
   }
 
-  #transpose
-  if(on.columns){
+  # transpose
+  if (on.columns) {
     data_t <- t(data)
-    if(!is.null(rownames)){
+    if (!is.null(rownames)) {
       colnames(data_t) <- rownames
     }
-  }else{
+  } else {
     data_t <- as.matrix(data)
-    if(!is.null(rownames)){
+    if (!is.null(rownames)) {
       rownames(data_t) <- rownames
     }
   }
 
-  #check if PCA possible
-  if(ncol(data_t) < 3){
+  # check if PCA possible
+  if (ncol(data_t) < 3) {
     stop(paste("PCA requires at least 3 elements. Found:", ncol(data_t)))
   }
 
-  #remove constant rows (=genes with the same value for all samples)
+  # remove constant rows (= genes with the same value for all samples)
   data_t <- data_t[, apply(data_t, 2, function(x) min(x, na.rm = TRUE) != max(x, na.rm = TRUE))]
 
   pca <- FactoMineR::PCA(data_t, scale.unit = TRUE, ncp = dimensions, graph = FALSE)
 
   # plot --------------------------------------------------------------------
-  theme1 <- ggplot2::theme (								#no gray background or helper lines
+  theme1 <- ggplot2::theme(								# no gray background or helper lines
     plot.background = ggplot2::element_blank(),
     panel.grid.major = ggplot2::element_blank(),
     panel.grid.minor = ggplot2::element_blank(),
     panel.border = ggplot2::element_blank(),
     panel.background = ggplot2::element_blank(),
-    axis.line.x = ggplot2::element_line(size=.3),
-    axis.line.y = ggplot2::element_line(size=.3),
-    axis.title.x = ggplot2::element_text(color="black", size = 11 * scale),
-    axis.title.y = ggplot2::element_text(color="black", size = 11 * scale),
-    #plot.title = element_text(color="black", size=12),
+    axis.line.x = ggplot2::element_line(size = .3),
+    axis.line.y = ggplot2::element_line(size = .3),
+    axis.title.x = ggplot2::element_text(color = "black", size = 11 * scale),
+    axis.title.y = ggplot2::element_text(color = "black", size = 11 * scale),
+    # plot.title = element_text(color = "black", size = 12),
     plot.title = ggplot2::element_blank(),
-    legend.title = ggplot2::element_blank(),
-    text = ggplot2::element_text(size = 12 * scale)						#size for all (legend?) labels
-    #legend.key = element_rect(fill="white")
+    legend.title = ggplot2::element_text(color = "black", size = 11 * scale),
+    text = ggplot2::element_text(size = 12 * scale)						# size for all (legend?) labels
+    # legend.key = element_rect(fill = "white")
   )
 
-  pca_plot <- factoextra::fviz_pca_ind(pca, axes = c(dimensionA, dimensionB), invisible = "none", pointsize = pointsize * scale, label = "none", axes.linetype = "blank", repel = FALSE)
+  # show points if neither color- nor shape-groups
+  if (is.null(color.group) && is.null(shape.group)) {
+    invisible <-  "none"
+  } else {
+    invisible <-  "ind"
+    # prepare df for mapping
+    df <- data.frame(x = pca$ind$coord[, dimensionA], y = pca$ind$coord[, dimensionB])
+  }
+
+  pca_plot <- factoextra::fviz_pca_ind(pca, axes = c(dimensionA, dimensionB), invisible = invisible, pointsize = pointsize * scale, label = "none", axes.linetype = "blank", repel = FALSE)
   pca_plot <- pca_plot + theme1
 
-  if(labels) {
+  # grouping
+  scale_color <- NULL
+  scale_shape <- NULL
+  # color points by groups
+  if (is.vector(color.group)) {
+    color.group <- as.factor(color.group)
+    df <- data.frame(df, color = color.group)
+
+    scale_color <- ggplot2::scale_color_manual(
+      values = grDevices::colorRampPalette(palette)(nlevels(color.group)),
+      name = color.title
+    )
+  }
+  # shape points by groups
+  if (is.vector(shape.group)) {
+    shape.group <- as.factor(shape.group)
+    df <- data.frame(df, shape = shape.group)
+
+    scale_shape <- ggplot2::scale_shape_manual(
+      values = rep(shapes, length.out = nlevels(shape.group)),
+      name = shape.title
+    )
+  }
+  # generate mapping
+  if (!is.null(color.group) && !is.null(shape.group)) {
+    mapping <- ggplot2::aes(x = x, y = y, color = color, shape = shape)
+  } else if (!is.null(color.group)) {
+    mapping <- ggplot2::aes(x = x, y = y, color = color)
+  } else if (!is.null(shape.group)) {
+    mapping <- ggplot2::aes(x = x, y = y, shape = shape)
+  }
+  # apply grouping
+  if (!is.null(color.group) || !is.null(shape.group)) {
+    pca_plot <- pca_plot +
+      ggplot2::geom_point(data = df, mapping = mapping, size = pointsize * scale) +
+      scale_color +
+      scale_shape
+  }
+
+  if (labels) {
     pca_plot <- pca_plot + ggrepel::geom_text_repel(
       data = data.frame(pca$ind$coord),
       mapping = ggplot2::aes_(x = pca$ind$coord[, dimensionA], y = pca$ind$coord[, dimensionB], label = rownames(pca$ind$coord)),
@@ -394,8 +448,8 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
     )
   }
 
-  #ensure quadratic plot
-  # if(width == height){
+  # ensure quadratic plot
+  # if (width == height) {
   #   pca_plot <- pca_plot + ggplot2::coord_fixed(ratio = 1)
   # }
 
@@ -405,11 +459,11 @@ create_pca <- function(data, dimensionA = 1, dimensionB = 2, dimensions = 6, on.
 
   # size exceeded?
   exceed_size <- FALSE
-  if(width > 500) {
+  if (width > 500) {
     exceed_size <- TRUE
     width <- 500
   }
-  if(height > 500) {
+  if (height > 500) {
     exceed_size <- TRUE
     height <- 500
   }
