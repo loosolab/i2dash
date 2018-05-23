@@ -28,10 +28,13 @@ library(devtools)
 install_github("loosolab/wilson", host="github.molgen.mpg.de/api/v3")
 ```
 
-## Data Format
+## CLARION input format
+
 CLARION: generiC fiLe formAt foR quantItative cOmparsions of high throughput screeNs
 
-CLARION is a data format especially developed to be used with WIlsON, which relies on a tab-delimited table with a metadata header to describe the following columns. Most results derived from a variety of analyses can thus be easily reformatted to become compatible, without having to modify the code of WIlsON for specific experiments. For details considering CLARION please visit the Introduction pages of our [official demonstration server](http://loosolab.mpi-bn.mpg.de/apps/wilson/). 
+CLARION is a data format especially developed to be used with WIlsON, which relies on a tab-delimited table with a metadata header to describe the following columns. It is based on the Summarized Experiment format and supports all types of data which can be reduced to features and their annotation (e.g. genes, transcripts, proteins, probes) with assigned numerical values (e.g. count, score, log2foldchange, z-score, p-value). Most result tables derived from RNA-Seq, ChIP/ATAC-Seq, Proteomics, Microarrays, and many other analyses can thus be easily reformatted to become compatible without having to modify the code of WIlsON for each specific experiment.
+
+Please check the following link for details considering the [CLARION format](https://github.molgen.mpg.de/loosolab/wilson-apps/blob/master/wilson-basic/introduction/format.md).
 
 ## How to cite
 *Schultheis H, Kuenne C, Preussner J, Wiegandt R, Fust A, Bentsen M, Looso M*. WIlsON: Webbased Interactive Omics VisualizatioN. (2018), doi: https://XY
