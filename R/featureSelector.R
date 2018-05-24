@@ -28,6 +28,7 @@ featureSelectorUI <- function(id){
                             shiny::actionButton(ns("select"), "Select", style = "color: #fff; background-color: #3c8dbc"),
                             shiny::actionButton(ns("reset"), "Reset", style = "color: #fff; background-color: #3c8dbc"),
                             shiny::actionButton(ns("guide"), "Launch guide", style = "color: #fff; background-color: #3c8dbc", icon = shiny::icon("question-circle")),
+                            shiny::downloadButton(ns("download")),
                             shiny::br("The SELECT button only evaluates the filter(s) below. Sorting or sub-selections based on the table above will reset!")
                             )
 
@@ -316,6 +317,16 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     data_change(1)
   })
 
+  # download #####
+  output$download <- shiny::downloadHandler(
+    filename = "subset.tsv",
+    content = function(file) {
+      log_message("FeatureSelector: download", "INFO", token = session$token)
+
+      data.table::fwrite(x = result()$data, file = file, sep = "\t")
+    }
+  )
+
   return(result)
 }
 
@@ -338,7 +349,8 @@ featureSelectorGuide <- function(session, grouping = FALSE) {
       So in order to apply a filter and create a specific subset adjust the selectors as needed.<br/>
       The sum of those adjustments will be the filter used in the next step.",
     "guide_buttons" = "<h4>Apply filter</h4>
-      After the filter is set as intended, click on 'select' to filter the dataset, or click on 'reset' to delete the current filter.",
+      After the filter is set as intended, click on 'select' to filter the dataset, or click on 'reset' to delete the current filter.<br/>
+      Download the current subset via the respecting 'Download' Button (includes reorder, text search & row selection).",
     "guide_table" = "<h4>Further limit dataset</h4>
       Once the filter is successfully applied the remaining data is shown in this table.<br/>
       <br/>
