@@ -365,11 +365,11 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
         paste("Caution! You selected", length(input$genes), "genes. This may take a while to compute."),
         duration = 5,
         type = "warning",
-        id = "warning",
+        id = session$ns("warning"),
         closeButton = FALSE
       )
     }else{
-      shiny::removeNotification("warning")
+      shiny::removeNotification(session$ns("warning"))
     }
   })
 
@@ -378,11 +378,11 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     if (plot()$exceed_size) {
       shiny::showNotification(
         ui = "Width and/ or height exceed limit. Using 500 cm instead.",
-        id = "limit",
+        id = session$ns("limit"),
         type = "warning"
       )
     } else {
-      shiny::removeNotification("limit")
+      shiny::removeNotification(session$ns("limit"))
     }
   })
   # Fetch the reactive guide for this module

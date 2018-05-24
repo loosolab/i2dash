@@ -245,11 +245,11 @@ global_cor_heatmap <- function(input, output, session, clarion, plot.method = "s
     if (plot()$exceed_size) {
       shiny::showNotification(
         ui = "Width and/ or height exceed limit. Using 500 cm instead.",
-        id = "limit",
+        id = session$ns("limit"),
         type = "warning"
       )
     } else {
-      shiny::removeNotification("limit")
+      shiny::removeNotification(session$ns("limit"))
     }
   })
 
@@ -266,11 +266,11 @@ global_cor_heatmap <- function(input, output, session, clarion, plot.method = "s
     if (length(columns$selectedColumns()) < 2) {
       shiny::showNotification(
         ui = "Warning! At least two columns needed. Please select more.",
-        id = "less_data_warning",
+        id = session$ns("less_data_warning"),
         type = "warning"
       )
     } else {
-      shiny::removeNotification("less_data_warning")
+      shiny::removeNotification(session$ns("less_data_warning"))
     }
   })
 

@@ -353,11 +353,11 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
       if (show_warning) {
         shiny::showNotification(
           ui = "Warning! Insufficient columns/ rows. Either disable the respective clustering or expand the dataset.",
-          id = "insuf_data",
+          id = session$ns("insuf_data"),
           type = "warning"
         )
       } else {
-        shiny::removeNotification("insuf_data")
+        shiny::removeNotification(session$ns("insuf_data"))
       }
 
       # maximum heatmap reached?
@@ -413,11 +413,11 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     if (plot()$exceed_size) {
       shiny::showNotification(
         ui = "Width and/ or height exceed limit. Using 500 cm instead.",
-        id = "limit",
+        id = session$ns("limit"),
         type = "warning"
       )
     } else {
-      shiny::removeNotification("limit")
+      shiny::removeNotification(session$ns("limit"))
     }
   })
 
