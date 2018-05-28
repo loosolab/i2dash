@@ -13,9 +13,11 @@ The WIlsON R package includes a toolbox of R Shiny modules that can be used to c
 ## Availability
 All components of the WIlsON R package have been implemented in an integrated web application that is available for download from the Github repository [wilson-apps](https://github.molgen.mpg.de/loosolab/wilson-apps) and can be tested on our [official demonstration server](http://loosolab.mpi-bn.mpg.de/apps/wilson/).
 
+Usage instructions can be found in the extensive [documentation](https://github.molgen.mpg.de/loosolab/wilson-apps/wiki).
+
 Get a Docker container [here](https://hub.docker.com/r/loosolab/wilson/).
 
-Please make sure to check our other projects at http://loosolab.mpi-bn.mpg.de/.
+Please make sure to check our other projects at [loosolab](http://loosolab.mpi-bn.mpg.de/).
 
 ## Organization and Philosophy
 Visualizations are organized hierarchically as Shiny modules, such that larger visualizations are built from small, general, and reusable components. 
