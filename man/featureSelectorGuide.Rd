@@ -4,7 +4,7 @@
 \alias{featureSelectorGuide}
 \title{featureSelector module guide}
 \usage{
-featureSelectorGuide(session, grouping = FALSE)
+featureSelectorGuide(session)
 }
 \arguments{
 \item{session}{The shiny session}

@@ -325,7 +325,7 @@ featureSelector <- function(input, output, session, clarion, multiple = TRUE, co
 #'
 #' @return A shiny reactive that contains the texts for the guide steps.
 #'
-featureSelectorGuide <- function(session, grouping = FALSE) {
+featureSelectorGuide <- function(session) {
   steps <- list("guide_and" = "<h4>Grouping</h4>
       These boxes contain several selectors each.<br/>
       Expand/ Collapse them with a click on the '+'/ '-' on the right side.<br/>
