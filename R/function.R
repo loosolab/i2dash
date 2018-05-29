@@ -1184,29 +1184,30 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
 #' @param width in centimeter.
 #' @param height in centimeter.
 #' @param ppi pixel per inch. Defaults to 72.
+#' @param save_plot Logical if plot object should be saved as .RData.
 #' @param ui List of user inputs. Will be converted to Javascript Object Notation. See \code{\link[RJSONIO]{toJSON}}
 #'
 #' @return See \code{\link[utils]{zip}}.
-download <- function(file, filename, plot, width, height, ppi = 72, ui = NULL) {
+download <- function(file, filename, plot, width, height, ppi = 72, save_plot = TRUE, ui = NULL) {
   # cut off file extension
   name <- sub("(.*)\\..*$", replacement = "\\1", filename)
 
   # create tempfile names
   plot_file_pdf <- tempfile(pattern = name, fileext = ".pdf")
   plot_file_png <- tempfile(pattern = name, fileext = ".png")
-  if(!is.null(ui)) {
+  if (!is.null(ui)) {
     selection_file <- tempfile(pattern = "selection", fileext = ".json")
   } else {
     selection_file <- NULL
   }
 
   # save plots depending on given plot object
-  if(ggplot2::is.ggplot(plot)) {
+  if (ggplot2::is.ggplot(plot)) {
     # ggplot
 
     ggplot2::ggsave(plot_file_pdf, plot = plot, width = width, height = height, units = "cm", device = "pdf", useDingbats = FALSE)
     ggplot2::ggsave(plot_file_png, plot = plot, width = width, height = height, units = "cm", device = "png", dpi = ppi)
-  } else if(class(plot)[1] == "plotly") {
+  } else if (class(plot)[1] == "plotly") {
     # plotly
     # change working directory temporary so mounted drives are not a problem
     wd <- getwd()
@@ -1214,7 +1215,7 @@ download <- function(file, filename, plot, width, height, ppi = 72, ui = NULL) {
     plotly::export(p = plot, file = plot_file_pdf)
     plotly::export(p = plot, file = plot_file_png)
     setwd(wd)
-  } else if(class(plot) == "Heatmap") { # TODO: find better way to check for complexHeatmap object
+  } else if (class(plot) == "Heatmap") { # TODO: find better way to check for complexHeatmap object
     # complexHeatmap
     grDevices::pdf(plot_file_pdf, width = width / 2.54, height = height / 2.54, useDingbats = FALSE) # cm to inch
     ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom")
@@ -1228,7 +1229,7 @@ download <- function(file, filename, plot, width, height, ppi = 72, ui = NULL) {
   files <- c(plot_file_pdf, plot_file_png)
 
   # save user input
-  if(!is.null(selection_file)) {
+  if (!is.null(selection_file)) {
     # make key = value pair using value of name variable
     ui_list <- list()
     ui_list[[name]] <- ui
@@ -1237,6 +1238,16 @@ download <- function(file, filename, plot, width, height, ppi = 72, ui = NULL) {
     write(json, file = selection_file)
 
     files <- c(files, selection_file)
+  }
+
+  # save plot object
+  if (save_plot) {
+    # create temp file name
+    plot_object_file <- tempfile(pattern = "plot_object", fileext = ".RData")
+
+    save(plot, file = plot_object_file)
+
+    files <- c(files, plot_object_file)
   }
 
   # create zip file

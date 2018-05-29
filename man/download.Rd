@@ -6,7 +6,8 @@
 Creates a zip container containing plot in png, pdf and user input in json format.
 Use inside \code{\link[shiny]{downloadHandler}} content function.}
 \usage{
-download(file, filename, plot, width, height, ppi = 72, ui = NULL)
+download(file, filename, plot, width, height, ppi = 72, save_plot = TRUE,
+  ui = NULL)
 }
 \arguments{
 \item{file}{See \code{\link[shiny]{downloadHandler}} content parameter.}
@@ -20,6 +21,8 @@ download(file, filename, plot, width, height, ppi = 72, ui = NULL)
 \item{height}{in centimeter.}
 
 \item{ppi}{pixel per inch. Defaults to 72.}
+
+\item{save_plot}{Logical if plot object should be saved as .RData.}
 
 \item{ui}{List of user inputs. Will be converted to Javascript Object Notation. See \code{\link[RJSONIO]{toJSON}}}
 }
