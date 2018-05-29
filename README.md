@@ -13,9 +13,11 @@ The WIlsON R package includes a toolbox of R Shiny modules that can be used to c
 ## Availability
 All components of the WIlsON R package have been implemented in an integrated web application that is available for download from the Github repository [wilson-apps](https://github.molgen.mpg.de/loosolab/wilson-apps) and can be tested on our [official demonstration server](http://loosolab.mpi-bn.mpg.de/apps/wilson/).
 
+Usage instructions can be found in the extensive [documentation](https://github.molgen.mpg.de/loosolab/wilson-apps/wiki).
+
 Get a Docker container [here](https://hub.docker.com/r/loosolab/wilson/).
 
-Please make sure to check our other projects at http://loosolab.mpi-bn.mpg.de/.
+Please make sure to check our other projects at [loosolab](http://loosolab.mpi-bn.mpg.de/).
 
 ## Organization and Philosophy
 Visualizations are organized hierarchically as Shiny modules, such that larger visualizations are built from small, general, and reusable components. 
@@ -34,7 +36,7 @@ CLARION: generiC fiLe formAt foR quantItative cOmparsions of high throughput scr
 
 CLARION is a data format especially developed to be used with WIlsON, which relies on a tab-delimited table with a metadata header to describe the following columns. It is based on the Summarized Experiment format and supports all types of data which can be reduced to features and their annotation (e.g. genes, transcripts, proteins, probes) with assigned numerical values (e.g. count, score, log2foldchange, z-score, p-value). Most result tables derived from RNA-Seq, ChIP/ATAC-Seq, Proteomics, Microarrays, and many other analyses can thus be easily reformatted to become compatible without having to modify the code of WIlsON for each specific experiment.
 
-Please check the following link for details considering the [CLARION format](https://github.molgen.mpg.de/loosolab/wilson-apps/blob/master/wilson-basic/introduction/format.md).
+Please check the following link for details considering the [CLARION format](https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format).
 
 ## How to cite
 *Schultheis H, Kuenne C, Preussner J, Wiegandt R, Fust A, Bentsen M, Looso M*. WIlsON: Webbased Interactive Omics VisualizatioN. (2018), doi: https://XY

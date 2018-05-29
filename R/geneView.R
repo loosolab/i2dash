@@ -306,7 +306,7 @@ geneView <- function(input, output, session, data, metadata, level = NULL, plot.
 
   #enable plot button only if plot possible
   shiny::observe({
-    if(is.null(input$genes) | length(selector$selectedColumns()) < 1){
+    if(is.null(input$genes) || !shiny::isTruthy(selector$selectedColumns())){
       shinyjs::disable("plot")
     }else if(input$plotType == "violin"){
       factor1.levels <- metadata.r()[level == selector$type() & key %in% selector$selectedColumns() & factor1 != ""][, .N, keyby = factor1][["N"]]
