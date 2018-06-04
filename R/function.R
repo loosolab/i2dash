@@ -1189,6 +1189,18 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
 #'
 #' @return See \code{\link[utils]{zip}}.
 download <- function(file, filename, plot, width, height, ppi = 72, save_plot = TRUE, ui = NULL) {
+  session <- shiny::getDefaultReactiveDomain()
+
+  # show notification
+  shiny::showNotification(
+    id = session$ns("download-note"),
+    shiny::tags$b("Preparing download files. Please wait..."),
+    duration = NULL,
+    closeButton = FALSE,
+    type = "message"
+  )
+  shinyjs::runjs(paste0("$(document.getElementById('", paste0("shiny-notification-", session$ns("download-note")), "')).addClass('notification-position-center');"))
+
   # cut off file extension
   name <- sub("(.*)\\..*$", replacement = "\\1", filename)
 
@@ -1251,5 +1263,10 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   }
 
   # create zip file
-  utils::zip(zipfile = file, files = files, flags = "-j") # discard file path
+  out <- utils::zip(zipfile = file, files = files, flags = "-j") # discard file path
+
+  # remove notification
+  shiny::removeNotification(session$ns("download-note"))
+
+  return(out)
 }
