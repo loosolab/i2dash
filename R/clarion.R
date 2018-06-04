@@ -49,7 +49,23 @@ Clarion <- R6::R6Class("Clarion",
                            }
                          },
                          get_factors = function() {
-                           grep("^factor\\d+", names(self$metadata), perl = TRUE, value = TRUE)
+                           # returns data.table key(, factor columns)
+                           # only name for named factors (e.g. factor1="name")
+
+                           # get factor columns
+                           columns <- grep("^factor\\d+", names(self$metadata), perl = TRUE, value = TRUE)
+                           # on no factors return key column
+                           if (length(columns) == 0) return(self$metadata[, "key"])
+
+                           # extract names
+                           ext_names <- sub("^factor\\d+=\"(.*)\"", replacement = "\\1", columns, perl = TRUE)
+
+                           # get factor table
+                           factor_table <- self$metadata[, c("key", columns), with = FALSE]
+                           # rename columns
+                           names(factor_table)[-1] <- ext_names
+
+                           return(factor_table)
                          },
                          validate = function() {
                            # validate header
@@ -103,7 +119,7 @@ Clarion <- R6::R6Class("Clarion",
                          ## metadata checks
                          check_metadataHeader = function() {
                            # case: invalid column names
-                           valid_names <- c("key", "factor\\d+", "level", "type", "label", "sub_label")
+                           valid_names <- c("key", "factor\\d+(=\".*\")?", "level", "type", "label", "sub_label")
                            regex <- paste0("^", valid_names, "$", collapse = "|")
                            invalid_names <- grep(regex, names(self$metadata), invert = TRUE, value = TRUE, perl = TRUE)
                            if (length(invalid_names) > 0) {
