@@ -146,7 +146,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
   transform <- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selectedColumns(), with = FALSE])))
   selector <- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), columnTypeLabel = "Select Columns")
   custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes)]), sep = label.sep)
-  factor_data <- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$metadata[key %in% selector$selectedColumns(), c(object()$get_factors())]), sep = label.sep, unique = FALSE)
+  factor_data <- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$get_factors()[key %in% selector$selectedColumns(), !"key"]), sep = label.sep, unique = FALSE)
   limiter <- shiny::callModule(limit, "limit", lower = shiny::reactive(get_limits()[1]), upper = shiny::reactive(get_limits()[2]))
 
   output$genes <- shiny::renderUI({
@@ -185,7 +185,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     transform <<- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selectedColumns(), with = FALSE])))
     selector <<- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), columnTypeLabel = "Select Columns")
     custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes)]), sep = label.sep)
-    factor_data <<- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$metadata[key %in% selector$selectedColumns(), c(object()$get_factors())]), sep = label.sep, unique = FALSE)
+    factor_data <<- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$get_factors()[key %in% selector$selectedColumns(), !"key"]), sep = label.sep, unique = FALSE)
     limiter <<- shiny::callModule(limit, "limit", lower = shiny::reactive(get_limits()[1]), upper = shiny::reactive(get_limits()[2]))
     clearPlot(TRUE)
   })
