@@ -1198,8 +1198,11 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   if (save_plot) {
     # create temp file name
     plot_object_file <- tempfile(pattern = "plot_object", fileext = ".RData")
+    ggplot2_version <- as.character(packageVersion("ggplot2"))
+    plotly_version <- as.character(packageVersion("plotly"))
+    r_version <- R.Version()$version.string
 
-    save(plot, file = plot_object_file)
+    save(plot, ggplot2_version, plotly_version, r_version, file = plot_object_file)
 
     files <- c(files, plot_object_file)
   }
