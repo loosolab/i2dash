@@ -1193,6 +1193,9 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   # create zip file
   out <- utils::zip(zipfile = file, files = files, flags = "-j") # discard file path
 
+  # remove tmp files
+  file.remove(files)
+
   # remove notification
   shiny::removeNotification(session$ns("download-note"))
 
