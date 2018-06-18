@@ -378,16 +378,14 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
             paste("Clustering limited to", static, "genes! Please disable clustering or select less genes."),
             duration = NULL,
             type = "error",
-            id = session$ns("notification"),
-            closeButton = FALSE
+            id = session$ns("notification")
           )
         } else if (plot.method == "interactive" && nrow(object()$data) > interactive) { # cluster limitation (interactive)
           shiny::showNotification(
             paste("Clustering limited to", interactive, "genes! Please disable clustering or select less genes."),
             duration = NULL,
             type = "error",
-            id = session$ns("notification"),
-            closeButton = FALSE
+            id = session$ns("notification")
           )
         } else {
           shiny::removeNotification(session$ns("notification"))
@@ -397,8 +395,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
           paste("Caution! You selected", nrow(object()$data), "genes. This will take a while to compute."),
           duration = 5,
           type = "warning",
-          id = session$ns("notification"),
-          closeButton = FALSE
+          id = session$ns("notification")
         )
       } else {
         shiny::removeNotification(session$ns("notification"))

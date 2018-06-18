@@ -365,8 +365,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
         paste("Caution! You selected", length(input$genes), "genes. This may take a while to compute."),
         duration = 5,
         type = "warning",
-        id = session$ns("warning"),
-        closeButton = FALSE
+        id = session$ns("warning")
       )
     }else{
       shiny::removeNotification(session$ns("warning"))
