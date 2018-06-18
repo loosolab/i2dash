@@ -3,18 +3,48 @@
 #' Use this to create a clarion object.
 #' This object is used by all top-level wilson modules.
 #'
+#' @section Methods:
+#' \describe{
+#'     \item{\code{get_uniqueID()}}{
+#'       Returns name of unique column. Assumes first feature to be unique if not specified.
+#'     }
+#'     \item{\code{get_name()}}{
+#'       Returns name of name column. If not specified return unique Id.
+#'     }
+#'     \item{\code{get_delimiter()}}{
+#'       Return delimiter used within multi-value fields (no delimiter = NULL).
+#'     }
+#'     \item{\code{is_delimited(x)}}{
+#'       Logical whether the given column name is delimited.
+#'     }
+#'     \item{\code{get_factors()}}{
+#'       Returns a data.table columns: key and factor(s) if any. Named factors (e.g. factor1="name") will be cropped to their name.
+#'     }
+#'     \item{\code{validate()}}{
+#'       Check the object for inconsistencies.
+#'     }
+#'   }
+#'
 #' @param header A named list. Defaults to NULL.
 #' @param metadata Clarion metadata in form of a data.table.
 #' @param data Data.table according to metadata.
 #' @param validate Logical value to validate on initialization. Defaults to TRUE.
 #'
+#' @field header List of global information regarding the whole experiment.
+#' @field metadata Data.table with additional information for each column.
+#' @field data Data.table containing experiment result data.
+#'
 #' @examples
+#' \dontrun{
 #' # initializing a new object
 #' object <- Clarion$new(header, metadata, data, validate = TRUE)
 #'
 #' # create a deep copy
 #' object_copy <- object$clone(deep = TRUE)
+#' }
 #'
+#' @format NULL
+#' @usage NULL
 #' @export
 Clarion <- R6::R6Class("Clarion",
                        public = list(

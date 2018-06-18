@@ -4,10 +4,6 @@
 \name{Clarion}
 \alias{Clarion}
 \title{Clarion R6-class definition}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
-\usage{
-Clarion
-}
 \arguments{
 \item{header}{A named list. Defaults to NULL.}
 
@@ -21,12 +17,48 @@ Clarion
 Use this to create a clarion object.
 This object is used by all top-level wilson modules.
 }
+\section{Fields}{
+
+\describe{
+\item{\code{header}}{List of global information regarding the whole experiment.}
+
+\item{\code{metadata}}{Data.table with additional information for each column.}
+
+\item{\code{data}}{Data.table containing experiment result data.}
+}}
+
+\section{Methods}{
+
+\describe{
+    \item{\code{get_uniqueID()}}{
+      Returns name of unique column. Assumes first feature to be unique if not specified.
+    }
+    \item{\code{get_name()}}{
+      Returns name of name column. If not specified return unique Id.
+    }
+    \item{\code{get_delimiter()}}{
+      Return delimiter used within multi-value fields (no delimiter = NULL).
+    }
+    \item{\code{is_delimited(x)}}{
+      Logical whether the given column name is delimited.
+    }
+    \item{\code{get_factors()}}{
+      Returns a data.table columns: key and factor(s) if any. Named factors (e.g. factor1="name") will be cropped to their name.
+    }
+    \item{\code{validate()}}{
+      Check the object for inconsistencies.
+    }
+  }
+}
+
 \examples{
+\dontrun{
 # initializing a new object
 object <- Clarion$new(header, metadata, data, validate = TRUE)
 
 # create a deep copy
 object_copy <- object$clone(deep = TRUE)
+}
 
 }
 \keyword{datasets}
