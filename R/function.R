@@ -34,6 +34,9 @@
 #'
 #' @return Returns list(plot = ggplotly/ ggplot, width, height, ppi, exceed_size).
 create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, transparency = 1, pointsize = 1, labelsize = 3, color = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.hovertext = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
+  # force evaluation of all arguments
+  # no promises in plot object
+  forceArgs()
   ########## prepare data ##########
   # set labelnames if needed
   x_label <- ifelse(nchar(x_label), x_label, names(data)[2])
@@ -320,6 +323,10 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
 #'
 #' @return A named list(plot = ggplot object, data = pca.data, width = width of plot (cm), height = height of plot (cm), ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max).
 create_pca <- function(data, color.group = NULL, color.title = NULL, palette = NULL, shape.group = NULL, shape.title = NULL, shapes = c(15:25), dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72, scale = 1) {
+  # force evaluation of all arguments
+  # no promises in plot object
+  forceArgs()
+
   requireNamespace("FactoMineR", quietly = TRUE)
   requireNamespace("factoextra", quietly = TRUE)
 
@@ -494,6 +501,10 @@ create_pca <- function(data, color.group = NULL, color.title = NULL, palette = N
 #'
 #' @return Returns list(plot = complexHeatmap/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max) depending on plot.method.
 create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label = NULL, column.label=T, column.custom.label = NULL, clustering='none', clustdist='auto', clustmethod='auto', colors=NULL, winsorize.colors = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
+  # force evaluation of all arguments
+  # no promises in plot object
+  forceArgs()
+
   requireNamespace("heatmaply", quietly = TRUE)
   requireNamespace("ComplexHeatmap", quietly = TRUE)
   requireNamespace("grDevices", quietly = TRUE)
@@ -761,6 +772,9 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
 #'
 #' @return Returns depending on plot.method list(plot = ggplot/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean).
 create_geneview <- function(data, grouping, plot.type = "line", facet.target = "gene", facet.cols = 2, colors = NULL, ylabel = NULL, ylimits = NULL, gene.label = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1){
+  # force evaluation of all arguments
+  # no promises in plot object
+  forceArgs()
   #grouping
   #group by factor if existing (fill with key if empty)
   grouping[grouping[[2]] == "", 2 := grouping[grouping[[2]] == "", 1]]
@@ -1256,8 +1270,11 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   if (save_plot) {
     # create temp file name
     plot_object_file <- tempfile(pattern = "plot_object", fileext = ".RData")
+    ggplot2_version <- as.character(packageVersion("ggplot2"))
+    plotly_version <- as.character(packageVersion("plotly"))
+    r_version <- R.Version()$version.string
 
-    save(plot, file = plot_object_file)
+    save(plot, ggplot2_version, plotly_version, r_version, file = plot_object_file)
 
     files <- c(files, plot_object_file)
   }
@@ -1265,8 +1282,33 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   # create zip file
   out <- utils::zip(zipfile = file, files = files, flags = "-j") # discard file path
 
+  # remove tmp files
+  file.remove(files)
+
   # remove notification
   shiny::removeNotification(session$ns("download-note"))
 
   return(out)
+}
+
+#' Force evaluation of the parent function's arguments.
+#'
+#' @param args List of Argument names to force evaluation. Defaults to all named arguments see \code{\link[base]{match.call}}.
+#'
+#' @details Similar to \code{\link[base]{forceAndCall}} but used from within the respective function.
+#' @details This method is not using \code{\link[base]{force}} as it is restricted to it's calling environment. Instead \code{\link[base]{get}} is used.
+#'
+forceArgs <- function(args) {
+  if (missing(args)) {
+    # get parent's call
+    args <- match.call(definition = sys.function(-1), call = sys.call(-1))
+    # use argument names
+    args <- names(as.list(args))
+    # omit empty names ("")
+    args <- args[-which(args == "")]
+  }
+
+  for (i in args) {
+    get(i, envir = sys.parent())
+  }
 }
