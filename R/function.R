@@ -125,7 +125,7 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
   if (density) {
     ### kernel density
     # plot$layers <- c(stat_density2d(geom = "tile", aes(fill = ..density..^0.25), n=200, contour=FALSE) + aes_(fill = as.name(var)), plot$layers) # n = resolution; density less sparse
-    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes(fill = ..density..^0.25), n = 200, contour = FALSE)
+    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes_(fill = ~ ..density..^0.25), n = 200, contour = FALSE)
 
     plot <- plot + ggplot2::scale_fill_gradient(low = "white", high = "black") +
       # guides(fill=FALSE) +		# remove density legend
@@ -429,11 +429,11 @@ create_pca <- function(data, color.group = NULL, color.title = NULL, palette = N
   }
   # generate mapping
   if (!is.null(color.group) && !is.null(shape.group)) {
-    mapping <- ggplot2::aes(x = x, y = y, color = color, shape = shape)
+    mapping <- ggplot2::aes_string(x = "x", y = "y", color = "color", shape = "shape")
   } else if (!is.null(color.group)) {
-    mapping <- ggplot2::aes(x = x, y = y, color = color)
+    mapping <- ggplot2::aes_string(x = "x", y = "y", color = "color")
   } else if (!is.null(shape.group)) {
-    mapping <- ggplot2::aes(x = x, y = y, shape = shape)
+    mapping <- ggplot2::aes_string(x = "x", y = "y", shape = "shape")
   }
   # apply grouping
   if (!is.null(color.group) || !is.null(shape.group)) {
@@ -904,7 +904,7 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
       matrixplot = matrixplot + ggplot2::aes(x = condition, fill = condition)
 
       if (plot.type == "line") {													#line plot: no facetting, different size algorithm
-        matrixplot <- matrixplot + ggplot2::aes(x = variable, colour = condition, group = condition, fill = NULL)
+        matrixplot <- matrixplot + ggplot2::aes_(x = ~ variable, colour = ~ condition, group = ~ condition, fill = NULL)
         matrixplot <- matrixplot + ggplot2::scale_x_discrete(expand = c(0.05, 0.05))								#expand to reduce the whitespace inside the plot (left/right)
       } else {
         #compute number of rows to get facet.cols columns (works better with plotly)
@@ -914,10 +914,10 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
       }
     }
     if (facet.target == "condition") {													#facet = condition
-      matrixplot <- matrixplot + ggplot2::aes(x = variable, fill = variable)
+      matrixplot <- matrixplot + ggplot2::aes_(x = ~ variable, fill = ~ variable)
 
       if (plot.type == "line") {													#line plot: no facetting, different size algorithm
-        matrixplot <- matrixplot + ggplot2::aes(x = condition, colour = variable, group = variable, fill = NULL)
+        matrixplot <- matrixplot + ggplot2::aes_(x = ~ condition, colour = ~ variable, group = ~ variable, fill = NULL)
         matrixplot <- matrixplot + ggplot2::scale_x_discrete(expand = c(0.05,0.05))								#expand to reduce the whitespace inside the plot (left/right)
       } else {
         #compute number of rows to get facet.cols columns (works better with plotly)
@@ -948,7 +948,7 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
     if (plot.type == "line") {
       matrixplot <- matrixplot + ggplot2::theme(legend.position = "right")
       #matrixplot <- matrixplot + geom_errorbar(aes(ymin = value-sd, ymax = value + sd), width = 0.05)								#error bar = standard deviation
-      matrixplot <- matrixplot + ggplot2::geom_errorbar(ggplot2::aes(ymin = value - se, ymax = value + se), size = 0.2, width = 0.05)								#error bar = standard error
+      matrixplot <- matrixplot + ggplot2::geom_errorbar(ggplot2::aes_(ymin = ~ value - se, ymax = ~ value + se), size = 0.2, width = 0.05)								#error bar = standard error
       matrixplot <- matrixplot + ggplot2::geom_line() + ggplot2::geom_point()											#bar plot of the mean (color=condition)
       #set hovertext
       matrixplot <- matrixplot + ggplot2::aes(text = paste("ID: ", data$variable, "\n",
@@ -1270,8 +1270,8 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   if (save_plot) {
     # create temp file name
     plot_object_file <- tempfile(pattern = "plot_object", fileext = ".RData")
-    ggplot2_version <- as.character(packageVersion("ggplot2"))
-    plotly_version <- as.character(packageVersion("plotly"))
+    ggplot2_version <- as.character(utils::packageVersion("ggplot2"))
+    plotly_version <- as.character(utils::packageVersion("plotly"))
     r_version <- R.Version()$version.string
 
     save(plot, ggplot2_version, plotly_version, r_version, file = plot_object_file)
