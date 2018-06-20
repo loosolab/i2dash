@@ -331,6 +331,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
   # enable plot button only if plot possible
   shiny::observe({
     if (is.null(input$genes) || !shiny::isTruthy(selector$selectedColumns())) {
+      shiny::removeNotification(session$ns("violin"))
       shinyjs::disable("plot")
     }else if (input$plotType == "violin") {
       factor_levels <- table(droplevels(as.factor(factor_data()$label), exclude = ""))
@@ -339,19 +340,34 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
         # every level >= 3 times
         factor_levels <- ifelse(length(factor_levels) > 0, factor_levels, FALSE)
         if (all(factor_levels >= 3)) {
+          shiny::removeNotification(session$ns("violin"))
           shinyjs::enable("plot")
         } else {
+          shiny::showNotification(
+            paste("Violin plot not feasible. Insufficient data. Please try a boxplot instead."),
+            duration = 5,
+            type = "warning",
+            id = session$ns("violin")
+          )
           shinyjs::disable("plot")
         }
       } else if (input$groupby == "gene") {
         # at least one level >= 3 times
         if (any(factor_levels >= 3)) {
+          shiny::removeNotification(session$ns("violin"))
           shinyjs::enable("plot")
         } else {
+          shiny::showNotification(
+            paste("Violin plot not feasible. Insufficient data. Please try a boxplot instead."),
+            duration = 5,
+            type = "warning",
+            id = session$ns("violin")
+          )
           shinyjs::disable("plot")
         }
       }
     } else {
+      shiny::removeNotification(session$ns("violin"))
       shinyjs::enable("plot")
     }
   })
