@@ -56,7 +56,7 @@ geneViewUI <- function(id, plot.columns = 3){
             shiny::column(
               width = 3,
               shiny::div(id = ns("guide_color"),
-                         colorPicker2UI(id = ns("color"), show.transparency = FALSE, show.scaleoptions = FALSE)),
+                         colorPickerUI(id = ns("color"), show.transparency = FALSE, show.scaleoptions = FALSE)),
               shiny::div(id = ns("guide_plotColumns"),
                          shiny::sliderInput(ns("plotColumns"), label = "Plot Columns", min = 1, max = 7, value = plot.columns, step = 1))
             )
@@ -142,7 +142,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
   })
 
   # modules/ ui #####
-  colorPicker <- shiny::callModule(colorPicker2, "color", distribution = "all", selected = "Dark2")
+  colorPicker <- shiny::callModule(colorPicker, "color", distribution = "all", selected = "Dark2")
   transform <- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selectedColumns(), with = FALSE])))
   selector <- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), columnTypeLabel = "Select Columns")
   custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes)]), sep = label.sep)
@@ -181,7 +181,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     shinyjs::reset("plotType")
     shinyjs::reset("groupby")
     shinyjs::reset("plotColumns")
-    colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = "all", selected = "Dark2")
+    colorPicker <<- shiny::callModule(colorPicker, "color", distribution = "all", selected = "Dark2")
     transform <<- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selectedColumns(), with = FALSE])))
     selector <<- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), columnTypeLabel = "Select Columns")
     custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes)]), sep = label.sep)

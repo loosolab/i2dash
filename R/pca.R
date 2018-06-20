@@ -48,7 +48,7 @@ pcaUI <- function(id, show.label = TRUE) {
                        shiny::sliderInput(ns("labelsize"), label = "Label size", min = 1, max = 20, value = 5, round = TRUE)
             ),
             shiny::div(id = ns("guide_color"),
-                       colorPicker2UI(id = ns("colorPicker"), show.scaleoptions = FALSE, show.transparency = FALSE)
+                       colorPickerUI(id = ns("colorPicker"), show.scaleoptions = FALSE, show.transparency = FALSE)
             )
           )
         ),
@@ -136,7 +136,7 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
   columnSelect <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
   factor_data <- shiny::callModule(label, "group", label = "Select color grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columnSelect$selectedColumns(), !"key"]), unique = FALSE)
   factor_data2 <- shiny::callModule(label, "group2", label = "Select shape grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columnSelect$selectedColumns(), !"key"]), unique = FALSE)
-  colorPicker <- shiny::callModule(colorPicker2, "colorPicker",  distribution = "categorical", selected = "Dark2")
+  colorPicker <- shiny::callModule(colorPicker, "colorPicker",  distribution = "categorical", selected = "Dark2")
 
   # update dimension inputs
   shiny::observe({
@@ -164,7 +164,7 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     columnSelect <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
     factor_data <<- shiny::callModule(label, "group", label = "Select color grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columnSelect$selectedColumns(), !"key"]), unique = FALSE)
     factor_data2 <<- shiny::callModule(label, "group2", label = "Select shape grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columnSelect$selectedColumns(), !"key"]), unique = FALSE)
-    colorPicker <<- shiny::callModule(colorPicker2, "colorPicker",  distribution = "categorical", selected = "Dark2")
+    colorPicker <<- shiny::callModule(colorPicker, "colorPicker",  distribution = "categorical", selected = "Dark2")
     clearPlot(TRUE)
   })
 

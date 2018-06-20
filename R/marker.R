@@ -11,7 +11,7 @@ markerUI <- function(id, label = "Highlight/ Label Selected Features"){
 
   shiny::tagList(
     shiny::selectInput(ns("highlight"), label = label, choices = c("Disabled", "Highlight", "Exclusive")),
-    colorPicker2UI(ns("color"), label = "Color", custom = TRUE),
+    colorPickerUI(ns("color"), label = "Color", custom = TRUE),
     labelUI(ns("label"))
 
   )
@@ -43,7 +43,7 @@ marker <- function(input, output, session, clarion){
   })
 
   # modules #####
-  color <- shiny::callModule(colorPicker2, "color")
+  color <- shiny::callModule(colorPicker, "color")
   labeller <-  shiny::callModule(label, "label", data = shiny::reactive(object()$data), unique = FALSE)
 
   return(

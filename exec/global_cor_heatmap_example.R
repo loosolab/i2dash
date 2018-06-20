@@ -1,7 +1,7 @@
 library(shiny)
 library(shinydashboard)
 source("../R/function.R")
-source("../R/colorPicker2.R")
+source("../R/colorPicker.R")
 source("../R/columnSelector.R")
 source("../R/transformation.R")
 source("../R/global_cor_heatmap.R")

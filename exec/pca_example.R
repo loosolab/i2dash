@@ -7,7 +7,7 @@ source("../R/pca.R")
 source("../R/global.R")
 source("../R/clarion.R")
 source("../R/label.R")
-source("../R/colorPicker2.R")
+source("../R/colorPicker.R")
 source("../R/limit.R")
 
 ####Test Data

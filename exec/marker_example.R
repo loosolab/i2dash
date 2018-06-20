@@ -1,7 +1,7 @@
 
 library(shiny)
 source("../R/marker.R")
-source("../R/colorPicker2.R")
+source("../R/colorPicker.R")
 source("../R/label.R")
 source("../R/limit.R")
 source("../R/clarion.R")

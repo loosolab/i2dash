@@ -81,7 +81,7 @@ global_cor_heatmapUI <- function(id) {
                   choices = c("Sequential", "Diverging"),
                   multiple = FALSE
                 ),
-                colorPicker2UI(
+                colorPickerUI(
                   id = ns("color"),
                   show.transparency = FALSE
                 )
@@ -208,7 +208,7 @@ global_cor_heatmap <- function(input, output, session, clarion, plot.method = "s
   # load internal modules
   columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
   transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selectedColumns(), with = FALSE])))
-  colorPicker <- shiny::callModule(colorPicker2, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
+  colorPicker <- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
 
   # load dynamic ui
   if (plot.method == "static") {
@@ -236,7 +236,7 @@ global_cor_heatmap <- function(input, output, session, clarion, plot.method = "s
     shinyjs::reset("column_label")
     columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
     transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selectedColumns(), with = FALSE])))
-    colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
+    colorPicker <<- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
     clearPlot(TRUE)
   })
 

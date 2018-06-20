@@ -4,7 +4,8 @@
 \alias{colorPicker}
 \title{colorPicker module server logic}
 \usage{
-colorPicker(input, output, session)
+colorPicker(input, output, session, num.colors = 256, distribution = "all",
+  winsorize = NULL, selected = NULL)
 }
 \arguments{
 \item{input}{Shiny's input object}
@@ -12,15 +13,23 @@ colorPicker(input, output, session)
 \item{output}{Shiny's output object}
 
 \item{session}{Shiny's session object}
+
+\item{num.colors}{Define length of colorpalette vector (Default = 256).}
+
+\item{distribution}{Decide which palettes are selectable. One or more of list("sequential", "diverging", "categorical"). Defaults to "all" (Supports reactive).}
+
+\item{winsorize}{Numeric vector of two. Dynamicly change lower and upper limit (supports reactive). Defaults to NULL.}
+
+\item{selected}{Set the default selected palette.}
 }
 \value{
-The \code{input} object.
+Reactive containing list(palette = c(colors), name = palette_name, transparency = Integer, reverse = Boolean, winsorize = NULL or a two-component vector containing lower and upper limits).
 }
 \description{
-Provides server logic for the colorPicker module.
+Provides server logic for the colorPicker2 module.
 }
-\section{To do}{
+\details{
+A custom colorpalette's return will be NULL if there is something wrong with it.
 
-Implement transparency calculation in case of one or more single colors.
+equalize will be returned as FALSE if not selected.
 }
-

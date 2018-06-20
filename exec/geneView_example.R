@@ -2,7 +2,7 @@
 library(shiny)
 library(shinydashboard)
 source("../R/function.R")
-source("../R/colorPicker2.R")
+source("../R/colorPicker.R")
 source("../R/transformation.R")
 source("../R/geneView.R")
 source("../R/columnSelector.R")

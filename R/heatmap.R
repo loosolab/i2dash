@@ -57,7 +57,7 @@ heatmapUI <- function(id, row.label = TRUE) {
                          choices = c("Sequential", "Diverging"),
                          multiple = FALSE
                        ),
-                       colorPicker2UI(ns("color"), show.transparency = FALSE)
+                       colorPickerUI(ns("color"), show.transparency = FALSE)
             )
           ),
           shiny::column(
@@ -156,7 +156,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
   # modules/ ui #####
   columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
   transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selectedColumns(), with = FALSE])))
-  colorPicker <- shiny::callModule(colorPicker2, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
+  colorPicker <- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
   custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row.label))
 
   # automatic unitlabel
@@ -178,7 +178,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     shinyjs::reset("column.label")
     columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
     transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selectedColumns(), with = FALSE])))
-    colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
+    colorPicker <<- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
     custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row.label))
     clearPlot(TRUE)
   })

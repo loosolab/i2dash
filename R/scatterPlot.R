@@ -71,7 +71,7 @@ scatterPlotUI <- function(id) {
           shiny::column(
             width = 3,
             shiny::div(id = ns("guide_color"),
-                       colorPicker2UI(id = ns("color"))
+                       colorPickerUI(id = ns("color"))
             ),
             shiny::div(id = ns("guide_pointsize"),
                        shiny::sliderInput(
@@ -186,7 +186,7 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
   xaxis <- shiny::callModule(columnSelector, "xaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
   yaxis <- shiny::callModule(columnSelector, "yaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
   zaxis <- shiny::callModule(columnSelector, "zaxis", type.columns = shiny::reactive(object()$metadata[, intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Color label", multiple = FALSE, none = TRUE)
-  colorPicker <- shiny::callModule(colorPicker2, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selectedColumn()) + 1, NULL, equalize(object()$data[, zaxis$selectedColumn(), with = FALSE]))))
+  colorPicker <- shiny::callModule(colorPicker, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selectedColumn()) + 1, NULL, equalize(object()$data[, zaxis$selectedColumn(), with = FALSE]))))
   transform_x <- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selectedColumn(), with = FALSE])))
   transform_y <- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selectedColumn(), with = FALSE])))
   # transform highlight data
@@ -222,7 +222,7 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
     xaxis <<- shiny::callModule(columnSelector, "xaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
     yaxis <<- shiny::callModule(columnSelector, "yaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
     zaxis <<- shiny::callModule(columnSelector, "zaxis", type.columns = shiny::reactive(object()$metadata[, intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", multiple = FALSE, none = TRUE)
-    colorPicker <<- shiny::callModule(colorPicker2, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selectedColumn()) + 1, NULL, equalize(object()$data[, zaxis$selectedColumn(), with = FALSE]))))
+    colorPicker <<- shiny::callModule(colorPicker, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selectedColumn()) + 1, NULL, equalize(object()$data[, zaxis$selectedColumn(), with = FALSE]))))
     transform_x <<- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selectedColumn(), with = FALSE])))
     transform_y <<- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selectedColumn(), with = FALSE])))
     # transform highlight data
