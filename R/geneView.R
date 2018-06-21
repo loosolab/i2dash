@@ -423,7 +423,7 @@ geneViewGuide <- function(session) {
       Select one or more columns to be used as a label instead of the names above.",
     "guide_columnSelection" = "<h4>Column selection</h4>
       First select a column type for visualization, then select individual columns from all columns of the chosen type.<br/>
-      Second select grouping factor(s). 'None' will result in no grouping, multiple selection in a single merged factor.<br/>
+      Second select grouping factor(s). Condense the above selected columns to factor(s). 'None' will result in no grouping, multiple selection in a single merged factor.<br/>
       After that choose a factor by which the given subset is grouped. E.g. 'condition' will generate a plot for each condition or uses the conditions as x-axis ticks, based on the choosen plot type.",
     "guide_type" = "<h4>Plot type</h4>
       Choose the preferred type of plot that will be rendered.",
