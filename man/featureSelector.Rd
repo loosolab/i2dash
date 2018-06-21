@@ -36,5 +36,5 @@ Reactive containing names list: Selected data as reactive containing clarion obj
 featureSelector module server logic
 }
 \details{
-Keep in mind that the order of features is the order in which delimiter, multiple, contains, ranged and step are evaluated.
+Keep in mind that the order of features (columns in clarion$data) is the order in which multiple, contains, ranged and step are evaluated.
 }

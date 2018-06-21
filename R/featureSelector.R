@@ -60,7 +60,7 @@ featureSelectorUI <- function(id){
 #' @param truncate Truncate datatable entries at x characters (Default = 30).
 #' @param selection.default Decide whether everything or nothing is selected on default (no filters applied). Either "all" or "none" (Default = "all").
 #'
-#' @details Keep in mind that the order of features is the order in which delimiter, multiple, contains, ranged and step are evaluated.
+#' @details Keep in mind that the order of features (columns in clarion$data) is the order in which multiple, contains, ranged and step are evaluated.
 #'
 #' @return Reactive containing names list: Selected data as reactive containing clarion object (object). Used filter to select data (filter).
 #'
