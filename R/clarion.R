@@ -73,7 +73,7 @@ Clarion <- R6::R6Class("Clarion",
                          },
                          is_delimited = function(x) {
                            if (is.element("type", names(self$metadata))) {
-                             return(self$metadata[key == x] == "array")
+                             return(self$metadata[key == x, type] == "array")
                            } else {
                              return(FALSE)
                            }
