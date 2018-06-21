@@ -83,7 +83,7 @@ featureSelector <- function(input, output, session, clarion, multiple = TRUE, co
   # delimiter vector
   # only delimit type = array
   delimiter <- shiny::reactive({
-    sapply(names(object()$data), function(x) {
+    sapply(object()$metadata[["key"]], function(x) {
       if (object()$is_delimited(x)) {
         return(object()$get_delimiter())
       } else {
