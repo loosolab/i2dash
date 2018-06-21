@@ -20,8 +20,8 @@
 #'     \item{\code{get_factors()}}{
 #'       Returns a data.table columns: key and factor(s) if any. Named factors (e.g. factor1="name") will be cropped to their name.
 #'     }
-#'     \item{\code{validate()}}{
-#'       Check the object for inconsistencies.
+#'     \item{\code{validate(solve = TRUE)}}{
+#'       Check the object for inconsistencies. For solve = TRUE try to resolve some warnings.
 #'     }
 #'   }
 #'
@@ -97,7 +97,7 @@ Clarion <- R6::R6Class("Clarion",
 
                            return(factor_table)
                          },
-                         validate = function() {
+                         validate = function(solve = TRUE) {
                            # validate header
                            private$check_delimiter()
                            # validate metadata
@@ -107,7 +107,7 @@ Clarion <- R6::R6Class("Clarion",
                            private$check_type()
                            private$check_label()
                            # validate data
-                           private$check_dataHeader()
+                           private$check_dataHeader(solve)
                            private$check_dataMin()
                            private$check_dataColumnTypes()
                          },
@@ -216,11 +216,15 @@ Clarion <- R6::R6Class("Clarion",
                            }
                          },
                          ## data checks
-                         check_dataHeader = function() {
+                         check_dataHeader = function(solve = TRUE) {
                            # case: column not defined in metadata
                            missing <- setdiff(names(self$data), self$metadata[["key"]])
                            if (length(missing) > 0) {
-                             warning("Metadata rows and data columns differ! Following rows are missing in metadata: ", paste0(missing, collapse = ", "))
+                             if (solve) {
+                               # omit undefined columns
+                               self$data[, (missing) := NULL]
+                             }
+                             warning("Metadata rows and data columns differ! Following rows are missing in metadata: ", paste0(missing, collapse = ", "), if (solve) "\nOmitting data column(s)!")
                            }
                            # case: duplicated column names
                            if (anyDuplicated(names(self$data))) {

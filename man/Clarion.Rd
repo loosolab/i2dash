@@ -45,8 +45,8 @@ This object is used by all top-level wilson modules.
     \item{\code{get_factors()}}{
       Returns a data.table columns: key and factor(s) if any. Named factors (e.g. factor1="name") will be cropped to their name.
     }
-    \item{\code{validate()}}{
-      Check the object for inconsistencies.
+    \item{\code{validate(solve = TRUE)}}{
+      Check the object for inconsistencies. For solve = TRUE try to resolve some warnings.
     }
   }
 }
