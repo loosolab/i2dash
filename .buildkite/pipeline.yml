@@ -1,0 +1,3 @@
+steps:
+  - label: Package check
+    command: Rscript /.buildkite/check.R
