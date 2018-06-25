@@ -8,7 +8,7 @@
 #' @param custom Boolean if TRUE custom colors can be selected (Default = FALSE).
 #' @param multiple Boolean value, if set to TRUE custom colorpalettes can be made. Only if custom = TRUE (Default = FALSE).
 #' @param show.reverse Logical, whether or not to show the reverse switch (Default = TRUE).
-#' @param show.scaleoptions Logical, whether or not to show color scaling option winorize (Default = TRUE).
+#' @param show.scaleoptions Logical, whether or not to show color scaling option winsorize (Default = TRUE).
 #' @param show.transparency Logical, whether or not to show the transparency slider (Default = TRUE).
 #'
 #' @return A list with HTML tags from \code{\link[shiny]{tag}}.
@@ -59,7 +59,7 @@ colorPickerUI <- function(id, label = "Color scheme", custom = FALSE, multiple =
 #' @param session Shiny's session object
 #' @param num.colors Define length of colorpalette vector (Default = 256).
 #' @param distribution Decide which palettes are selectable. One or more of list("sequential", "diverging", "categorical"). Defaults to "all" (Supports reactive).
-#' @param winsorize Numeric vector of two. Dynamicly change lower and upper limit (supports reactive). Defaults to NULL.
+#' @param winsorize Numeric vector of two. Dynamically change lower and upper limit (supports reactive). Defaults to NULL.
 #' @param selected Set the default selected palette.
 #'
 #' @details A custom colorpalette's return will be NULL if there is something wrong with it.

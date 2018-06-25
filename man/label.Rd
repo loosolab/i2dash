@@ -21,11 +21,11 @@ label(input, output, session, data, label = "Select label columns",
 
 \item{multiple}{Allow multiple selection which will be merged with sep (default = TRUE).}
 
-\item{sep}{Seperator used to collapse selection (default = ", ").}
+\item{sep}{Separator used to collapse selection (default = ", ").}
 
 \item{unique}{Make labels unique. Defaults to TRUE. See \code{\link[base]{make.unique}}.}
 
-\item{unique_sep}{Seperator used for unique (default = "_"). Should differ from sep.}
+\item{unique_sep}{Separator used for unique (default = "_"). Should differ from sep.}
 
 \item{disable}{Reactive containing boolean. To disable/ enable module.}
 }

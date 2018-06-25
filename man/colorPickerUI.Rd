@@ -19,7 +19,7 @@ colorPickerUI(id, label = "Color scheme", custom = FALSE,
 
 \item{show.reverse}{Logical, whether or not to show the reverse switch (Default = TRUE).}
 
-\item{show.scaleoptions}{Logical, whether or not to show color scaling option winorize (Default = TRUE).}
+\item{show.scaleoptions}{Logical, whether or not to show color scaling option winsorize (Default = TRUE).}
 
 \item{show.transparency}{Logical, whether or not to show the transparency slider (Default = TRUE).}
 }

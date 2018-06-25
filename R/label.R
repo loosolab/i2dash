@@ -21,9 +21,9 @@ labelUI <- function(id){
 #' @param data Data.table used for label creation. Column names will be used for selection. (supports reactive)
 #' @param label Set label of selectizeInput.
 #' @param multiple Allow multiple selection which will be merged with sep (default = TRUE).
-#' @param sep Seperator used to collapse selection (default = ", ").
+#' @param sep Separator used to collapse selection (default = ", ").
 #' @param unique Make labels unique. Defaults to TRUE. See \code{\link[base]{make.unique}}.
-#' @param unique_sep Seperator used for unique (default = "_"). Should differ from sep.
+#' @param unique_sep Separator used for unique (default = "_"). Should differ from sep.
 #' @param disable Reactive containing boolean. To disable/ enable module.
 #'
 #' @return Reactive containing list(label = vector of strings or NULL on empty selection, selected = user input).

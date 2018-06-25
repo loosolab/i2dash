@@ -31,9 +31,9 @@ sub_label = optional, added to id/ label}
 
 \item{none}{If TRUE adds "None to secondSelector and select is. (Default = FALSE)}
 
-\item{sep}{Used to seperate labels on multi value selection.}
+\item{sep}{Used to separate labels on multi value selection.}
 
-\item{suffix}{Added to label only on multiple = FALSE (supports reactive). Also uses sep as seperator.}
+\item{suffix}{Added to label only on multiple = FALSE (supports reactive). Also uses sep as separator.}
 }
 \value{
 Returns the input. As named list: names("type", "selectedColumns", "label")

@@ -11,7 +11,7 @@
 #'       Intensity 'experiment_name'
 #' Do you want both add "Intensity" to the list.
 #' Do you only want the sample add "Intensity;exp" to the list
-#' Anything else like 'Intensity;ex' or 'Intesity;' results in writing both.
+#' Anything else like 'Intensity;ex' or 'Intensity;' results in writing both.
 #' Only works if there are samples of that type. If not, column does not show up in file
 #'
 #' @author Rene Wiegandt

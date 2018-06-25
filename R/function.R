@@ -305,7 +305,7 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
 #' @param shapes Vector of shapes see \code{\link[graphics]{points}}. Will recycle/ cut off shapes if needed. Default = c(15:25)
 #' @param dimensionA Number of dimension displayed on X-Axis.
 #' @param dimensionB Number of dimension displayed on Y-Axis.
-#' @param dimensions Number of dimesions to create.
+#' @param dimensions Number of dimensions to create.
 #' @param on.columns Boolean perform pca on columns or rows.
 #' @param labels Boolean show labels.
 #' @param custom.labels Vector of custom labels. Will replace columnnames.
@@ -753,7 +753,7 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
 #' @param grouping data.table metadata containing:
 #'                                                column1 : key
 #'                                                column2 : factor1
-#' @param plot.type String specifing which plot type is used c("box", "line", "violin", "bar").
+#' @param plot.type String specifying which plot type is used c("box", "line", "violin", "bar").
 #' @param facet.target Target to plot on x-Axis c("gene", "condition").
 #' @param facet.cols Number of plots per row.
 #' @param colors Vector of colors used for color palette
@@ -1199,7 +1199,7 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
 #' @param height in centimeter.
 #' @param ppi pixel per inch. Defaults to 72.
 #' @param save_plot Logical if plot object should be saved as .RData.
-#' @param ui List of user inputs. Will be converted to Javascript Object Notation. See \code{\link[RJSONIO]{toJSON}}
+#' @param ui List of user inputs. Will be converted to JavaScript Object Notation. See \code{\link[RJSONIO]{toJSON}}
 #'
 #' @return See \code{\link[utils]{zip}}.
 download <- function(file, filename, plot, width, height, ppi = 72, save_plot = TRUE, ui = NULL) {

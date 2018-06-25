@@ -93,7 +93,7 @@ heatmapUI <- function(id, row.label = TRUE) {
 #' @param session Shiny's session object
 #' @param clarion A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)
 #' @param plot.method Choose which method is used for plotting. Either "static" or "interactive" (Default = "static").
-#' @param label.sep Seperator used for label merging (Default = ", ").
+#' @param label.sep Separator used for label merging (Default = ", ").
 #' @param width Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param height Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param ppi Pixel per inch. Defaults to 72 and supports reactive.

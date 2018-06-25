@@ -35,8 +35,8 @@ columnSelectorUI <- function(id, label = F, title = NULL) {
 #' @param labelLabel Change label above label text input.
 #' @param multiple Boolean value whether multiple values can be selected in second selector. (Default = TRUE)
 #' @param none If TRUE adds "None to secondSelector and select is. (Default = FALSE)
-#' @param sep Used to seperate labels on multi value selection.
-#' @param suffix Added to label only on multiple = FALSE (supports reactive). Also uses sep as seperator.
+#' @param sep Used to separate labels on multi value selection.
+#' @param suffix Added to label only on multiple = FALSE (supports reactive). Also uses sep as separator.
 #'
 #' @return Returns the input. As named list: names("type", "selectedColumns", "label")
 #'

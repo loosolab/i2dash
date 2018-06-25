@@ -16,7 +16,7 @@ create_geneview(data, grouping, plot.type = "line", facet.target = "gene",
 column1 : key
 column2 : factor1}
 
-\item{plot.type}{String specifing which plot type is used c("box", "line", "violin", "bar").}
+\item{plot.type}{String specifying which plot type is used c("box", "line", "violin", "bar").}
 
 \item{facet.target}{Target to plot on x-Axis c("gene", "condition").}
 

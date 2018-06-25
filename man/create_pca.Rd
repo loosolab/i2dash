@@ -29,7 +29,7 @@ create_pca(data, color.group = NULL, color.title = NULL, palette = NULL,
 
 \item{dimensionB}{Number of dimension displayed on Y-Axis.}
 
-\item{dimensions}{Number of dimesions to create.}
+\item{dimensions}{Number of dimensions to create.}
 
 \item{on.columns}{Boolean perform pca on columns or rows.}
 

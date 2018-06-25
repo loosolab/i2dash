@@ -18,7 +18,7 @@ colorPicker(input, output, session, num.colors = 256, distribution = "all",
 
 \item{distribution}{Decide which palettes are selectable. One or more of list("sequential", "diverging", "categorical"). Defaults to "all" (Supports reactive).}
 
-\item{winsorize}{Numeric vector of two. Dynamicly change lower and upper limit (supports reactive). Defaults to NULL.}
+\item{winsorize}{Numeric vector of two. Dynamically change lower and upper limit (supports reactive). Defaults to NULL.}
 
 \item{selected}{Set the default selected palette.}
 }

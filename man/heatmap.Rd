@@ -19,7 +19,7 @@ heatmap(input, output, session, clarion, plot.method = "static",
 
 \item{plot.method}{Choose which method is used for plotting. Either "static" or "interactive" (Default = "static").}
 
-\item{label.sep}{Seperator used for label merging (Default = ", ").}
+\item{label.sep}{Separator used for label merging (Default = ", ").}
 
 \item{width}{Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.}
 
