@@ -1,3 +1,10 @@
 steps:
-  - label: Package check
-    command: Rscript /.buildkite/check.R
+  - label: "Build Conda-environment"
+    command:
+      - "conda env create -f .buildkite/wilson-env.yml"
+      - "source activate wilson"
+
+  - wait
+
+  - label: "Package check"
+    command: "Rscript .buildkite/check.R"
