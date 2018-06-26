@@ -41,3 +41,4 @@ dependencies:
 #  - r-methods # base package
   - r-r6
   - r-devtools
+  - "readline==6.3"
