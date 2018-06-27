@@ -5,8 +5,9 @@ steps:
       - ". /etc/profile.d/conda.sh"
       - "conda activate wilson"
 #      - "Rscript -e 'install.packages(\"rje\")'"
+      - "Rscript -e 'devtools::check()'"
 
-  - wait
+#  - wait
 
-  - label: "Package check"
-    command: "Rscript -e 'devtools::check()'"
+# - label: "Package check"
+#    command:
