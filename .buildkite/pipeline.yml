@@ -1,0 +1,13 @@
+steps:
+  - label: "Build Conda-environment"
+    command:
+#      - "conda env create -f .buildkite/wilson-env.yml --force"
+      - ". /etc/profile.d/conda.sh"
+      - "conda activate wilson"
+#      - "Rscript -e 'install.packages(\"rje\")'"
+      - "Rscript -e 'devtools::check()'"
+
+#  - wait
+
+# - label: "Package check"
+#    command:

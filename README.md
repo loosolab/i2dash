@@ -1,4 +1,5 @@
 # WIlsON: Webbased Interactive Omics visualizatioN -  The R Package
+*Buildkite:* [![Build status](https://badge.buildkite.com/d79f55bb3e3cf0d70d6784feb8c6e26182d602f534e74fac4e.svg?branch=master)](https://buildkite.com/loosolab/wilson)
 
 ## Abstract
 #### Objective

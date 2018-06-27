@@ -1,0 +1,46 @@
+name: wilson
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base
+  - r-shiny
+  - r-data.table
+  - r-ggplot2
+  - r-plotly
+  - r-scales
+  - r-shinydashboard
+  - "r-dt>=0.3"
+  - r-colourpicker
+  - r-RColorBrewer
+  - r-shinyjs
+  - r-viridis
+#  - r-rje
+#  - r-grdevices # base package
+#  - r-grid # base package
+  - r-plyr
+  - r-circlize
+  - bioconductor-complexheatmap
+#  - r-stats # base package
+  - r-gplots
+  - r-reshape
+  - r-rintrojs
+  - r-webshot
+  - r-rjsonio
+  - "r-ggrepel>=0.6.12"
+  - bioconductor-deseq2
+  - r-rjson
+  - r-factominer
+  - r-factoextra
+  - "r-heatmaply>=0.14.1"
+  - r-shinythemes
+  - r-shinycssloaders
+  - r-log4r
+  - r-openssl
+#  - r-methods # base package
+  - r-r6
+  - r-devtools
+  - "readline==6.3"
+  - r-roxygen2
+  - r-shinybs
