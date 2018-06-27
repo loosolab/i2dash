@@ -1,7 +1,7 @@
 steps:
   - label: "Build Conda-environment"
     command:
-      - "conda env create -f .buildkite/wilson-env.yml"
+      - "conda env create -f .buildkite/wilson-env.yml --force"
       - "source activate wilson"
       - "Rscript -e 'install.packages(\"rje\")'"
 
