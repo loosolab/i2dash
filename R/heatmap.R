@@ -157,7 +157,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
   columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
   transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])))
   color <- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
-  custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row.label))
+  custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row_label))
 
   # automatic unitlabel
   shiny::observe({
@@ -179,7 +179,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
     transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])))
     color <<- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
-    custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row.label))
+    custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row_label))
     clear_plot(TRUE)
   })
 
@@ -371,7 +371,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
   shiny::observe({
     shiny::req(object())
 
-    if (shiny::isTruthy(columns$selectedColumns())) {
+    if (shiny::isTruthy(columns$selected_columns())) {
       if (input$clustering != "none") { # clustering
         if (plot.method == "static" && nrow(object()$data) > static) { # cluster limitation (static)
           shiny::showNotification(
