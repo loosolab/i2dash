@@ -1234,6 +1234,7 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
     # plotly
     # change working directory temporary so mounted drives are not a problem
     wd <- getwd()
+    on.exit(setwd(wd)) # make sure working directory will be restored
     setwd(tempdir())
     plotly::export(p = plot, file = plot_file_pdf)
     plotly::export(p = plot, file = plot_file_png)
