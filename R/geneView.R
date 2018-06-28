@@ -46,7 +46,7 @@ geneViewUI <- function(id, plot.columns = 3){
             shiny::column(
               width = 3,
               shiny::div(id = ns("guide_type"),
-                         shiny::selectInput(ns("plotType"), label = "Type of Plot", choices = c("box", "line", "violin", "bar"), selected = "line")),
+                         shiny::selectInput(ns("plot_type"), label = "Type of Plot", choices = c("box", "line", "violin", "bar"), selected = "line")),
               shiny::div(id = ns("guide_transformation"),
                          transformationUI(id = ns("transform"), choices = list(`None` = "raw", `log2` = "log2", `-log2` = "-log2", `log10` = "log10", `-log10` = "-log10", `Z score` = "zscore")),
                          shiny::textInput(ns("label"), label = "Y-Axis Label")),
@@ -58,7 +58,7 @@ geneViewUI <- function(id, plot.columns = 3){
               shiny::div(id = ns("guide_color"),
                          colorPickerUI(id = ns("color"), show.transparency = FALSE, show.scaleoptions = FALSE)),
               shiny::div(id = ns("guide_plotColumns"),
-                         shiny::sliderInput(ns("plotColumns"), label = "Plot Columns", min = 1, max = 7, value = plot.columns, step = 1))
+                         shiny::sliderInput(ns("plot_columns"), label = "Plot Columns", min = 1, max = 7, value = plot.columns, step = 1))
             )
           ),
           shiny::fluidRow(
@@ -100,7 +100,7 @@ geneViewUI <- function(id, plot.columns = 3){
 #' @export
 geneView <- function(input, output, session, clarion, plot.method = "static", label.sep = ", ", width = "auto", height = "auto", ppi = 72, scale = 1){
   # globals/ initialization #####
-  clearPlot <- shiny::reactiveVal(FALSE)
+  clear_plot <- shiny::reactiveVal(FALSE)
   # disable downloadButton on init
   shinyjs::disable("download")
 
@@ -110,11 +110,11 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     if (shiny::is.reactive(clarion)) {
       if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion()$clone(deep = TRUE)
+      clarion()$clone(deep = TRUE)
     } else {
       if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion$clone(deep = TRUE)
+      clarion$clone(deep = TRUE)
     }
   })
 
@@ -142,11 +142,11 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
   })
 
   # modules/ ui #####
-  colorPicker <- shiny::callModule(colorPicker, "color", distribution = "all", selected = "Dark2")
-  transform <- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selectedColumns(), with = FALSE])))
-  selector <- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), columnTypeLabel = "Select Columns")
+  color <- shiny::callModule(colorPicker, "color", distribution = "all", selected = "Dark2")
+  transform <- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selected_columns(), with = FALSE])))
+  selector <- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), column.type.label = "Select Columns")
   custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes)]), sep = label.sep)
-  factor_data <- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$get_factors()[key %in% selector$selectedColumns(), !"key"]), sep = label.sep, unique = FALSE)
+  factor_data <- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$get_factors()[key %in% selector$selected_columns(), !"key"]), sep = label.sep, unique = FALSE)
   limiter <- shiny::callModule(limit, "limit", lower = shiny::reactive(get_limits()[1]), upper = shiny::reactive(get_limits()[2]))
 
   output$genes <- shiny::renderUI({
@@ -178,26 +178,26 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     log_message("GeneView: reset", "INFO", token = session$token)
 
     shinyjs::reset("genes")
-    shinyjs::reset("plotType")
+    shinyjs::reset("plot_type")
     shinyjs::reset("groupby")
-    shinyjs::reset("plotColumns")
-    colorPicker <<- shiny::callModule(colorPicker, "color", distribution = "all", selected = "Dark2")
-    transform <<- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selectedColumns(), with = FALSE])))
-    selector <<- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), columnTypeLabel = "Select Columns")
+    shinyjs::reset("plot_columns")
+    color <<- shiny::callModule(colorPicker, "color", distribution = "all", selected = "Dark2")
+    transform <<- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selected_columns(), with = FALSE])))
+    selector <<- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), column.type.label = "Select Columns")
     custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes)]), sep = label.sep)
-    factor_data <<- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$get_factors()[key %in% selector$selectedColumns(), !"key"]), sep = label.sep, unique = FALSE)
+    factor_data <<- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$get_factors()[key %in% selector$selected_columns(), !"key"]), sep = label.sep, unique = FALSE)
     limiter <<- shiny::callModule(limit, "limit", lower = shiny::reactive(get_limits()[1]), upper = shiny::reactive(get_limits()[2]))
-    clearPlot(TRUE)
+    clear_plot(TRUE)
   })
 
   get_limits <- shiny::reactive({
-    equalize(result.data()$data[, c(-1, -2)])
+    equalize(result_data()$data[, c(-1, -2)])
   })
 
-  result.data <- shiny::eventReactive(input$plot, {
-    columns <- switch((object()$get_uniqueID() == object()$get_name()) + 1,
-                      c(object()$get_uniqueID(), object()$get_name()),
-                      object()$get_uniqueID())
+  result_data <- shiny::eventReactive(input$plot, {
+    columns <- switch((object()$get_id() == object()$get_name()) + 1,
+                      c(object()$get_id(), object()$get_name()),
+                      object()$get_id())
 
     result <- data.table::data.table(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), columns, with = FALSE], data.table::as.data.table(transform$data()))
 
@@ -211,7 +211,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
 
     # enable downloadButton
     shinyjs::enable("download")
-    clearPlot(FALSE)
+    clear_plot(FALSE)
 
     # new progress indicator
     progress <- shiny::Progress$new()
@@ -226,18 +226,18 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     } else {
       factor <- factor_data()$label
     }
-    grouping <- data.table::data.table(object()$metadata[key %in% selector$selectedColumns(), key], factor)
+    grouping <- data.table::data.table(object()$metadata[key %in% selector$selected_columns(), key], factor)
 
     # plot
     plot <- create_geneview(
-      data = if (object()$get_uniqueID() == object()$get_name()) result.data()$data else result.data()$data[, -2], # without name column
+      data = if (object()$get_id() == object()$get_name()) result_data()$data else result_data()$data[, -2], # without name column
       grouping = grouping,
-      plot.type = input$plotType,
+      plot.type = input$plot_type,
       facet.target = input$groupby,
-      facet.cols = input$plotColumns,
-      colors = colorPicker()$palette,
+      facet.cols = input$plot_columns,
+      colors = color()$palette,
       ylabel = input$label,
-      gene.label = result.data()$label,
+      gene.label = result_data()$label,
       ylimits = unlist(unname(limiter())),
       plot.method = plot.method,
       width = size()$width,
@@ -254,7 +254,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
   # render plot ######
   if (plot.method == "interactive") {
     output$interactive <- plotly::renderPlotly({
-      if (clearPlot()) {
+      if (clear_plot()) {
         return()
       } else {
         log_message("GeneView: render plot interactive", "INFO", token = session$token)
@@ -275,7 +275,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
-        if (clearPlot()) {
+        if (clear_plot()) {
           return()
         } else {
           log_message("GeneView: render plot static", "INFO", token = session$token)
@@ -306,7 +306,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     # format data
     data <- list(
       genes = input$genes,
-      columns = list(type = selector$type(), selectedColumns = selector$selectedColumns()),
+      columns = list(type = selector$type(), selectedColumns = selector$selected_columns()),
       group = factor_data()$selected,
       groupby = input$groupby
     )
@@ -314,12 +314,12 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     # format options
     label <- custom_label()$selected
     options <- list(
-      plot_type = input$plotType,
+      plot_type = input$plot_type,
       transformation = transform$method(),
       yaxis_label = input$label,
       yaxis_limit = limiter(),
-      plot_column = input$plotColumns,
-      colors = list(scheme = colorPicker()$name, reverse = colorPicker()$reverse),
+      plot_column = input$plot_columns,
+      colors = list(scheme = color()$name, reverse = color()$reverse),
       custom_label = label
     )
 
@@ -330,10 +330,10 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
   # notifications #####
   # enable plot button only if plot possible
   shiny::observe({
-    if (is.null(input$genes) || !shiny::isTruthy(selector$selectedColumns())) {
+    if (is.null(input$genes) || !shiny::isTruthy(selector$selected_columns())) {
       shiny::removeNotification(session$ns("violin"))
       shinyjs::disable("plot")
-    }else if (input$plotType == "violin") {
+    } else if (input$plot_type == "violin") {
       factor_levels <- table(droplevels(as.factor(factor_data()$label), exclude = ""))
 
       if (input$groupby == "condition") {
@@ -406,7 +406,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     rintrojs::introjs(session, options = list(steps = guide()))
   })
 
-  return(shiny::reactive(result.data()$data))
+  return(shiny::reactive(result_data()$data))
 }
 
 #' geneView module guide
