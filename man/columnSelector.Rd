@@ -5,7 +5,7 @@
 \title{columnSelector module server logic}
 \usage{
 columnSelector(input, output, session, type.columns, type = NULL,
-  columnTypeLabel = "Type of Column", labelLabel = "Label",
+  column.type.label = "Type of Column", label.label = "Label",
   multiple = TRUE, none = FALSE, sep = ", ", suffix = NULL)
 }
 \arguments{
@@ -23,9 +23,7 @@ sub_label = optional, added to id/ label}
 
 \item{type}{The type (contrast/group/sample of the type dropdown menu, selected in step 1 (upper dropdown). Defaults to unique(type.columns[,2]) (Supports reactive)}
 
-\item{columnTypeLabel}{Changes the label of the first UI element}
-
-\item{labelLabel}{Change label above label text input.}
+\item{label.label}{Change label above label text input.}
 
 \item{multiple}{Boolean value whether multiple values can be selected in second selector. (Default = TRUE)}
 
@@ -34,9 +32,11 @@ sub_label = optional, added to id/ label}
 \item{sep}{Used to separate labels on multi value selection.}
 
 \item{suffix}{Added to label only on multiple = FALSE (supports reactive). Also uses sep as separator.}
+
+\item{column.type.tabel}{Changes the label of the first UI element}
 }
 \value{
-Returns the input. As named list: names("type", "selectedColumns", "label")
+Returns the input. As named list: names("type", "selected_columns", "label")
 }
 \description{
 columnSelector module server logic

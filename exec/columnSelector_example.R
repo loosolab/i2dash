@@ -1,7 +1,7 @@
 library(shiny)
 source("../R/columnSelector.R")
 
-###Test Data
+### Test Data
 table <- data.table::data.table(id = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"), level = c("sample", "condition", "contrast"), sub_label = "sub")
 names(table)[1] <- "key"
 
@@ -27,22 +27,21 @@ type <- reactive({
   unique(table[[2]])[-1]
 })
 
-  mod <-callModule(columnSelector, "id", type.columns = table, multiple = FALSE, none = TRUE)
-  mod2 <-callModule(columnSelector, "2", type.columns = data, type = type)
+  mod <- callModule(columnSelector, "id", type.columns = table, multiple = FALSE, none = TRUE)
+  mod2 <- callModule(columnSelector, "2", type.columns = data, type = type)
 
   output$first <- renderPrint({
     print(mod$type())
-    print(mod$selectedColumn())
+    print(mod$selected_column())
     print(mod$label())
   })
 
   output$second <- renderPrint({
     print(mod2$type())
-    print(mod2$selectedColumn())
+    print(mod2$selected_column())
     print(mod2$label())
   })
 }
 
 # Run the application
 shinyApp(ui = ui, server = server)
-
