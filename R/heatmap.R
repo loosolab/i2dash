@@ -34,13 +34,13 @@ heatmapUI <- function(id, row.label = TRUE) {
                          multiple = FALSE
                        ),
                        shiny::selectInput(
-                         ns("cluster.distance"),
+                         ns("cluster_distance"),
                          label = "Cluster distance",
                          choices = c("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", "pearson", "spearman", "kendall"),
                          multiple = FALSE
                        ),
                        shiny::selectInput(
-                         ns("cluster.method"),
+                         ns("cluster_method"),
                          label = "Cluster method",
                          choices = c("average", "ward.D", "ward.D2", "single", "complete", "mcquitty"),
                          multiple = FALSE))
@@ -64,9 +64,9 @@ heatmapUI <- function(id, row.label = TRUE) {
             width = 3,
             shiny::div(id = ns("guide_options"),
                        shiny::textInput(ns("label"), label = "Unit label", placeholder = "Enter unit..."),
-                       shiny::checkboxInput(ns("row.label"), label = "Row label", value = row.label),
+                       shiny::checkboxInput(ns("row_label"), label = "Row label", value = row.label),
                        labelUI(ns("labeller")),
-                       shiny::checkboxInput(ns("column.label"), label = "Column label", value = TRUE)
+                       shiny::checkboxInput(ns("column_label"), label = "Column label", value = TRUE)
             )
           )
         ),
@@ -108,7 +108,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
   static <- 11000
   interactive <- 3000
   # clear plot
-  clearPlot <- shiny::reactiveVal(FALSE)
+  clear_plot <- shiny::reactiveVal(FALSE)
   # disable downloadButton on init
   shinyjs::disable("download")
 
@@ -118,11 +118,11 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     if (shiny::is.reactive(clarion)) {
       if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion()$clone(deep = TRUE)
+      clarion()$clone(deep = TRUE)
     } else {
       if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion$clone(deep = TRUE)
+      clarion$clone(deep = TRUE)
     }
   })
 
@@ -154,9 +154,9 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
   })
 
   # modules/ ui #####
-  columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
-  transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selectedColumns(), with = FALSE])))
-  colorPicker <- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
+  columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
+  transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])))
+  color <- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
   custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row.label))
 
   # automatic unitlabel
@@ -169,27 +169,27 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
   shiny::observeEvent(input$reset, {
     log_message("Heatmap: reset", "INFO", token = session$token)
 
-    shinyjs::reset("cluster.distance")
-    shinyjs::reset("cluster.method")
+    shinyjs::reset("cluster_distance")
+    shinyjs::reset("cluster_method")
     shinyjs::reset("clustering")
     shinyjs::reset("distribution")
     shinyjs::reset("label")
-    shinyjs::reset("row.label")
-    shinyjs::reset("column.label")
-    columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
-    transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selectedColumns(), with = FALSE])))
-    colorPicker <<- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
+    shinyjs::reset("row_label")
+    shinyjs::reset("column_label")
+    columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
+    transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])))
+    color <<- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
     custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row.label))
-    clearPlot(TRUE)
+    clear_plot(TRUE)
   })
 
-  result.data <- shiny::eventReactive(input$plot, {
+  result_data <- shiny::eventReactive(input$plot, {
     # new progress indicator
     progress <- shiny::Progress$new()
     on.exit(progress$close())
     progress$set(0.2, message = "Compute data")
 
-    processed_data <- data.table::data.table(object()$data[, object()$get_uniqueID(), with = FALSE], transform$data())
+    processed_data <- data.table::data.table(object()$data[, object()$get_id(), with = FALSE], transform$data())
 
     progress$set(1)
     return(processed_data)
@@ -200,7 +200,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
 
     # enable downloadButton
     shinyjs::enable("download")
-    clearPlot(FALSE)
+    clear_plot(FALSE)
 
     # new progress indicator
     progress <- shiny::Progress$new()
@@ -208,22 +208,22 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     progress$set(0.2, message = "Compute plot")
 
     plot <- create_heatmap(
-      data = result.data(),
+      data = result_data(),
       unitlabel = input$label,
-      row.label = input$row.label,
+      row.label = input$row_label,
       row.custom.label = custom_label()$label,
-      column.label = input$column.label,
+      column.label = input$column_label,
       column.custom.label = make.unique(columns$label()),
       clustering = input$clustering,
-      clustdist = input$cluster.distance,
-      clustmethod = input$cluster.method,
-      colors = colorPicker()$palette,
+      clustdist = input$cluster_distance,
+      clustmethod = input$cluster_method,
+      colors = color()$palette,
       width = size()$width,
       height = size()$height,
       ppi = size()$ppi,
       scale = size()$scale,
       plot.method = plot.method,
-      winsorize.colors = colorPicker()$winsorize
+      winsorize.colors = color()$winsorize
     )
 
     progress$set(1)
@@ -239,7 +239,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     })
 
     output$interactive <- plotly::renderPlotly({
-      if (clearPlot()) {
+      if (clear_plot()) {
         return()
       } else {
         log_message("Heatmap: render plot interactive", "INFO", token = session$token)
@@ -265,7 +265,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
-        if (clearPlot()) {
+        if (clear_plot()) {
           return()
         } else {
           log_message("Heatmap: render plot static", "INFO", token = session$token)
@@ -300,27 +300,27 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
 
   user_input <- shiny::reactive({
     # format selection
-    selection <- list(type = columns$type(), selectedColumns = columns$selectedColumns())
+    selection <- list(type = columns$type(), selectedColumns = columns$selected_columns())
 
     # format clustering
     clustering <- list(
       clustering = input$clustering,
-      distance = input$cluster.distance,
-      method = input$cluster.method
+      distance = input$cluster_distance,
+      method = input$cluster_method
     )
 
     # format options
     options <- list(
       transformation = list(method = transform$method(), applied = transform$transpose()),
-      color = list(distribution = input$distribution, scheme = colorPicker()$name, reverse = colorPicker()$reverse, winsorize = colorPicker()$winsorize),
+      color = list(distribution = input$distribution, scheme = color()$name, reverse = color()$reverse, winsorize = color()$winsorize),
       unit_label = input$label,
-      row_label = input$row.label,
+      row_label = input$row_label,
       custom_row_label = custom_label()$selected,
-      column_label = input$column.label
+      column_label = input$column_label
     )
 
     # merge all
-    all <- list(selection = selection, clustering = clustering, options = options)
+    list(selection = selection, clustering = clustering, options = options)
   })
 
   # notifications #####
@@ -331,20 +331,20 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     show_warning <- TRUE
 
     # are columns selected?
-    if (shiny::isTruthy(columns$selectedColumns())) {
-      row.num <- nrow(shiny::isolate(object()$data))
-      col.num <- length(columns$selectedColumns())
+    if (shiny::isTruthy(columns$selected_columns())) {
+      row_num <- nrow(shiny::isolate(object()$data))
+      col_num <- length(columns$selected_columns())
 
       # minimal heatmap possible (greater 1x1)?
-      if (row.num > 1 || col.num > 1) {
+      if (row_num > 1 || col_num > 1) {
         # no clustering for single rows or columns
-        if (row.num == 1 && !is.element(input$clustering, c("both", "row"))) {
+        if (row_num == 1 && !is.element(input$clustering, c("both", "row"))) {
           show_warning <- FALSE
           shinyjs::enable("plot")
-        } else if (col.num == 1 && !is.element(input$clustering, c("both", "column"))) {
+        } else if (col_num == 1 && !is.element(input$clustering, c("both", "column"))) {
           show_warning <- FALSE
           shinyjs::enable("plot")
-        } else if (row.num > 1 && col.num > 1) { # no border case heatmaps
+        } else if (row_num > 1 && col_num > 1) { # no border case heatmaps
           show_warning <- FALSE
           shinyjs::enable("plot")
         }
@@ -361,7 +361,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
       }
 
       # maximum heatmap reached?
-      if (plot.method == "static" && row.num > static || plot.method == "interactive" && row.num > interactive) {
+      if (plot.method == "static" && row_num > static || plot.method == "interactive" && row_num > interactive) {
         shinyjs::disable("plot")
       }
     }
@@ -424,7 +424,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     rintrojs::introjs(session, options = list(steps = guide()))
   })
 
-  return(result.data)
+  return(result_data)
 }
 
 #' heatmap module guide
