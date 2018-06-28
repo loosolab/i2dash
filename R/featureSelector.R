@@ -315,7 +315,7 @@ featureSelector <- function(input, output, session, clarion, multiple = TRUE, co
     content = function(file) {
       log_message("FeatureSelector: download", "INFO", token = session$token)
 
-      data.table::fwrite(x = result()$data, file = file, sep = "\t")
+      data.table::fwrite(x = result()$object$data, file = file, sep = "\t")
     }
   )
 
