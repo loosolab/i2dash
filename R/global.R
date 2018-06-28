@@ -11,7 +11,7 @@ wilson.globals <- new.env(parent = emptyenv())
 #'
 #' @export
 set_logger <- function(logger, token = NULL) {
-  if(is.null(logger) || methods::is(logger, "logger")) {
+  if (is.null(logger) || methods::is(logger, "logger")) {
     assign(x = paste0("logger", token), value = logger, envir = wilson.globals)
   }
 }
@@ -25,7 +25,7 @@ set_logger <- function(logger, token = NULL) {
 #' @details Does nothing if logger doesn't exist.
 #'
 log_message <- function(message, level = c("DEBUG", "INFO", "WARN", "ERROR", "FATAL"), token = NULL) {
-  if(exists(paste0("logger", token), envir = wilson.globals)) {
+  if (exists(paste0("logger", token), envir = wilson.globals)) {
     logger <- get(paste0("logger", token), envir = wilson.globals)
 
     switch(level,
