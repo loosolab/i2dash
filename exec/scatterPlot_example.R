@@ -39,7 +39,7 @@ server <- function(input, output) {
   marked <- Clarion$new(metadata = metadata, data = data[1:10])
   marker <- callModule(marker, "marker", clarion = marked)
 
-  plot <- callModule(scatterPlot, "id", clarion = clarion, markerOutput = marker, plot.method = "interactive", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
+  plot <- callModule(scatterPlot, "id", clarion = clarion, marker.output = marker, plot.method = "interactive", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
 
   observe({
     print(plot())

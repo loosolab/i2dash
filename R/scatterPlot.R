@@ -117,7 +117,7 @@ scatterPlotUI <- function(id) {
 #' @param output Shiny's output object
 #' @param session Shiny's session object
 #' @param clarion A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)
-#' @param markerOutput Marker module output. See \code{\link[wilson]{marker}}.
+#' @param marker.output Marker module output. See \code{\link[wilson]{marker}}.
 #' @param plot.method Choose to rather render a 'interactive' or 'static' plot. Defaults to 'static'.
 #' @param width Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
 #' @param height Height of the plot in cm. Defaults to minimal size for readable labels and supports reactive.
@@ -130,10 +130,10 @@ scatterPlotUI <- function(id) {
 #' @details Intersections between marker and clarion will be removed from clarion in favor of highlighting them.
 #'
 #' @export
-scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
+scatterPlot <- function(input, output, session, clarion, marker.output = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
   # globals/ initialization #####
   # clear plot
-  clearPlot <- shiny::reactiveVal(FALSE)
+  clear_plot <- shiny::reactiveVal(FALSE)
   # disable downloadbutton on init
   shinyjs::disable("download")
   # set labelsize default for interactive
@@ -145,17 +145,17 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
     if (shiny::is.reactive(clarion)) {
       if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion()$clone(deep = TRUE)
+      clarion()$clone(deep = TRUE)
     } else {
       if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion$clone(deep = TRUE)
+      clarion$clone(deep = TRUE)
     }
   })
   # create deep copy of marker data if existing
-  if (!is.null(markerOutput)) {
+  if (!is.null(marker.output)) {
     marker_object <- shiny::reactive({
-      markerOutput$clarion()$clone(deep = TRUE)
+      marker.output$clarion()$clone(deep = TRUE)
     })
   }
 
@@ -183,20 +183,20 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
   })
 
   # modules/ ui #####
-  xaxis <- shiny::callModule(columnSelector, "xaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
-  yaxis <- shiny::callModule(columnSelector, "yaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
-  zaxis <- shiny::callModule(columnSelector, "zaxis", type.columns = shiny::reactive(object()$metadata[, intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Color label", multiple = FALSE, none = TRUE)
-  colorPicker <- shiny::callModule(colorPicker, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selectedColumn()) + 1, NULL, equalize(object()$data[, zaxis$selectedColumn(), with = FALSE]))))
-  transform_x <- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selectedColumn(), with = FALSE])))
-  transform_y <- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selectedColumn(), with = FALSE])))
+  xaxis <- shiny::callModule(columnSelector, "xaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
+  yaxis <- shiny::callModule(columnSelector, "yaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
+  zaxis <- shiny::callModule(columnSelector, "zaxis", type.columns = shiny::reactive(object()$metadata[, intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Color label", multiple = FALSE, none = TRUE)
+  color <- shiny::callModule(colorPicker, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selected_column()) + 1, NULL, equalize(object()$data[, zaxis$selected_column(), with = FALSE]))))
+  transform_x <- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selected_column(), with = FALSE])))
+  transform_y <- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selected_column(), with = FALSE])))
   # transform highlight data
-  if (!is.null(markerOutput)) {
+  if (!is.null(marker.output)) {
     # note: same id as transform_x/y so it depends on same ui
-    highlight_transform_x <- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(marker_object()$data[, xaxis$selectedColumn(), with = FALSE])))
-    highlight_transform_y <- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(marker_object()$data[, yaxis$selectedColumn(), with = FALSE])))
+    highlight_transform_x <- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(marker_object()$data[, xaxis$selected_column(), with = FALSE])))
+    highlight_transform_y <- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(marker_object()$data[, yaxis$selected_column(), with = FALSE])))
   }
-  limit_x <- shiny::callModule(limit, "xaxis_limit", lower = shiny::reactive(result.data()$xlim[1]), upper = shiny::reactive(result.data()$xlim[2]))
-  limit_y <- shiny::callModule(limit, "yaxis_limit", lower = shiny::reactive(result.data()$ylim[1]), upper = shiny::reactive(result.data()$ylim[2]))
+  limit_x <- shiny::callModule(limit, "xaxis_limit", lower = shiny::reactive(result_data()$xlim[1]), upper = shiny::reactive(result_data()$xlim[2]))
+  limit_y <- shiny::callModule(limit, "yaxis_limit", lower = shiny::reactive(result_data()$ylim[1]), upper = shiny::reactive(result_data()$ylim[2]))
 
   # select container dependend on plot.method
   if (plot.method == "static") {
@@ -219,26 +219,26 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
     shinyjs::reset("pointsize")
     shinyjs::reset("labelsize")
     shinyjs::reset("force_cat")
-    xaxis <<- shiny::callModule(columnSelector, "xaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
-    yaxis <<- shiny::callModule(columnSelector, "yaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", labelLabel = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
-    zaxis <<- shiny::callModule(columnSelector, "zaxis", type.columns = shiny::reactive(object()$metadata[, intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column type to choose from", multiple = FALSE, none = TRUE)
-    colorPicker <<- shiny::callModule(colorPicker, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selectedColumn()) + 1, NULL, equalize(object()$data[, zaxis$selectedColumn(), with = FALSE]))))
-    transform_x <<- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selectedColumn(), with = FALSE])))
-    transform_y <<- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selectedColumn(), with = FALSE])))
+    xaxis <<- shiny::callModule(columnSelector, "xaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_x$method()))
+    yaxis <<- shiny::callModule(columnSelector, "yaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
+    zaxis <<- shiny::callModule(columnSelector, "zaxis", type.columns = shiny::reactive(object()$metadata[, intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Color label", multiple = FALSE, none = TRUE)
+    color <<- shiny::callModule(colorPicker, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selected_column()) + 1, NULL, equalize(object()$data[, zaxis$selected_column(), with = FALSE]))))
+    transform_x <<- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selected_column(), with = FALSE])))
+    transform_y <<- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selected_column(), with = FALSE])))
     # transform highlight data
-    if (!is.null(markerOutput)) {
+    if (!is.null(marker.output)) {
       # note: same id as transform_x/y so it depends on same ui
-      highlight_transform_x <<- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(marker_object()$data[, xaxis$selectedColumn(), with = FALSE])))
-      highlight_transform_y <<- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(marker_object()$data[, yaxis$selectedColumn(), with = FALSE])))
+      highlight_transform_x <<- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(marker_object()$data[, xaxis$selected_column(), with = FALSE])))
+      highlight_transform_y <<- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(marker_object()$data[, yaxis$selected_column(), with = FALSE])))
     }
-    limit_x <<- shiny::callModule(limit, "xaxis_limit", lower = shiny::reactive(result.data()$xlim[1]), upper = shiny::reactive(result.data()$xlim[2]))
-    limit_y <<- shiny::callModule(limit, "yaxis_limit", lower = shiny::reactive(result.data()$ylim[1]), upper = shiny::reactive(result.data()$ylim[2]))
-    clearPlot(TRUE)
+    limit_x <<- shiny::callModule(limit, "xaxis_limit", lower = shiny::reactive(result_data()$xlim[1]), upper = shiny::reactive(result_data()$xlim[2]))
+    limit_y <<- shiny::callModule(limit, "yaxis_limit", lower = shiny::reactive(result_data()$ylim[1]), upper = shiny::reactive(result_data()$ylim[2]))
+    clear_plot(TRUE)
   })
 
   # disable plot if mandatory x- or y-axis missing
   shiny::observe({
-    if (!shiny::isTruthy(xaxis$selectedColumn()) || !shiny::isTruthy(yaxis$selectedColumn())) {
+    if (!shiny::isTruthy(xaxis$selected_column()) || !shiny::isTruthy(yaxis$selected_column())) {
       shinyjs::disable("plot")
     } else {
       shinyjs::enable("plot")
@@ -248,85 +248,81 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
   transformed_data <- shiny::reactive({
     # reassemble after transformation
     # columns: unique_id, x, y(, z)
-    if (shiny::isTruthy(zaxis$selectedColumn())) {
-      z <- object()$data[, zaxis$selectedColumn(), with = FALSE]
-      pre.data <- data.table::data.table(object()$data[, object()$get_uniqueID(), with = FALSE], transform_x$data(), transform_y$data(), z)
+    if (shiny::isTruthy(zaxis$selected_column())) {
+      z <- object()$data[, zaxis$selected_column(), with = FALSE]
+      data.table::data.table(object()$data[, object()$get_id(), with = FALSE], transform_x$data(), transform_y$data(), z)
     } else {
-      pre.data <- data.table::data.table(object()$data[, object()$get_uniqueID(), with = FALSE], transform_x$data(), transform_y$data())
+      data.table::data.table(object()$data[, object()$get_id(), with = FALSE], transform_x$data(), transform_y$data())
     }
-
-    return(pre.data)
   })
 
-  if (!is.null(markerOutput)) {
+  if (!is.null(marker.output)) {
     highlight_data <- shiny::reactive({
       # return null on empty table
-      if (nrow(markerOutput$clarion()$data) == 0) return()
+      if (nrow(marker.output$clarion()$data) == 0) return()
       # reassemble after transformation
       # columns: unique_id, x, y(, z)
-      if (shiny::isTruthy(zaxis$selectedColumn())) {
-        z <- marker_object()$data[, zaxis$selectedColumn(), with = FALSE]
-        pre.data <- data.table::data.table(marker_object()$data[, marker_object()$get_uniqueID(), with = FALSE], highlight_transform_x$data(), highlight_transform_y$data(), z)
+      if (shiny::isTruthy(zaxis$selected_column())) {
+        z <- marker_object()$data[, zaxis$selected_column(), with = FALSE]
+        data.table::data.table(marker_object()$data[, marker_object()$get_id(), with = FALSE], highlight_transform_x$data(), highlight_transform_y$data(), z)
       } else {
-        pre.data <- data.table::data.table(marker_object()$data[, marker_object()$get_uniqueID(), with = FALSE], highlight_transform_x$data(), highlight_transform_y$data())
+        data.table::data.table(marker_object()$data[, marker_object()$get_id(), with = FALSE], highlight_transform_x$data(), highlight_transform_y$data())
       }
-
-      return(pre.data)
     })
   }
 
-  result.data <- shiny::eventReactive(input$plot, {
+  result_data <- shiny::eventReactive(input$plot, {
     # new progress indicator
     progress <- shiny::Progress$new()
     on.exit(progress$close())
     progress$set(0, message = "Computing data")
 
     result <- list(
-      processed.data = NULL,
-      data.label = NULL,
-      data.hovertext = NULL,
-      highlight.color = NULL,
-      highlight.label = NULL,
-      highlight.hovertext = NULL,
-      highlight.data = NULL,
+      processed_data = NULL,
+      data_label = NULL,
+      data_hovertext = NULL,
+      highlight_color = NULL,
+      highlight_label = NULL,
+      highlight_hovertext = NULL,
+      highlight_data = NULL,
       xlim = NULL,
       ylim = NULL
     )
 
     # get selected data
     progress$set(0.3, detail = "transforming")
-    processed.data <- transformed_data()
+    processed_data <- transformed_data()
     progress$set(0.5, detail = "selecting")
 
     # no highlighting either disabled or N/A
-    if (is.null(markerOutput) || is.null(highlight_data()) || markerOutput$highlight() == "Disabled") {
+    if (is.null(marker.output) || is.null(highlight_data()) || marker.output$highlight() == "Disabled") {
       # get axis limits
-      result$xlim <- c(min(processed.data[, 2], na.rm = TRUE), max(processed.data[, 2], na.rm = TRUE))
-      result$ylim <- c(min(processed.data[, 3], na.rm = TRUE), max(processed.data[, 3], na.rm = TRUE))
+      result$xlim <- c(min(processed_data[, 2], na.rm = TRUE), max(processed_data[, 2], na.rm = TRUE))
+      result$ylim <- c(min(processed_data[, 3], na.rm = TRUE), max(processed_data[, 3], na.rm = TRUE))
 
       # add name to hovertext
-      if (plot.method == "interactive" && object()$get_name() != object()$get_uniqueID()) {
-        result$data.hovertext <- object()$data[[object()$get_name()]]
+      if (plot.method == "interactive" && object()$get_name() != object()$get_id()) {
+        result$data_hovertext <- object()$data[[object()$get_name()]]
       }
 
-      result$processed.data <- processed.data
+      result$processed_data <- processed_data
     } else {
       # get highlight data
-      highlight.data <- highlight_data()
+      highlight_data <- highlight_data()
 
       # get axis limit including both datasets
-      result$xlim <- c(min(processed.data[, 2], highlight.data[, 2], na.rm = TRUE), max(processed.data[, 2], highlight.data[, 2], na.rm = TRUE))
-      result$ylim <- c(min(processed.data[, 3], highlight.data[, 3], na.rm = TRUE), max(processed.data[, 3], highlight.data[, 3], na.rm = TRUE))
+      result$xlim <- c(min(processed_data[, 2], highlight_data[, 2], na.rm = TRUE), max(processed_data[, 2], highlight_data[, 2], na.rm = TRUE))
+      result$ylim <- c(min(processed_data[, 3], highlight_data[, 3], na.rm = TRUE), max(processed_data[, 3], highlight_data[, 3], na.rm = TRUE))
 
       # get colors
-      result$highlight.color <- markerOutput$color()
+      result$highlight_color <- marker.output$color()
 
-      if (markerOutput$highlight() == "Highlight") {
+      if (marker.output$highlight() == "Highlight") {
         # omit duplicates from processed.data
-        processed.data <- data.table::fsetdiff(x = processed.data, y = highlight.data)
+        processed_data <- data.table::fsetdiff(x = processed_data, y = highlight_data)
 
         # for everything duplicated = empty processed.data
-        if (nrow(processed.data) == 0) {
+        if (nrow(processed_data) == 0) {
           # notification that highlight color will be ignored
           shiny::showNotification(
             id = session$ns("full_highlight"),
@@ -338,45 +334,45 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
           shinyjs::runjs(paste0("$(document.getElementById('", paste0("shiny-notification-", session$ns("full_highlight")), "')).addClass('notification-position-center');"))
 
           # add name to hovertext
-          if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_uniqueID()) {
-            result$data.hovertext <- marker_object()$data[[marker_object()$get_name()]]
+          if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_id()) {
+            result$data_hovertext <- marker_object()$data[[marker_object()$get_name()]]
           }
 
-          result$processed.data <- highlight.data
+          result$processed_data <- highlight_data
         } else {
           # add name to hovertext
-          if (plot.method == "interactive" && object()$get_name() != object()$get_uniqueID()) {
+          if (plot.method == "interactive" && object()$get_name() != object()$get_id()) {
             # only keep selected rows
-            result$data.hovertext <- object()$data[processed.data, on = object()$get_uniqueID()][[object()$get_name()]]
+            result$data_hovertext <- object()$data[processed_data, on = object()$get_id()][[object()$get_name()]]
           }
           # add name to hovertext
-          if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_uniqueID()) {
-            result$highlight.hovertext <- marker_object()$data[[marker_object()$get_name()]]
+          if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_id()) {
+            result$highlight_hovertext <- marker_object()$data[[marker_object()$get_name()]]
           }
 
-          result$processed.data <- processed.data
-          result$highlight.data <- highlight.data
+          result$processed_data <- processed_data
+          result$highlight_data <- highlight_data
         }
 
         # set label; ignore if more than 100
-        if (length(markerOutput$label()) <= 100) {
-          if (nrow(processed.data) == 0) {
-            result$data.label <- markerOutput$label()
+        if (length(marker.output$label()) <= 100) {
+          if (nrow(processed_data) == 0) {
+            result$data_label <- marker.output$label()
           } else {
-            result$highlight.label <- markerOutput$label()
+            result$highlight_label <- marker.output$label()
           }
         }
-      } else if (markerOutput$highlight() == "Exclusive") {
+      } else if (marker.output$highlight() == "Exclusive") {
         # add name to hovertext
-        if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_uniqueID()) {
+        if (plot.method == "interactive" && marker_object()$get_name() != marker_object()$get_id()) {
           result$data.hovertext <- marker_object()$data[[marker_object()$get_name()]]
         }
 
-        result$processed.data <- highlight.data
+        result$processed_data <- highlight_data
 
         # set label; ignore if more than 100
-        if (length(markerOutput$label()) <= 100) {
-          result$data.label <- markerOutput$label()
+        if (length(marker.output$label()) <= 100) {
+          result$data_label <- marker.output$label()
         }
       }
     }
@@ -390,7 +386,7 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
 
     # enable downloadbutton
     shinyjs::enable("download")
-    clearPlot(FALSE)
+    clear_plot(FALSE)
 
     # new progress indicator
     progress <- shiny::Progress$new()
@@ -400,40 +396,40 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
     if (!is.null(limit_x())) {
       xlimit <- unlist(limit_x())
     } else {
-      xlimit <- result.data()$xlim
+      xlimit <- result_data()$xlim
     }
     if (!is.null(limit_y())) {
       ylimit <- unlist(limit_y())
     } else {
-      ylimit <- result.data()$ylim
+      ylimit <- result_data()$ylim
     }
 
     plot <- create_scatterplot(
-      data = result.data()$processed.data,
-      data.labels = result.data()$data.label,
-      data.hovertext <- result.data()$data.hovertext,
-      color = colorPicker()$palette,
+      data = result_data()$processed_data,
+      data.labels = result_data()$data_label,
+      data.hovertext <- result_data()$data_hovertext,
+      color = color()$palette,
       x_label = xaxis$label(),
       y_label = yaxis$label(),
       z_label = zaxis$label(),
-      transparency = colorPicker()$transparency,
+      transparency = color()$transparency,
       pointsize = input$pointsize,
       labelsize = input$labelsize,
       density = input$density,
       line = input$line,
-      highlight.data = result.data()$highlight.data,
-      highlight.color = result.data()$highlight.color,
-      highlight.labels = result.data()$highlight.label,
-      highlight.hovertext = result.data()$highlight.hovertext,
+      highlight.data = result_data()$highlight_data,
+      highlight.color = result_data()$highlight_color,
+      highlight.labels = result_data()$highlight_label,
+      highlight.hovertext = result_data()$highlight_hovertext,
       xlim = xlimit,
       ylim = ylimit,
-      colorbar.limits = colorPicker()$winsorize,
+      colorbar.limits = color()$winsorize,
       plot.method = plot.method,
       width = size()$width,
       height = size()$height,
       ppi = size()$ppi,
       scale = size()$scale,
-      categorized = if (input$force_cat || ncol(result.data()$processed.data) >= 4 && !is.numeric(result.data()$processed.data[[4]])) TRUE else FALSE
+      categorized = if (input$force_cat || ncol(result_data()$processed_data) >= 4 && !is.numeric(result_data()$processed_data[[4]])) TRUE else FALSE
     )
 
     progress$set(1)
@@ -447,7 +443,7 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
       width = shiny::reactive(plot()$width * (plot()$ppi / 2.54)),
       height = shiny::reactive(plot()$height * (plot()$ppi / 2.54)),
       {
-        if (clearPlot()) {
+        if (clear_plot()) {
           return()
         } else {
           log_message("Scatterplot: render plot static", "INFO", token = session$token)
@@ -458,7 +454,7 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
     )
   } else if (plot.method == "interactive") {
     output$interactive <- plotly::renderPlotly({
-      if (clearPlot()) {
+      if (clear_plot()) {
         return()
       } else {
         log_message("Scatterplot: render plot interactive", "INFO", token = session$token)
@@ -497,10 +493,10 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
 
     # format appearance
     appearance <- list(
-      scheme = colorPicker()$name,
-      reverse = colorPicker()$reverse,
-      winsorize = colorPicker()$winsorize,
-      transparency = colorPicker()$transparency,
+      scheme = color()$name,
+      reverse = color()$reverse,
+      winsorize = color()$winsorize,
+      transparency = color()$transparency,
       pointsize = input$pointsize,
       labelsize = input$labelsize)
 
@@ -509,27 +505,27 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
 
     # format marker
     marker <- NULL
-    if (!is.null(markerOutput)) {
+    if (!is.null(marker.output)) {
       marker <- list(
-        highlight = markerOutput$highlight(),
-        color = markerOutput$color(),
-        labelColumn = markerOutput$labelColumn(),
-        label = markerOutput$label()
+        highlight = marker.output$highlight(),
+        color = marker.output$color(),
+        label_column = marker.output$label_column(),
+        label = marker.output$label()
       )
     }
 
     # merge all
-    all <- list(axis = axis, appearance = appearance, options = options, marker = marker)
+    list(axis = axis, appearance = appearance, options = options, marker = marker)
   })
 
   # notifications #####
   # show warning if there would be more than 10 categories
   shiny::observe({
     # something selected?
-    if (shiny::isTruthy(zaxis$selectedColumn())) {
+    if (shiny::isTruthy(zaxis$selected_column())) {
       # categories used?
-      if (input$force_cat || !is.numeric(object()$data[[zaxis$selectedColumn()]])) {
-        cat_num <- length(unique(object()$data[[zaxis$selectedColumn()]]))
+      if (input$force_cat || !is.numeric(object()$data[[zaxis$selected_column()]])) {
+        cat_num <- length(unique(object()$data[[zaxis$selected_column()]]))
 
         if (cat_num > 10) {
           shiny::showNotification(
@@ -565,12 +561,12 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
   })
 
   # label restriction warning
-  if (!is.null(markerOutput)) {
+  if (!is.null(marker.output)) {
     shiny::observe({
-      if (markerOutput$highlight() != "Disabled" && length(markerOutput$label()) > 100) {
+      if (marker.output$highlight() != "Disabled" && length(marker.output$label()) > 100) {
         shiny::showNotification(
           id = session$ns("label-limit"),
-          paste("Warning! Label restricted to 100 or less labels. Currently selected:", length(markerOutput$label()), "Please select fewer genes to label or else they will be ignored."),
+          paste("Warning! Label restricted to 100 or less labels. Currently selected:", length(marker.output$label()), "Please select fewer genes to label or else they will be ignored."),
           duration = NULL,
           type = "warning"
         )
@@ -582,12 +578,12 @@ scatterPlot <- function(input, output, session, clarion, markerOutput = NULL, pl
   }
 
   # Fetch the reactive guide for this module
-  guide <- scatterPlotGuide(session, !is.null(markerOutput))
+  guide <- scatterPlotGuide(session, !is.null(marker.output))
   shiny::observeEvent(input$guide, {
     rintrojs::introjs(session, options = list(steps = guide()))
   })
 
-  return(shiny::reactive({unique(data.table::rbindlist(list(result.data()$processed.data, result.data()$highlight.data)))}))
+  return(shiny::reactive({unique(data.table::rbindlist(list(result_data()$processed_data, result_data()$highlight_data)))}))
 }
 
 #' scatterPlot module guide

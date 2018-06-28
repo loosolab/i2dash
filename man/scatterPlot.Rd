@@ -4,7 +4,7 @@
 \alias{scatterPlot}
 \title{scatterPlot module server logic}
 \usage{
-scatterPlot(input, output, session, clarion, markerOutput = NULL,
+scatterPlot(input, output, session, clarion, marker.output = NULL,
   plot.method = "static", width = "auto", height = "auto", ppi = 72,
   scale = 1)
 }
@@ -17,7 +17,7 @@ scatterPlot(input, output, session, clarion, markerOutput = NULL,
 
 \item{clarion}{A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)}
 
-\item{markerOutput}{Marker module output. See \code{\link[wilson]{marker}}.}
+\item{marker.output}{Marker module output. See \code{\link[wilson]{marker}}.}
 
 \item{plot.method}{Choose to rather render a 'interactive' or 'static' plot. Defaults to 'static'.}
 
