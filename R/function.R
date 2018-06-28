@@ -33,7 +33,7 @@
 #' @import data.table
 #'
 #' @return Returns list(plot = ggplotly/ ggplot, width, height, ppi, exceed_size).
-create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, transparency = 1, pointsize = 1, labelsize = 3, color = NULL, x_label = "", y_label = "", z_label = "", density = T, line = T, categorized = F, highlight.data = NULL, highlight.labels = NULL, highlight.hovertext = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
+create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, transparency = 1, pointsize = 1, labelsize = 3, color = NULL, x_label = "", y_label = "", z_label = "", density = TRUE, line = TRUE, categorized = FALSE, highlight.data = NULL, highlight.labels = NULL, highlight.hovertext = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
   # force evaluation of all arguments
   # no promises in plot object
   forceArgs()

@@ -21,7 +21,7 @@ transformationUI <- function(id, label = "Transformation", selected = "raw", cho
                             label = NULL,
                             choices = choices,
                             selected = selected,
-                            multiple = F))
+                            multiple = FALSE))
   if (transposeOptions) {
     ret <- list(ret, shinyjs::useShinyjs(), shiny::radioButtons(ns("transpose"), label = NULL, choices = c(`row-wise` = "row", `column-wise` = "column")))
   }

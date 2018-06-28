@@ -28,7 +28,7 @@ scatterPlotUI <- function(id) {
                        columnSelectorUI(
                          id = ns("xaxis"),
                          title = "Data on x-axis",
-                         label = T
+                         label = TRUE
                        )
             ),
             shiny::div(id = ns("guide_xaxis_transformation"),
@@ -43,7 +43,7 @@ scatterPlotUI <- function(id) {
                        columnSelectorUI(
                          id = ns("yaxis"),
                          title = "Data on y-axis",
-                         label = T
+                         label = TRUE
                        )
             ),
             shiny::div(id = ns("guide_yaxis_transformation"),
@@ -59,7 +59,7 @@ scatterPlotUI <- function(id) {
                        columnSelectorUI(
                          id = ns("zaxis"),
                          title = "Data on z-axis",
-                         label = T
+                         label = TRUE
                        ),
                        shiny::checkboxInput(
                          inputId = ns("force_cat"),

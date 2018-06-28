@@ -7,7 +7,7 @@
 #' @return A list from \code{\link[shiny]{tag}} with the UI elements.
 #'
 #' @export
-columnSelectorUI <- function(id, label = F, title = NULL) {
+columnSelectorUI <- function(id, label = FALSE, title = NULL) {
   # create namespace
   ns <- shiny::NS(id)
 

@@ -4,7 +4,7 @@
 \alias{columnSelectorUI}
 \title{columnSelector module UI representation}
 \usage{
-columnSelectorUI(id, label = F, title = NULL)
+columnSelectorUI(id, label = FALSE, title = NULL)
 }
 \arguments{
 \item{id}{The ID of the modules namespace.}
