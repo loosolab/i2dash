@@ -66,7 +66,7 @@ Clarion <- R6::R6Class("Clarion",
                            if (is.element("type", names(self$metadata)) && is.element("name", self$metadata[["type"]])) {
                              return(self$metadata[type == "name"][["key"]])
                            }
-                           return(self$get_uniqueid())
+                           return(self$get_id())
                          },
                          get_delimiter = function() {
                            self$header$delimiter
