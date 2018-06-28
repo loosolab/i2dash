@@ -17,10 +17,10 @@
 colorPickerUI <- function(id, label = "Color scheme", custom = FALSE, multiple = FALSE, show.reverse = TRUE, show.scaleoptions = TRUE, show.transparency = TRUE) {
   ns <- shiny::NS(id)
 
-  if(custom){
+  if (custom) {
     ret <- list(colourpicker::colourInput(ns("picker"), label = NULL, value = "red"))
 
-    if(multiple){
+    if (multiple) {
       ret <- list(
         shinyjs::useShinyjs(),
         shiny::textInput(ns("palette"), label = NULL, value = "red,blue", placeholder = "e.g. black,#3c8dbc"),
@@ -31,18 +31,18 @@ colorPickerUI <- function(id, label = "Color scheme", custom = FALSE, multiple =
     }
 
     ret <- list(shiny::tags$b(label), ret)
-  }else{
+  } else {
     ret <- list(shiny::tags$b(label), shiny::uiOutput(ns("palette")))
   }
 
-  if(!custom | custom & multiple){
-    if(show.reverse) {
+  if (!custom | custom & multiple) {
+    if (show.reverse) {
       ret <- c(ret, list(shiny::checkboxInput(ns("reverse"), label = "Reverse scheme")))
     }
-    if(show.scaleoptions) {
+    if (show.scaleoptions) {
       ret <- c(ret, limitUI(ns("winsorize"), label = "Winsorize to upper/lower"))
     }
-    if(show.transparency) {
+    if (show.transparency) {
       ret <- c(ret, list(shiny::sliderInput(ns("transparency"), label = "Transparency", min = 0, max = 1, value = 1)))
     }
   }
@@ -76,34 +76,34 @@ colorPicker <- function(input, output, session, num.colors = 256, distribution =
   shinyjs::reset("reverse")
   shinyjs::reset("transparency")
 
-  #handle reactive distribution
-  distribution.r <- shiny::reactive({
-    if(shiny::is.reactive(distribution)){
+  # handle reactive distribution
+  distribution_r <- shiny::reactive({
+    if (shiny::is.reactive(distribution)) {
       distribution()
-    }else{
+    } else {
       distribution
     }
   })
 
-  if(!is.null(winsorize)) {
+  if (!is.null(winsorize)) {
     # handle reactive winsorize
-    winsorize.r <- shiny::reactive({
-      if(shiny::is.reactive(winsorize)) {
+    winsorize_r <- shiny::reactive({
+      if (shiny::is.reactive(winsorize)) {
         winsorize()
       } else {
         winsorize
       }
     })
   }
-  limits <- shiny::callModule(limit, "winsorize", lower = if(!is.null(winsorize)){shiny::reactive(winsorize.r()[1])}, upper = if(!is.null(winsorize)){shiny::reactive(winsorize.r()[2])})
+  limits <- shiny::callModule(limit, "winsorize", lower = if (!is.null(winsorize)) {shiny::reactive(winsorize_r()[1])}, upper = if (!is.null(winsorize)) {shiny::reactive(winsorize_r()[2])})
 
   output$palette <- shiny::renderUI({
     choices <- list()
 
-    if("sequential" %in% distribution.r()) choices <- append(choices, list(Sequential = names(Sequential)))
-    if("diverging" %in% distribution.r()) choices <- append(choices, list(Diverging = names(Diverging)))
-    if("categorical" %in% distribution.r()) choices <- append(choices, list(Categorical = names(Categorical)))
-    if(length(distribution.r()) == 1 && distribution.r() == "all") {
+    if ("sequential" %in% distribution_r()) choices <- append(choices, list(Sequential = names(Sequential)))
+    if ("diverging" %in% distribution_r()) choices <- append(choices, list(Diverging = names(Diverging)))
+    if ("categorical" %in% distribution_r()) choices <- append(choices, list(Categorical = names(Categorical)))
+    if (length(distribution_r()) == 1 && distribution_r() == "all") {
       choices <- list(Sequential = names(Sequential), Diverging = names(Diverging), Categorical = names(Categorical))
     }
 
@@ -120,26 +120,26 @@ colorPicker <- function(input, output, session, num.colors = 256, distribution =
     shiny::updateTextInput(session, "palette", value = "")
   })
 
-  #create custom colorpalette
+  # create custom colorpalette
   custom <- shiny::reactive({
-    #returns TRUE if String is a valid color
-    isColor <- function(x){
-      res <- try(grDevices::col2rgb(x),silent=TRUE)
-      return(!"try-error"%in%class(res))
+    # returns TRUE if String is a valid color
+    is_color <- function(x){
+      res <- try(grDevices::col2rgb(x), silent = TRUE)
+      return(!"try-error" %in% class(res))
     }
 
     pal <- unlist(strsplit(input$palette, split = ",", fixed = TRUE))
 
-    if(length(pal) != 0){
-      valid <- unlist(lapply(pal, isColor))
-      if(!all(valid)){
+    if (length(pal) != 0) {
+      valid <- unlist(lapply(pal, is_color))
+      if (!all(valid)) {
         shiny::showNotification(id = session$ns("notification"), shiny::HTML(paste("<b>ColorPicker</b><br/> Found invalid colors: ", paste(pal[!valid], collapse = ", "))), duration = NULL, type = "warning")
         pal <- NULL
-      }else{
+      } else {
         shiny::removeNotification(id = session$ns("notification"))
         pal <- grDevices::colorRampPalette(pal)(num.colors)
       }
-    }else{
+    } else {
       shiny::showNotification(id = session$ns("notification"), shiny::HTML("<b>ColorPicker</b><br/> Warning no colors selected!"), duration = NULL, type = "warning")
       pal <- NULL
     }
@@ -148,34 +148,34 @@ colorPicker <- function(input, output, session, num.colors = 256, distribution =
   })
 
   output <- shiny::reactive({
-    if(is.null(input$palette)){
-      #custom single color
+    if (is.null(input$palette)) {
+      # custom single color
       pal <- input$picker
     }else{
-      #predefined palettes
-      if(is.null(shiny::isolate(input$picker))){
-        #get palette
-        if(input$palette %in% names(Sequential)){
+      # predefined palettes
+      if (is.null(shiny::isolate(input$picker))) {
+        # get palette
+        if (input$palette %in% names(Sequential)) {
           pal <- Sequential[[input$palette]]
-        }else if(input$palette %in% names(Diverging)){
+        } else if (input$palette %in% names(Diverging)) {
           pal <- Diverging[[input$palette]]
-        }else {
+        } else {
           pal <- Categorical[[input$palette]]
         }
-      }else{
-        #custom palettes (multiple colors)
+      } else {
+        # custom palettes (multiple colors)
         pal <- custom()
       }
-      #reverse palette
-      if(!is.null(input$reverse)){
-        if(input$reverse){
+      # reverse palette
+      if (!is.null(input$reverse)) {
+        if (input$reverse) {
           pal <- rev(pal)
         }
       }
     }
 
     winsorize <- NULL
-    if(!is.null(limits())) {
+    if (!is.null(limits())) {
       winsorize <- c(limits()$lower, limits()$upper)
     }
 
@@ -199,19 +199,19 @@ colorPicker <- function(input, output, session, num.colors = 256, distribution =
 #'
 sequentialPalettes <- function(n) {
   Heat <- grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(9, "YlOrRd")))(n)
-  Viridis	<- viridis::viridis(n)
+  Viridis <- viridis::viridis(n)
   Magma <- viridis::magma(n)
-  Inferno	<- viridis::inferno(n)
+  Inferno <- viridis::inferno(n)
   Plasma <- viridis::plasma(n)
   YlGnBu <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "YlGnBu"))(n)
   Blues <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(n)
   Reds <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Reds"))(n)
-  Cubehelix	<- rje::cubeHelix(n)
+  Cubehelix <- rje::cubeHelix(n)
 
-  BkOrYl <- grDevices::colorRampPalette(c("black", "orange", "yellow"))(n)						#one-sided (0 .. x): go enrichment
-  GnBu <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "GnBu"))(n)							#one-sided (0 .. x): expression
-  PuBuGn <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "PuBuGn"))(n)							#one-sided (0 .. x): expression
-  BuGnYlRd <- grDevices::colorRampPalette(c("#000041", "#0000CB", "#0081FF", "#02DA81", "#80FE1A", "#FDEE02", "#FFAB00", "#FF3300"))(n)	#one-sided (0 .. x): expression, ~=spectral
+  BkOrYl <- grDevices::colorRampPalette(c("black", "orange", "yellow"))(n)						# one-sided (0 .. x): go enrichment
+  # GnBu <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "GnBu"))(n)							# one-sided (0 .. x): expression
+  PuBuGn <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "PuBuGn"))(n)							# one-sided (0 .. x): expression
+  # BuGnYlRd <- grDevices::colorRampPalette(c("#000041", "#0000CB", "#0081FF", "#02DA81", "#80FE1A", "#FDEE02", "#FFAB00", "#FF3300"))(n)	# one-sided (0 .. x): expression, ~=spectral
 
   data.table::data.table(Heat, Viridis, Magma, Inferno, Plasma, YlGnBu, Blues, Reds, Cubehelix, BkOrYl, PuBuGn)
 }
@@ -225,18 +225,18 @@ sequentialPalettes <- function(n) {
 divergingPalettes <- function(n) {
   BuWtRd <- grDevices::colorRampPalette(c("royalblue4", "steelblue4", "white", "indianred", "firebrick4"))(n)
   RdBkGr <- gplots::redgreen(n)
-  RdYlGr <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "RdYlGn"))(n)
-  YlWtPu <- grDevices::colorRampPalette(c("gold", "white", "white", "mediumpurple4"))(n)					#two-sided (-1 .. +1): correlation
+  # RdYlGr <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "RdYlGn"))(n)
+  YlWtPu <- grDevices::colorRampPalette(c("gold", "white", "white", "mediumpurple4"))(n)					# two-sided (-1 .. +1): correlation
   Spectral <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(n)
 
-  BuYlGn <- grDevices::colorRampPalette(c("dodgerblue4", "cadetblue1", "yellow", "darkolivegreen1", "darkgreen"))(n)	#two-sided (-x .. +x): fold-change
-  TqWtRd <- grDevices::colorRampPalette(c("darkslategray", "darkturquoise", "cornsilk", "indianred3", "red3"))(n)		#two-sided (-x .. +x): fold-change
-  YlGyRd <- grDevices::colorRampPalette(c("yellow", "grey25", "red"))(n)							#two-sided (-x .. +x): fold-change
-  RdBu <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "RdBu"))(n)							#two-sided (-x .. +x): fold-change
-  GnWtRd <- grDevices::colorRampPalette(c("chartreuse3", "white", "firebrick1"))(n)					#two-sided (-x .. +x): fold-change
-  RdYlBu <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "RdYlBu"))(n)							#two-sided (-x .. +x): fold-change
-  RdGy <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "RdGy"))(n)							#two-sided (-x .. +x): fold-change
-  PuOr <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "PuOr"))(n)							#two-sided (-x .. +x): fold-change
+  BuYlGn <- grDevices::colorRampPalette(c("dodgerblue4", "cadetblue1", "yellow", "darkolivegreen1", "darkgreen"))(n)	# two-sided (-x .. +x): fold-change
+  # TqWtRd <- grDevices::colorRampPalette(c("darkslategray", "darkturquoise", "cornsilk", "indianred3", "red3"))(n)		# two-sided (-x .. +x): fold-change
+  # YlGyRd <- grDevices::colorRampPalette(c("yellow", "grey25", "red"))(n)							# two-sided (-x .. +x): fold-change
+  # RdBu <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "RdBu"))(n)							# two-sided (-x .. +x): fold-change
+  GnWtRd <- grDevices::colorRampPalette(c("chartreuse3", "white", "firebrick1"))(n)					# two-sided (-x .. +x): fold-change
+  # RdYlBu <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "RdYlBu"))(n)							# two-sided (-x .. +x): fold-change
+  RdGy <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "RdGy"))(n)							# two-sided (-x .. +x): fold-change
+  PuOr <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(11, "PuOr"))(n)							# two-sided (-x .. +x): fold-change
 
   data.table::data.table(BuWtRd, Spectral, RdBkGr, YlWtPu, BuYlGn, GnWtRd, RdGy, PuOr)
 }
@@ -259,4 +259,3 @@ categoricalPalettes <- function(n) {
 
   data.table::data.table(Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3)
 }
-
