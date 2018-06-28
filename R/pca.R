@@ -33,8 +33,8 @@ pcaUI <- function(id, show.label = TRUE) {
           shiny::column(
             width = 4,
             shiny::div(id = ns("guide_dimensions"),
-                       shiny::numericInput(ns("dimA"), label = "PCA dimension (x-axis)", min = 1, max = 6, step = 1, value = 1),
-                       shiny::numericInput(ns("dimB"), label = "PCA dimension (y-axis)", min = 1, max = 6, step = 1, value = 2)
+                       shiny::numericInput(ns("dim_a"), label = "PCA dimension (x-axis)", min = 1, max = 6, step = 1, value = 1),
+                       shiny::numericInput(ns("dim_b"), label = "PCA dimension (y-axis)", min = 1, max = 6, step = 1, value = 2)
             ),
             shiny::div(id = ns("guide_grouping"),
                        labelUI(ns("group")),
@@ -44,7 +44,7 @@ pcaUI <- function(id, show.label = TRUE) {
           shiny::column(
             width = 4,
             shiny::div(id = ns("guide_pointsize"),
-                       shiny::sliderInput(ns("pointsize"),label = "Point size", min = 0.1, max = 10, value = 2),
+                       shiny::sliderInput(ns("pointsize"), label = "Point size", min = 0.1, max = 10, value = 2),
                        shiny::sliderInput(ns("labelsize"), label = "Label size", min = 1, max = 20, value = 5, round = TRUE)
             ),
             shiny::div(id = ns("guide_color"),
@@ -89,7 +89,7 @@ pcaUI <- function(id, show.label = TRUE) {
 pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 72, scale = 1) {
   # globals/ initialization #####
   # clear plot
-  clearPlot <- shiny::reactiveVal(value = FALSE)
+  clear_plot <- shiny::reactiveVal(value = FALSE)
   # disable downloadButton on init
   shinyjs::disable("download")
   # disable plot button on init
@@ -101,11 +101,11 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     if (shiny::is.reactive(clarion)) {
       if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion()$clone(deep = TRUE)
+      clarion()$clone(deep = TRUE)
     } else {
       if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion$clone(deep = TRUE)
+      clarion$clone(deep = TRUE)
     }
   })
 
@@ -133,21 +133,21 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
   })
 
   # modules/ ui #####
-  columnSelect <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
-  factor_data <- shiny::callModule(label, "group", label = "Select color grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columnSelect$selectedColumns(), !"key"]), unique = FALSE)
-  factor_data2 <- shiny::callModule(label, "group2", label = "Select shape grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columnSelect$selectedColumns(), !"key"]), unique = FALSE)
-  colorPicker <- shiny::callModule(colorPicker, "colorPicker",  distribution = "categorical", selected = "Dark2")
+  columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
+  factor_data <- shiny::callModule(label, "group", label = "Select color grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columns$selected_columns(), !"key"]), unique = FALSE)
+  factor_data2 <- shiny::callModule(label, "group2", label = "Select shape grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columns$selected_columns(), !"key"]), unique = FALSE)
+  color <- shiny::callModule(colorPicker, "colorPicker",  distribution = "categorical", selected = "Dark2")
 
   # update dimension inputs
   shiny::observe({
-    col_num <- length(shiny::req(columnSelect$selectedColumns()))
+    col_num <- length(shiny::req(columns$selected_columns()))
 
     if (col_num >= 3) {
-      valueA <- ifelse(col_num <= input$dimA, col_num - 1, input$dimA)
-      valueB <- ifelse(col_num <= input$dimB, col_num - 1, input$dimB)
+      value_a <- ifelse(col_num <= input$dim_a, col_num - 1, input$dim_a)
+      value_b <- ifelse(col_num <= input$dim_b, col_num - 1, input$dim_b)
 
-      shiny::updateNumericInput(session = session, inputId = "dimA", max = col_num - 1, value = valueA)
-      shiny::updateNumericInput(session = session, inputId = "dimB", max = col_num - 1, value = valueB)
+      shiny::updateNumericInput(session = session, inputId = "dim_a", max = col_num - 1, value = value_a)
+      shiny::updateNumericInput(session = session, inputId = "dim_b", max = col_num - 1, value = value_b)
     }
   })
 
@@ -157,15 +157,15 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     log_message("PCA: reset", "INFO", token = session$token)
 
     shinyjs::reset("label")
-    shinyjs::reset("dimA")
-    shinyjs::reset("dimB")
+    shinyjs::reset("dim_a")
+    shinyjs::reset("dim_b")
     shinyjs::reset("pointsize")
     shinyjs::reset("labelsize")
-    columnSelect <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), columnTypeLabel = "Column types to choose from")
-    factor_data <<- shiny::callModule(label, "group", label = "Select color grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columnSelect$selectedColumns(), !"key"]), unique = FALSE)
-    factor_data2 <<- shiny::callModule(label, "group2", label = "Select shape grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columnSelect$selectedColumns(), !"key"]), unique = FALSE)
-    colorPicker <<- shiny::callModule(colorPicker, "colorPicker",  distribution = "categorical", selected = "Dark2")
-    clearPlot(TRUE)
+    columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
+    factor_data <<- shiny::callModule(label, "group", label = "Select color grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columns$selected_columns(), !"key"]), unique = FALSE)
+    factor_data2 <<- shiny::callModule(label, "group2", label = "Select shape grouping factors", data = shiny::reactive(object()$get_factors()[key %in% columns$selected_columns(), !"key"]), unique = FALSE)
+    color <<- shiny::callModule(colorPicker, "colorPicker",  distribution = "categorical", selected = "Dark2")
+    clear_plot(TRUE)
   })
 
   result_data <- shiny::reactive({
@@ -174,7 +174,7 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     on.exit(progress$close())
     progress$set(0.2, message = "Select data")
 
-    selected <- object()$data[, c(object()$get_uniqueID(), columnSelect$selectedColumns()), with = FALSE]
+    selected <- object()$data[, c(object()$get_id(), columns$selected_columns()), with = FALSE]
 
     progress$set(1)
 
@@ -186,7 +186,7 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
 
     # enable downloadButton
     shinyjs::enable("download")
-    clearPlot(FALSE)
+    clear_plot(FALSE)
 
     #new progress indicator
     progress <- shiny::Progress$new()
@@ -197,16 +197,16 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
                data = result_data(),
                color.group = factor_data()$label,
                color.title = paste0(factor_data()$selected, collapse = ", "),
-               palette = colorPicker()$palette,
+               palette = color()$palette,
                shape.group = factor_data2()$label,
                shape.title = paste0(factor_data2()$selected, collapse = ", "),
-               dimensionA = input$dimA,
-               dimensionB = input$dimB,
-               dimensions = length(columnSelect$selectedColumns()) - 1,
+               dimension.a = input$dim_a,
+               dimension.b = input$dim_b,
+               dimensions = length(columns$selected_columns()) - 1,
                pointsize = input$pointsize,
                labelsize = input$labelsize,
                labels = input$label,
-               custom.labels = columnSelect$label(),
+               custom.labels = columns$label(),
                on.columns = TRUE,
                width = size()$width,
                height = size()$height,
@@ -238,7 +238,7 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     width = plot_width,
     height = plot_height,
     {
-      if (clearPlot()) {
+      if (clear_plot()) {
         return()
       } else {
         log_message("PCA: render plot", "INFO", token = session$token)
@@ -266,8 +266,8 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
   user_input <- shiny::reactive({
     # format selection
     selection <- list(
-      data = list(type = columnSelect$type(), selectedColumns = columnSelect$selectedColumns()),
-      dimensions = list(xaxis = input$dimA, yaxis = input$dimB),
+      data = list(type = columns$type(), selectedColumns = columns$selected_columns()),
+      dimensions = list(xaxis = input$dim_a, yaxis = input$dim_b),
       colorGrouping = factor_data()$selected,
       shapeGrouping = factor_data2()$selected
     )
@@ -277,11 +277,11 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
       show_label = input$label,
       pointsize = input$pointsize,
       labelsize = input$labelsize,
-      colorOptions = list(scheme = colorPicker()$name, reverse = colorPicker()$reverse)
+      colorOptions = list(scheme = color()$name, reverse = color()$reverse)
     )
 
     # merge all
-    all <- list(selection = selection, options = options)
+    list(selection = selection, options = options)
   })
 
   # notifications #####
@@ -291,10 +291,10 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
     shinyjs::enable("plot")
 
     # no selection
-    if (!shiny::isTruthy(columnSelect$selectedColumns())) {
+    if (!shiny::isTruthy(columns$selected_columns())) {
       shinyjs::disable("plot")
     } else {
-      col_num <- length(columnSelect$selectedColumns())
+      col_num <- length(columns$selected_columns())
       # insufficient data
       if (col_num < 3 || nrow(shiny::isolate(object()$data)) < 3) {
         shinyjs::disable("plot")
@@ -308,7 +308,7 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
       }
 
       # invalid dimension
-      if (col_num >= 3 && (is.na(input$dimA) || is.na(input$dimB) || input$dimA <= 0 || input$dimA >= col_num || input$dimB <= 0 || input$dimB >= col_num)) {
+      if (col_num >= 3 && (is.na(input$dim_a) || is.na(input$dim_b) || input$dim_a <= 0 || input$dim_a >= col_num || input$dim_b <= 0 || input$dim_b >= col_num)) {
         shinyjs::disable("plot")
         shiny::showNotification(
           ui = "Invalid dimension(s)! Please select an integer value between 1 and number of selected columns - 1.",
