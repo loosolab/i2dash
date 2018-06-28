@@ -30,7 +30,7 @@ featureSelectorUI <- function(id){
                             shiny::actionButton(ns("guide"), "Launch guide", style = "color: #fff; background-color: #3c8dbc", icon = shiny::icon("question-circle")),
                             shiny::downloadButton(ns("download")),
                             shiny::br(),
-                            shiny::strong("NOTE: The SELECT button only evaluates the filter(s) below.",shiny::br(),
+                            shiny::strong("NOTE: The SELECT button only evaluates the filter(s) below.", shiny::br(),
                                           "Manual sub-selections on table applies instantly!", shiny::br(),
                                           "Repress of SELECT button discards manual selections!")
                             )
@@ -72,11 +72,11 @@ featureSelector <- function(input, output, session, clarion, multiple = TRUE, co
     if (shiny::is.reactive(clarion)) {
       if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion()$clone(deep = TRUE)
+      clarion()$clone(deep = TRUE)
     } else {
       if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion$clone(deep = TRUE)
+      clarion$clone(deep = TRUE)
     }
   })
 
@@ -288,7 +288,7 @@ featureSelector <- function(input, output, session, clarion, multiple = TRUE, co
       }
 
       # create filter text
-      filter <- paste("Result:" , nrow(data), "hits")
+      filter <- paste("Result:", nrow(data), "hits")
     } else if (data_change() == 1) {
       data <- select()
 
