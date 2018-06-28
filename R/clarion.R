@@ -5,8 +5,8 @@
 #'
 #' @section Methods:
 #' \describe{
-#'     \item{\code{get_uniqueID()}}{
-#'       Returns name of unique column. Assumes first feature to be unique if not specified.
+#'     \item{\code{get_id()}}{
+#'       Returns name of unique identifier column. Assumes first feature to be unique if not specified.
 #'     }
 #'     \item{\code{get_name()}}{
 #'       Returns name of name column. If not specified return unique Id.
@@ -51,7 +51,7 @@ Clarion <- R6::R6Class("Clarion",
                          header = NULL,
                          metadata = NULL,
                          data = NULL,
-                         get_uniqueID = function() {
+                         get_id = function() {
                            # return unique_id
                            # if no type return first feature
                            if (is.element("type", names(self$metadata))) {
@@ -66,7 +66,7 @@ Clarion <- R6::R6Class("Clarion",
                            if (is.element("type", names(self$metadata)) && is.element("name", self$metadata[["type"]])) {
                              return(self$metadata[type == "name"][["key"]])
                            }
-                           return(self$get_uniqueID())
+                           return(self$get_uniqueid())
                          },
                          get_delimiter = function() {
                            self$header$delimiter
@@ -101,15 +101,15 @@ Clarion <- R6::R6Class("Clarion",
                            # validate header
                            private$check_delimiter()
                            # validate metadata
-                           private$check_metadataHeader()
+                           private$check_metadata_header()
                            private$check_key()
                            private$check_level()
                            private$check_type()
                            private$check_label()
                            # validate data
-                           private$check_dataHeader(solve)
-                           private$check_dataMin()
-                           private$check_dataColumnTypes()
+                           private$check_data_header(solve)
+                           private$check_data_min()
+                           private$check_data_column_types()
                          },
                          initialize = function(header = NULL, metadata, data, validate = TRUE) {
                            self$header <- header
@@ -117,10 +117,10 @@ Clarion <- R6::R6Class("Clarion",
                            self$data <- data
 
                            # coerce unique_id and name to character
-                           if (self$get_uniqueID() == self$get_name()) {
-                             cols <- self$get_uniqueID()
+                           if (self$get_id() == self$get_name()) {
+                             cols <- self$get_id()
                            } else {
-                             cols <- c(self$get_uniqueID(), self$get_name())
+                             cols <- c(self$get_id(), self$get_name())
                            }
                            self$data[, (cols) := lapply(.SD, as.character), .SDcols = cols]
 
@@ -147,7 +147,7 @@ Clarion <- R6::R6Class("Clarion",
                            }
                          },
                          ## metadata checks
-                         check_metadataHeader = function() {
+                         check_metadata_header = function() {
                            # case: invalid column names
                            valid_names <- c("key", "factor\\d+(=\".*\")?", "level", "type", "label", "sub_label")
                            regex <- paste0("^", valid_names, "$", collapse = "|")
@@ -216,7 +216,7 @@ Clarion <- R6::R6Class("Clarion",
                            }
                          },
                          ## data checks
-                         check_dataHeader = function(solve = TRUE) {
+                         check_data_header = function(solve = TRUE) {
                            # case: column not defined in metadata
                            missing <- setdiff(names(self$data), self$metadata[["key"]])
                            if (length(missing) > 0) {
@@ -231,13 +231,13 @@ Clarion <- R6::R6Class("Clarion",
                              stop("Data: Column names not unique! Following names occur more than once: ", paste0(unique(names(self$data)[duplicated(names(self$data))]), collapse = ", "))
                            }
                          },
-                         check_dataMin = function() {
+                         check_data_min = function() {
                            # case: minimum requirements not met (two columns: feature(unique_id) + sample|condition|contrast)
                            if (ncol(self$data) < 2) {
                              stop("Data: Minimum requirements not met! At least two columns needed, one with unique identifier and one with numeric values.")
                            }
                          },
-                         check_dataColumnTypes = function() {
+                         check_data_column_types = function() {
                            # case: level = sample, condition, contrast not numeric
                            # except type=array because of delimiter
                            if (is.element("type", names(self$metadata))) {

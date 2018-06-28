@@ -30,8 +30,8 @@ This object is used by all top-level wilson modules.
 \section{Methods}{
 
 \describe{
-    \item{\code{get_uniqueID()}}{
-      Returns name of unique column. Assumes first feature to be unique if not specified.
+    \item{\code{get_id()}}{
+      Returns name of unique identifier column. Assumes first feature to be unique if not specified.
     }
     \item{\code{get_name()}}{
       Returns name of name column. If not specified return unique Id.
