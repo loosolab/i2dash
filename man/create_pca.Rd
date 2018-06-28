@@ -6,7 +6,7 @@
 \usage{
 create_pca(data, color.group = NULL, color.title = NULL, palette = NULL,
   shape.group = NULL, shape.title = NULL, shapes = c(15:25),
-  dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE,
+  dimension.a = 1, dimension.b = 2, dimensions = 6, on.columns = TRUE,
   labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3,
   width = 28, height = 28, ppi = 72, scale = 1)
 }
@@ -25,9 +25,9 @@ create_pca(data, color.group = NULL, color.title = NULL, palette = NULL,
 
 \item{shapes}{Vector of shapes see \code{\link[graphics]{points}}. Will recycle/ cut off shapes if needed. Default = c(15:25)}
 
-\item{dimensionA}{Number of dimension displayed on X-Axis.}
+\item{dimension.a}{Number of dimension displayed on X-Axis.}
 
-\item{dimensionB}{Number of dimension displayed on Y-Axis.}
+\item{dimension.b}{Number of dimension displayed on Y-Axis.}
 
 \item{dimensions}{Number of dimensions to create.}
 

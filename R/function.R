@@ -57,19 +57,19 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
   if (ncol(data) >= 4) z_head <- names(data)[4]
 
   # delete rows where both 0 or at least one NA
-  rows.to.keep.data <- which(as.logical((data[, 2] != 0) + (data[, 3] != 0)))
-  data <- data[rows.to.keep.data]
+  rows_to_keep_data <- which(as.logical( (data[, 2] != 0) + (data[, 3] != 0)))
+  data <- data[rows_to_keep_data]
   if (!is.null(highlight.data)) {
-    rows.to.keep.high <- which(as.logical((highlight.data[, 2] != 0) + (highlight.data[, 3 != 0])))
-    highlight.data <- highlight.data[rows.to.keep.high]
+    rows_to_keep_high <- which(as.logical( (highlight.data[, 2] != 0) + (highlight.data[, 3 != 0])))
+    highlight.data <- highlight.data[rows_to_keep_high]
   }
 
   # delete labels & hovertext accordingly
-  data.labels <- data.labels[rows.to.keep.data]
-  data.hovertext <- data.hovertext[rows.to.keep.data]
+  data.labels <- data.labels[rows_to_keep_data]
+  data.hovertext <- data.hovertext[rows_to_keep_data]
   if (!is.null(highlight.data)) {
-    highlight.labels <- highlight.labels[rows.to.keep.high]
-    highlight.hovertext <- highlight.hovertext[rows.to.keep.high]
+    highlight.labels <- highlight.labels[rows_to_keep_high]
+    highlight.hovertext <- highlight.hovertext[rows_to_keep_high]
   }
 
   ########## assemble plot ##########
@@ -125,7 +125,7 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
   if (density) {
     ### kernel density
     # plot$layers <- c(stat_density2d(geom = "tile", aes(fill = ..density..^0.25), n=200, contour=FALSE) + aes_(fill = as.name(var)), plot$layers) # n = resolution; density less sparse
-    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes_(fill = ~ ..density..^0.25), n = 200, contour = FALSE)
+    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes_(fill = ~ ..density.. ^ 0.25), n = 200, contour = FALSE)
 
     plot <- plot + ggplot2::scale_fill_gradient(low = "white", high = "black") +
       # guides(fill=FALSE) +		# remove density legend
@@ -279,10 +279,10 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
 
     # add labels with arrows
     if (!is.null(highlight.labels) && !is.null(highlight.data)) {
-      plot <- plotly::add_annotations(p = plot, x = highlight.data[[x_head]], y = highlight.data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
+      plot <- plotly::add_annotations(p = plot, x = highlight.data[[x_head]], y = highlight.data[[y_head]], text = highlight.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = "rgba(255, 255, 255, 0.5)")
     }
     if (!is.null(data.labels)) {
-      plot <- plotly::add_annotations(p = plot, x = data[[x_head]], y = data[[y_head]], text = data.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = 'rgba(255, 255, 255, 0.5)')
+      plot <- plotly::add_annotations(p = plot, x = data[[x_head]], y = data[[y_head]], text = data.labels, standoff = pointsize * scale, font = list(size = labelsize * scale), bgcolor = "rgba(255, 255, 255, 0.5)")
     }
   }
 
@@ -303,8 +303,8 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
 #' @param shape.group Vector of groups according to samples (= column names).
 #' @param shape.title Title of the shape legend.
 #' @param shapes Vector of shapes see \code{\link[graphics]{points}}. Will recycle/ cut off shapes if needed. Default = c(15:25)
-#' @param dimensionA Number of dimension displayed on X-Axis.
-#' @param dimensionB Number of dimension displayed on Y-Axis.
+#' @param dimension.a Number of dimension displayed on X-Axis.
+#' @param dimension.b Number of dimension displayed on Y-Axis.
 #' @param dimensions Number of dimensions to create.
 #' @param on.columns Boolean perform pca on columns or rows.
 #' @param labels Boolean show labels.
@@ -322,7 +322,7 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
 #' @import data.table
 #'
 #' @return A named list(plot = ggplot object, data = pca.data, width = width of plot (cm), height = height of plot (cm), ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max).
-create_pca <- function(data, color.group = NULL, color.title = NULL, palette = NULL, shape.group = NULL, shape.title = NULL, shapes = c(15:25), dimensionA = 1, dimensionB = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72, scale = 1) {
+create_pca <- function(data, color.group = NULL, color.title = NULL, palette = NULL, shape.group = NULL, shape.title = NULL, shapes = c(15:25), dimension.a = 1, dimension.b = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72, scale = 1) {
   # force evaluation of all arguments
   # no promises in plot object
   forceArgs()
@@ -398,10 +398,10 @@ create_pca <- function(data, color.group = NULL, color.title = NULL, palette = N
   } else {
     invisible <-  "ind"
     # prepare df for mapping
-    df <- data.frame(x = pca$ind$coord[, dimensionA], y = pca$ind$coord[, dimensionB])
+    df <- data.frame(x = pca$ind$coord[, dimension.a], y = pca$ind$coord[, dimension.b])
   }
 
-  pca_plot <- factoextra::fviz_pca_ind(pca, axes = c(dimensionA, dimensionB), invisible = invisible, pointsize = pointsize * scale, label = "none", axes.linetype = "blank", repel = FALSE)
+  pca_plot <- factoextra::fviz_pca_ind(pca, axes = c(dimension.a, dimension.b), invisible = invisible, pointsize = pointsize * scale, label = "none", axes.linetype = "blank", repel = FALSE)
   pca_plot <- pca_plot + theme1
 
   # grouping
@@ -446,7 +446,7 @@ create_pca <- function(data, color.group = NULL, color.title = NULL, palette = N
   if (labels) {
     pca_plot <- pca_plot + ggrepel::geom_text_repel(
       data = data.frame(pca$ind$coord),
-      mapping = ggplot2::aes_(x = pca$ind$coord[, dimensionA], y = pca$ind$coord[, dimensionB], label = rownames(pca$ind$coord)),
+      mapping = ggplot2::aes_(x = pca$ind$coord[, dimension.a], y = pca$ind$coord[, dimension.b], label = rownames(pca$ind$coord)),
       segment.color = "gray65",
       size = labelsize * scale,
       force = 2,
@@ -500,7 +500,7 @@ create_pca <- function(data, color.group = NULL, color.title = NULL, palette = N
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
 #'
 #' @return Returns list(plot = complexHeatmap/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max) depending on plot.method.
-create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label = NULL, column.label=T, column.custom.label = NULL, clustering='none', clustdist='auto', clustmethod='auto', colors=NULL, winsorize.colors = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
+create_heatmap <- function(data, unitlabel = "auto", row.label = TRUE, row.custom.label = NULL, column.label = TRUE, column.custom.label = NULL, clustering = "none", clustdist = "auto", clustmethod = "auto", colors = NULL, winsorize.colors = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
   # force evaluation of all arguments
   # no promises in plot object
   forceArgs()
@@ -510,55 +510,55 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
   requireNamespace("grDevices", quietly = TRUE)
   requireNamespace("circlize", quietly = TRUE)
 
-  #row label
-  if(!is.null(row.custom.label)) {
-    row.label.strings <- row.custom.label
+  # row label
+  if (!is.null(row.custom.label)) {
+    row_label_strings <- row.custom.label
   } else {
-    row.label.strings <- data[[1]]
+    row_label_strings <- data[[1]]
   }
 
   # column label
-  if(!is.null(column.custom.label)) {
-    column.label.strings <- column.custom.label
+  if (!is.null(column.custom.label)) {
+    column_label_strings <- column.custom.label
   } else {
-    column.label.strings <- names(data)[-1]
+    column_label_strings <- names(data)[-1]
   }
 
   # cm to pixel
-  if(is.numeric(width)) {
+  if (is.numeric(width)) {
     width <- width * (ppi / 2.54)
   }
-  if(is.numeric(height)) {
+  if (is.numeric(height)) {
     height <- height * (ppi / 2.54)
   }
 
   # plot --------------------------------------------------------------------
-  if(plot.method == "interactive"){
-    #estimate label sizes
-    #row label
+  if (plot.method == "interactive") {
+    # estimate label sizes
+    # row label
     rowlabel_size <- ifelse(row.label, max(nchar(data[[1]]), na.rm = TRUE) * 8 * scale, 0)
-    #column label
-    collabel_size <- ifelse(column.label, (2 + log2(max(nchar(names(data)), na.rm = TRUE))^2) * 10, 0)
-    #legend
+    # column label
+    collabel_size <- ifelse(column.label, (2 + log2(max(nchar(names(data)), na.rm = TRUE)) ^ 2) * 10, 0)
+    # legend
     legend <- nchar(unitlabel) * 10
     legend <- ifelse(legend < 90, 90, legend)
-    #plot size
-    #auto_width <- 20 * (ncol(data) - 1) + rowlabel_size + legend
+    # plot size
+    # auto_width <- 20 * (ncol(data) - 1) + rowlabel_size + legend
     auto_height <- 10 * nrow(data) + collabel_size
 
-    #data
+    # data
     plot <- heatmaply::heatmapr(data[, -1],
-                                labRow = row.label.strings,
-                                labCol = column.label.strings,
+                                labRow = row_label_strings,
+                                labCol = column_label_strings,
                                 hclust_method = clustmethod,
                                 dist_method = clustdist,
                                 dendrogram = clustering,
                                 distfun = factoextra::get_dist
-                                #width = width, #not working
-                                #height = height
+                                # width = width, #not working
+                                # height = height
     )
 
-    #layout
+    # layout
     plot <- heatmaply::heatmaply(plot,
                                  plot_method = "ggplot",
                                  node_type = "heatmap",
@@ -569,12 +569,12 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     plot <- plotly::layout(plot, autosize = ifelse(width == "auto", TRUE, FALSE), margin = list(l = rowlabel_size, r = legend, b = collabel_size), showlegend = FALSE)
 
     # decide which sizes should be used
-    if(width == "auto") {
+    if (width == "auto") {
       width <- 0
     # } else if(width <= auto_width) {
     #   width <- auto_width
     }
-    if(height == "auto") {
+    if (height == "auto") {
       height <- auto_height
     }
 
@@ -585,11 +585,11 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     # size exceeded?
     exceed_size <- FALSE
     limit <- 500 * (ppi / 2.54)
-    if(width > limit) {
+    if (width > limit) {
       exceed_size <- TRUE
       width <- limit
     }
-    if(height > limit) {
+    if (height > limit) {
       exceed_size <- TRUE
       height <- limit
     }
@@ -600,21 +600,21 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     # address correct axis
     # scale axis tickfont
     ticks <- list(size = 12 * scale)
-    if(clustering == "both" || clustering == "column"){
+    if (clustering == "both" || clustering == "column") {
       plot <- plotly::layout(plot, xaxis = list(showticklabels = column.label, tickfont = ticks),
                              yaxis2 = list(showticklabels = row.label, tickfont = ticks)
       )
-    }else if(clustering == "row" || clustering == "none"){
+    }else if (clustering == "row" || clustering == "none") {
       plot <- plotly::layout(plot, xaxis = list(showticklabels = column.label, tickfont = ticks),
                              yaxis = list(showticklabels = row.label, tickfont = ticks)
       )
     }
 
-    #don't show dendrogram ticks
-    if(clustering == "row"){
+    # don't show dendrogram ticks
+    if (clustering == "row") {
       plot <- plotly::layout(plot, xaxis2 = list(showticklabels = FALSE)
       )
-    }else if(clustering == "column"){
+    }else if (clustering == "column") {
       plot <- plotly::layout(plot, yaxis = list(showticklabels = FALSE)
       )
     }
@@ -624,41 +624,41 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
     height <- height / (ppi / 2.54)
 
     plot <- list(plot = plot, width = width, height = height, ppi = ppi, exceed_size = exceed_size)
-  }else if(plot.method == "static"){
+  }else if (plot.method == "static") {
 
-    #clustering
-    if (clustering=='none') {
-      cluster_rows=F
-      cluster_columns=F
-    } else if (clustering=='row') {
-      cluster_rows=T
-      cluster_columns=F
-    } else if (clustering=='column') {
-      cluster_rows=F
-      cluster_columns=T
-    } else if (clustering=='both') {
-      cluster_rows=T
-      cluster_columns=T
+    # clustering
+    if (clustering == "none") {
+      cluster_rows <- FALSE
+      cluster_columns <- FALSE
+    } else if (clustering == "row") {
+      cluster_rows <- TRUE
+      cluster_columns <- FALSE
+    } else if (clustering == "column") {
+      cluster_rows <- FALSE
+      cluster_columns <- TRUE
+    } else if (clustering == "both") {
+      cluster_rows <- TRUE
+      cluster_columns <- TRUE
     }
 
     #
     # Create new colour brakepoints in case of winsorizing
     #
-    if(!is.null(winsorize.colors)) {
+    if (!is.null(winsorize.colors)) {
       breaks <- seq(winsorize.colors[1], winsorize.colors[2], length = length(colors))
     } else {
       breaks <- seq(min(apply(data[, -1], 2, function(x) {min(x, na.rm = TRUE)})), max(apply(data[, -1], 2, function(x) {max(x, na.rm = TRUE)})), length = length(colors))
     }
     colors <- circlize::colorRamp2(breaks, colors)
 
-    #convert data to data.frame so rownames can be used for annotation
-    prep.data <- as.data.frame(data[, -1])
+    # convert data to data.frame so rownames can be used for annotation
+    prep_data <- as.data.frame(data[, -1])
 
-    row.names(prep.data) <- row.label.strings
-    colnames(prep.data) <- column.label.strings
+    row.names(prep_data) <- row_label_strings
+    colnames(prep_data) <- column_label_strings
 
     plot <- try(ComplexHeatmap::Heatmap(
-      prep.data,
+      prep_data,
       name = unitlabel,
       col = colors,
       cluster_rows = cluster_rows,
@@ -689,40 +689,40 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
       )
     ))
 
-    #width/ height calculation
-    col_names_maxlength_label_width=max(sapply(colnames(prep.data), graphics::strwidth, units="in", font = 12))	#longest column label when plotted in inches
-    col_names_maxlength_label_height=max(sapply(colnames(prep.data), graphics::strheight, units="in", font = 12))	#highest column label when plotted in inches
-    row_names_maxlength_label_width=max(sapply(rownames(prep.data), graphics::strwidth, units="in", font = 12))	#longest row label when plotted in inches
-    row_names_maxlength_label_height=max(sapply(rownames(prep.data), graphics::strheight, units="in", font = 12))	#highest row label when plotted in inches
+    # width/ height calculation
+    col_names_maxlength_label_width <- max(sapply(colnames(prep_data), graphics::strwidth, units = "in", font = 12))	# longest column label when plotted in inches
+    col_names_maxlength_label_height <- max(sapply(colnames(prep_data), graphics::strheight, units = "in", font = 12))	# highest column label when plotted in inches
+    row_names_maxlength_label_width <- max(sapply(rownames(prep_data), graphics::strwidth, units = "in", font = 12))	# longest row label when plotted in inches
+    row_names_maxlength_label_height <- max(sapply(rownames(prep_data), graphics::strheight, units = "in", font = 12))	# highest row label when plotted in inches
 
     # width
-    if(row.label){
-      auto_width <- row_names_maxlength_label_width + 0.3 #width buffer: labels + small whitespaces
-    }else{
-      auto_width <- 0.3 #no labels
+    if (row.label) {
+      auto_width <- row_names_maxlength_label_width + 0.3 # width buffer: labels + small whitespaces
+    } else {
+      auto_width <- 0.3 # no labels
     }
 
-    if(cluster_rows) auto_width <- auto_width + 1 #width buffer: dendrogram + small whitespaces between viewports
+    if (cluster_rows) auto_width <- auto_width + 1 # width buffer: dendrogram + small whitespaces between viewports
 
-    auto_width <- ncol(prep.data) * (col_names_maxlength_label_height + 0.08) + auto_width #readable rowlabels
+    auto_width <- ncol(prep_data) * (col_names_maxlength_label_height + 0.08) + auto_width # readable rowlabels
     # inch to px
     auto_width <- auto_width * ppi
 
     # height
-    auto_height <- 0.2 + 0.5 + (5 * row_names_maxlength_label_height) #height buffer: small whitespaces + color legend + 2 title rows(+whitespace)
+    auto_height <- 0.2 + 0.5 + (5 * row_names_maxlength_label_height) # height buffer: small whitespaces + color legend + 2 title rows(+whitespace)
 
-    if(column.label) auto_height <- auto_height + col_names_maxlength_label_width
-    if(cluster_columns) auto_height <- auto_height + 1
+    if (column.label) auto_height <- auto_height + col_names_maxlength_label_width
+    if (cluster_columns) auto_height <- auto_height + 1
 
-    auto_height <- auto_height + nrow(prep.data) * (row_names_maxlength_label_height + 0.06)
+    auto_height <- auto_height + nrow(prep_data) * (row_names_maxlength_label_height + 0.06)
     # inch to px
     auto_height <- auto_height * ppi
 
     # use auto sizes
-    if(height == "auto") {
+    if (height == "auto") {
       height <- auto_height
     }
-    if(width == "auto") {
+    if (width == "auto") {
       width <- auto_width
     }
 
@@ -732,11 +732,11 @@ create_heatmap <- function(data, unitlabel='auto', row.label=T, row.custom.label
 
     # size exceeded?
     exceed_size <- FALSE
-    if(width > 500) {
+    if (width > 500) {
       exceed_size <- TRUE
       width <- 500
     }
-    if(height > 500) {
+    if (height > 500) {
       exceed_size <- TRUE
       height <- 500
     }
@@ -775,18 +775,18 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
   # force evaluation of all arguments
   # no promises in plot object
   forceArgs()
-  #grouping
-  #group by factor if existing (fill with key if empty)
+  # grouping
+  # group by factor if existing (fill with key if empty)
   grouping[grouping[[2]] == "", 2 := grouping[grouping[[2]] == "", 1]]
 
-  genes <- nrow(data)												#number of genes (rows in matrix)
-  conditions <- length(unique(grouping[[2]]))											#number of conditions (columns in matrix)
+  genes <- nrow(data)												# number of genes (rows in matrix)
+  conditions <- length(unique(grouping[[2]]))											# number of conditions (columns in matrix)
 
   ###################
   # Combine and transform dataframes
   ###################
-  #detach ids from data/ replace with gene.label
-  if(is.null(gene.label)) {
+  # detach ids from data/ replace with gene.label
+  if (is.null(gene.label)) {
     data_id <- data[[1]]
   } else {
     data_id <- gene.label
@@ -794,19 +794,19 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
   data <- data[, sapply(data, is.numeric), with = FALSE]
 
   data_cols <- names(data)
-  data <- data.table::transpose(data) 								#switch columns <> rows
+  data <- data.table::transpose(data) 								# switch columns <> rows
 
-  #place former colnames in cols
+  # place former colnames in cols
   data$cols <- data_cols
-  data.table::setcolorder(data, c("cols", colnames(data)[1:ncol(data)-1]))
-  #reattach ids as colnames
+  data.table::setcolorder(data, c("cols", colnames(data)[1:ncol(data) - 1]))
+  # reattach ids as colnames
   names(data)[2:ncol(data)] <- data_id
 
-  names(grouping)[1:2] <- c("cols", "condition") #add header for condition
-  data <- data[grouping, on = c(names(grouping)[1])]					#merge dataframes by rownames
-  names(data)[1] <- "sample"							#change Row.names to sample
-  data[, sample := NULL]								#completely remove sample column again
-  #order conditions in plot according to grouping (instead of alphabetic)
+  names(grouping)[1:2] <- c("cols", "condition") # add header for condition
+  data <- data[grouping, on = c(names(grouping)[1])]					# merge dataframes by rownames
+  names(data)[1] <- "sample"							# change Row.names to sample
+  data[, sample := NULL]								# completely remove sample column again
+  # order conditions in plot according to grouping (instead of alphabetic)
   data[, condition := factor(condition, levels = unique(condition))]
 
   data <- data.table::melt(data, id.vars = "condition")
@@ -814,28 +814,28 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
   ###################
   # Choose color palette
   ###################
-  if (facet.target == "gene") {											#facet = gene
+  if (facet.target == "gene") {											# facet = gene
     num_colors <- conditions
   }
-  if (facet.target == "condition") {										#facet = condition
+  if (facet.target == "condition") {										# facet = condition
     num_colors <- genes
   }
 
 
   if (is.null(colors)) {
-    color_fill_grayscale="grey75"										#color to use for filling geoms in grayscale mode
-    colors <- rep(color_fill_grayscale,num_colors)
-  }else{
+    color_fill_grayscale <- "grey75"										#color to use for filling geoms in grayscale mode
+    colors <- rep(color_fill_grayscale, num_colors)
+  } else {
     colors <- grDevices::colorRampPalette(colors)(num_colors)
   }
 
   ###################
   # Function to get standard error for error bars (box, bar, violin)
   ###################
-  get.se <- function(y){
+  get.se <- function(y) {
     se <- stats::sd(y) / sqrt(length(y))
     mu <- mean(y)
-    data.frame(ymin = mu-se, y = y, ymax = mu+se)
+    data.frame(ymin = mu - se, y = y, ymax = mu + se)
   }
 
   ###################
@@ -845,20 +845,21 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
   # data : a data frame
   # varname : the name of a column containing the variable to be summarized
   # groupnames : vector of column names to be used as grouping variables
-  data_summary <- function(data, varname, groupnames){
-    summary_func <- function(x, col){
+  data_summary <- function(data, varname, groupnames) {
+    summary_func <- function(x, col) {
       c(
-        mean = mean(x[[col]], na.rm=TRUE),
-        sd = stats::sd(x[[col]], na.rm=TRUE),
-        se = stats::sd(x[[col]], na.rm=TRUE) / sqrt(length(x[[col]]))
+        mean = mean(x[[col]], na.rm = TRUE),
+        sd = stats::sd(x[[col]], na.rm = TRUE),
+        se = stats::sd(x[[col]], na.rm = TRUE) / sqrt(length(x[[col]]))
       )
     }
-    data_sum <- plyr::ddply(data, groupnames, .fun=summary_func, varname)
+    data_sum <- plyr::ddply(data, groupnames, .fun = summary_func, varname)
     data_sum <- reshape::rename(data_sum, c("mean" = varname))
     return(data_sum)
   }
+
   if (plot.type == "line") {
-    data = data_summary(data, varname = "value", groupnames = c("condition", "variable"))			#collapse the dataframe to the mean and the standard deviation for line plot
+    data <- data_summary(data, varname = "value", groupnames = c("condition", "variable"))			# collapse the dataframe to the mean and the standard deviation for line plot
   }
 
   if (plot.type == "box" || plot.type == "violin" || plot.type == "bar" || plot.type == "line") {
@@ -867,24 +868,22 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
     ###################
 
     # plot --------------------------------------------------------------------
-
-    theme1 <- ggplot2::theme(															#no gray background or helper lines
+    theme1 <- ggplot2::theme(															# no gray background or helper lines
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
-      axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 1),										#x-axis sample lables = 90 degrees
+      axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 1),										# x-axis sample lables = 90 degrees
       strip.background = ggplot2::element_blank(),
       panel.border = ggplot2::element_rect(colour = "black"),
-      legend.position = "none",														#remove legend
+      legend.position = "none",														# remove legend
       legend.title = ggplot2::element_blank(),
       axis.title.x = ggplot2::element_blank(),
       text = ggplot2::element_text(family = "mono", size = 15 * scale)
-
-      #axis.line.x = element_line(size = .3),
-      #axis.line.y = element_line(size = .3),
-      #panel.background = element_blank(),
-      #axis.title.y = element_text(face = "bold", color = "black", size = 10),
-      #plot.title = element_text(face = "bold", color = "black", size = 12),
-      #axis.text.x = element_text(angle = 90, hjust = 1)											#x-axis sample lables = vertical
+      # axis.line.x = element_line(size = .3),
+      # axis.line.y = element_line(size = .3),
+      # panel.background = element_blank(),
+      # axis.title.y = element_text(face = "bold", color = "black", size = 10),
+      # plot.title = element_text(face = "bold", color = "black", size = 12),
+      # axis.text.x = element_text(angle = 90, hjust = 1)											# x-axis sample lables = vertical
     )
 
     matrixplot <- ggplot2::ggplot(data, ggplot2::aes(y = value))
@@ -900,30 +899,30 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
     # Handle facetting and special parameters for line plot (no facetting, etc.)
     ###################
 
-    if (facet.target == "gene") {														#facet = gene
-      matrixplot = matrixplot + ggplot2::aes(x = condition, fill = condition)
+    if (facet.target == "gene") {														# facet = gene
+      matrixplot <- matrixplot + ggplot2::aes(x = condition, fill = condition)
 
-      if (plot.type == "line") {													#line plot: no facetting, different size algorithm
+      if (plot.type == "line") {													# line plot: no facetting, different size algorithm
         matrixplot <- matrixplot + ggplot2::aes_(x = ~ variable, colour = ~ condition, group = ~ condition, fill = NULL)
-        matrixplot <- matrixplot + ggplot2::scale_x_discrete(expand = c(0.05, 0.05))								#expand to reduce the whitespace inside the plot (left/right)
+        matrixplot <- matrixplot + ggplot2::scale_x_discrete(expand = c(0.05, 0.05))								# expand to reduce the whitespace inside the plot (left/right)
       } else {
-        #compute number of rows to get facet.cols columns (works better with plotly)
+        # compute number of rows to get facet.cols columns (works better with plotly)
         rows <- ceiling(length(levels(data$variable)) / facet.cols)
 
-        matrixplot <- matrixplot + ggplot2::facet_wrap(~variable, nrow = rows, scales = "free_x")
+        matrixplot <- matrixplot + ggplot2::facet_wrap( ~ variable, nrow = rows, scales = "free_x")
       }
     }
-    if (facet.target == "condition") {													#facet = condition
+    if (facet.target == "condition") {													# facet = condition
       matrixplot <- matrixplot + ggplot2::aes_(x = ~ variable, fill = ~ variable)
 
-      if (plot.type == "line") {													#line plot: no facetting, different size algorithm
+      if (plot.type == "line") {													# line plot: no facetting, different size algorithm
         matrixplot <- matrixplot + ggplot2::aes_(x = ~ condition, colour = ~ variable, group = ~ variable, fill = NULL)
-        matrixplot <- matrixplot + ggplot2::scale_x_discrete(expand = c(0.05,0.05))								#expand to reduce the whitespace inside the plot (left/right)
+        matrixplot <- matrixplot + ggplot2::scale_x_discrete(expand = c(0.05, 0.05))								# expand to reduce the whitespace inside the plot (left/right)
       } else {
-        #compute number of rows to get facet.cols columns (works better with plotly)
+        # compute number of rows to get facet.cols columns (works better with plotly)
         rows <- ceiling(length(levels(data$condition)) / facet.cols)
 
-        matrixplot <- matrixplot + ggplot2::facet_wrap(~condition, nrow = rows, scales = "free_x")
+        matrixplot <- matrixplot + ggplot2::facet_wrap( ~ condition, nrow = rows, scales = "free_x")
       }
     }
 
@@ -931,26 +930,26 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
     # Further handle plot types
     ###################
 
-    if (plot.type == "box") {																#plot type: box
+    if (plot.type == "box") {																# plot type: box
       matrixplot <- matrixplot + ggplot2::geom_boxplot(position = ggplot2::position_dodge(1))
-      matrixplot <- matrixplot + ggplot2::stat_boxplot(geom = 'errorbar', size = 0.2, width = 0.5) 										#add horizontal line for errorbar
-      #matrixplot <- matrixplot + stat_summary(fun.data = get.se, geom = "errorbar", width = 0.2)					#error bar of standard error
+      matrixplot <- matrixplot + ggplot2::stat_boxplot(geom = "errorbar", size = 0.2, width = 0.5) 										# add horizontal line for errorbar
+      # matrixplot <- matrixplot + stat_summary(fun.data = get.se, geom = "errorbar", width = 0.2)					# error bar of standard error
     }
-    if (plot.type == "violin") {																#plot type: violin
+    if (plot.type == "violin") {																# plot type: violin
       matrixplot <- matrixplot + ggplot2::geom_violin()
-      #matrixplot <- matrixplot + stat_summary(fun.y = "median", geom = "point")										#add median dot
-      #matrixplot <- matrixplot + stat_summary(fun.data = get.se, geom = "errorbar", width = 0.2, position = position_dodge())					#error bar of standard error
+      # matrixplot <- matrixplot + stat_summary(fun.y = "median", geom = "point")										# add median dot
+      # matrixplot <- matrixplot + stat_summary(fun.data = get.se, geom = "errorbar", width = 0.2, position = position_dodge())					# error bar of standard error
     }
-    if (plot.type == "bar") {																#plot type: box
-      matrixplot <- matrixplot + ggplot2::stat_summary(fun.y = mean, geom = "bar", position = "dodge")							#bar plot of the mean (color=condition)
-      matrixplot <- matrixplot + ggplot2::stat_summary(fun.data = get.se, geom = "errorbar", size = 0.2, width = 0.2, position = ggplot2::position_dodge())					#error bar of standard error
+    if (plot.type == "bar") {																# plot type: box
+      matrixplot <- matrixplot + ggplot2::stat_summary(fun.y = mean, geom = "bar", position = "dodge")							# bar plot of the mean (color=condition)
+      matrixplot <- matrixplot + ggplot2::stat_summary(fun.data = get.se, geom = "errorbar", size = 0.2, width = 0.2, position = ggplot2::position_dodge())					# error bar of standard error
     }
     if (plot.type == "line") {
       matrixplot <- matrixplot + ggplot2::theme(legend.position = "right")
-      #matrixplot <- matrixplot + geom_errorbar(aes(ymin = value-sd, ymax = value + sd), width = 0.05)								#error bar = standard deviation
-      matrixplot <- matrixplot + ggplot2::geom_errorbar(ggplot2::aes_(ymin = ~ value - se, ymax = ~ value + se), size = 0.2, width = 0.05)								#error bar = standard error
-      matrixplot <- matrixplot + ggplot2::geom_line() + ggplot2::geom_point()											#bar plot of the mean (color=condition)
-      #set hovertext
+      # matrixplot <- matrixplot + geom_errorbar(aes(ymin = value - sd, ymax = value + sd), width = 0.05)								# error bar = standard deviation
+      matrixplot <- matrixplot + ggplot2::geom_errorbar(ggplot2::aes_(ymin = ~ value - se, ymax = ~ value + se), size = 0.2, width = 0.05)								# error bar = standard error
+      matrixplot <- matrixplot + ggplot2::geom_line() + ggplot2::geom_point()											# bar plot of the mean (color = condition)
+      # set hovertext
       matrixplot <- matrixplot + ggplot2::aes(text = paste("ID: ", data$variable, "\n",
                                                            "Condition: ", data$condition, "\n",
                                                            "Value: ", data$value
@@ -959,100 +958,99 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
 
     # set y-axis ticks
     y_ticks <- pretty(data[["value"]])
-    if(length(data[["value"]]) != 1) {
-      if(!is.null(ylimits)) {
+    if (length(data[["value"]]) != 1) {
+      if (!is.null(ylimits)) {
         y_ticks <- pretty(ylimits)
       }
 
       matrixplot <- matrixplot + ggplot2::scale_y_continuous(breaks = y_ticks, limits = ylimits)
     } else {
       # change yaxis limits
-      if(!is.null(ylimits)) {
+      if (!is.null(ylimits)) {
         matrixplot <- matrixplot + ggplot2::ylim(ylimits)
       }
     }
   }
 
-  #get names of columns / rows
-  if(plot.type == "line"){
-    if(facet.target == "gene"){
-      column.names <- data[["variable"]]
-      legend.names <- data[["condition"]]
-    }else{
-      column.names <- data[["condition"]]
-      legend.names <- data[["variable"]]
+  # get names of columns / rows
+  if (plot.type == "line") {
+    if (facet.target == "gene") {
+      column_names <- data[["variable"]]
+      legend_names <- data[["condition"]]
+    } else {
+      column_names <- data[["condition"]]
+      legend_names <- data[["variable"]]
     }
-  }else{
-    if(facet.target == "condition"){
-      column.names <- data[["variable"]]
-      title.names <- data[["condition"]]
-    }else{
-      column.names <- data[["condition"]]
-      title.names <- data[["variable"]]
+  } else {
+    if (facet.target == "condition") {
+      column_names <- data[["variable"]]
+      title_names <- data[["condition"]]
+    } else {
+      column_names <- data[["condition"]]
+      title_names <- data[["variable"]]
     }
   }
 
-  #dynamic plot in inches
-
-  #calculate cex for better strwidth calculation
+  # dynamic plot in inches
+  # calculate cex for better strwidth calculation
   ccex <- function(x){
-    2.3 - (x * log(1 + 1/x))
+    2.3 - (x * log(1 + 1 / x))
   }
 
-  ###width estimation
+  ### width estimation
   yaxis_label_height <- graphics::strheight(ylabel, units = "inches")
-  if(length(data[["value"]]) == 1 && floor(data[["value"]]) == data[["value"]]) {
+  if (length(data[["value"]]) == 1 && floor(data[["value"]]) == data[["value"]]) {
     # adds three characters '.05'; account for single integer value plots
     value <- data[["value"]] + 0.05
   } else {
     value <- y_ticks
   }
   yaxis_tick_width <- max(graphics::strwidth(value, units = "inches"), na.rm = TRUE)
-  xaxis_tick_height <- max(graphics::strheight(column.names, units = "inches", cex = 2), na.rm = TRUE) * length(levels(column.names))
-  ###height estimation
-  xaxis_tick_width <- max(graphics::strwidth(column.names, units = "inches", cex = ccex(max(nchar(levels(column.names))))), na.rm = TRUE)
+  xaxis_tick_height <- max(graphics::strheight(column_names, units = "inches", cex = 2), na.rm = TRUE) * length(levels(column_names))
+  ### height estimation
+  xaxis_tick_width <- max(graphics::strwidth(column_names, units = "inches", cex = ccex(max(nchar(levels(column_names))))), na.rm = TRUE)
 
-  if(plot.type == "line"){
-    ###width estimation
-    max_chars <- max(nchar(levels(legend.names)), na.rm = TRUE)
-    legend_width <- max(graphics::strwidth(legend.names, units = "inches", cex = ccex(max_chars)), na.rm = TRUE)
-    legend_columns <- 1 + (length(levels(legend.names))-1) %/% 20
+  if (plot.type == "line") {
+    ### width estimation
+    max_chars <- max(nchar(levels(legend_names)), na.rm = TRUE)
+    legend_width <- max(graphics::strwidth(legend_names, units = "inches", cex = ccex(max_chars)), na.rm = TRUE)
+    legend_columns <- 1 + (length(levels(legend_names)) - 1) %/% 20
 
-    auto_width <- 0.25 + yaxis_label_height + yaxis_tick_width + xaxis_tick_height + ((legend_width + 0.5) * legend_columns)
+    auto_width <- 0.25 + yaxis_label_height + yaxis_tick_width + xaxis_tick_height + (legend_width + 0.5) * legend_columns
 
-    ###height estimation
+    ### height estimation
     plot_height <- 4
 
-    #top margin to prevent legend cut off
+    # top margin to prevent legend cut off
     top <- 0
-    if(plot.method == "static"){
-      margin.multiplier <- ceiling(length(levels(legend.names)) / legend_columns)
-      margin.multiplier <- ifelse(margin.multiplier < 17, 0, margin.multiplier - 17)
+    if (plot.method == "static") {
+      margin_multiplier <- ceiling(length(levels(legend_names)) / legend_columns)
+      margin_multiplier <- ifelse(margin_multiplier < 17, 0, margin_multiplier - 17)
 
-      top <- 0.1 * margin.multiplier
+      top <- 0.1 * margin_multiplier
       matrixplot <- matrixplot + ggplot2::theme(plot.margin = grid::unit(c(top + 0.1, 0, 0, 0), "inches"))
     }
 
     auto_height <- plot_height + xaxis_tick_width + top
-  }else{
-    ###width estimation
-    max_chars <- max(nchar(levels(title.names)), na.rm = TRUE)
+  } else {
+    ### width estimation
+    max_chars <- max(nchar(levels(title_names)), na.rm = TRUE)
 
-    title_width <- max(graphics::strwidth(title.names, units = "inches", cex = ccex(max_chars)), na.rm = TRUE)
+    title_width <- max(graphics::strwidth(title_names, units = "inches", cex = ccex(max_chars)), na.rm = TRUE)
     # prevent cut off for small titles
-    title.chars <- sum(nchar(levels(title.names)))
-    if(facet.cols == 1 && max(nchar(levels(title.names))) <= 20) {
-        title_width <- title_width + (-log10(max(nchar(levels(title.names)))) + 1.6) / 3
-    } else if(title.chars <= 20) {
-      title_width <- title_width + (-log10(title.chars) + 1.4) / 3
+    title_chars <- sum(nchar(levels(title_names)))
+    if (facet.cols == 1 && max(nchar(levels(title_names))) <= 20) {
+        title_width <- title_width + (-log10(max(nchar(levels(title_names)))) + 1.6) / 3
+    } else if (title_chars <= 20) {
+      title_width <- title_width + (-log10(title_chars) + 1.4) / 3
     }
-    #TODO margin between plots (not really needed)
-    plots_per_row <- ceiling(length(levels(title.names))/ rows)
+    # TODO margin between plots (not really needed)
+    plots_per_row <- ceiling(length(levels(title_names)) / rows)
 
     auto_width <- yaxis_label_height + yaxis_tick_width + (ifelse(title_width > xaxis_tick_height, title_width, xaxis_tick_height) * plots_per_row)
 
     ###height estimation
-    title_height <- max(graphics::strheight(title.names, units = "inches", cex = 2), na.rm = TRUE)
+    title_height <- max(graphics::strheight(title_names, units = "inches", cex = 2), na.rm = TRUE)
     plot_height <- 2
 
 
@@ -1064,10 +1062,10 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
   auto_height <- auto_height * 2.54
 
   # use greater/ automatic sizes
-  if(width == "auto") {
+  if (width == "auto") {
     width <- auto_width
   }
-  if(height == "auto") {
+  if (height == "auto") {
     height <- auto_height
   }
 
@@ -1077,17 +1075,17 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
 
   # size exceeded?
   exceed_size <- FALSE
-  if(width > 500) {
+  if (width > 500) {
     exceed_size <- TRUE
     width <- 500
   }
-  if(height > 500) {
+  if (height > 500) {
     exceed_size <- TRUE
     height <- 500
   }
 
   # plotly ------------------------------------------------------------------
-  if(plot.method == "interactive"){
+  if (plot.method == "interactive") {
     matrixplotly <- plotly::ggplotly(
       tooltip = "text",
       matrixplot,
@@ -1108,18 +1106,18 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
 #' @param values Numeric vector or table
 #'
 #' @return Vector with c(min, max).
-equalize <- function(values){
-  if(is.vector(values)){
+equalize <- function(values) {
+  if (is.vector(values)) {
     min <- abs(min(values, na.rm = TRUE))
     max <- abs(max(values, na.rm = TRUE))
-  }else{
+  } else {
     min <- abs(min(apply(values, 2, function(x) {min(x, na.rm = TRUE)})))
     max <- abs(max(apply(values, 2, function(x) {max(x, na.rm = TRUE)})))
   }
 
-  if(min > max){
+  if (min > max) {
     result <- min
-  }else{
+  } else {
     result <- max
   }
 
@@ -1136,49 +1134,49 @@ equalize <- function(values){
 #'
 #' @return Returns a logical vector with the length of choices, where every matched position is TRUE.
 searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(choices, na.rm = TRUE), max. = max(choices, na.rm = TRUE)) {
-  #don't apply if no options selected
-  if(is.null(options)){
+  # don't apply if no options selected
+  if (is.null(options)) {
     return(rep(TRUE, length(choices)))
   }
 
-  if(length(input) > 1){
-    #don't compare if everything is selected
-    if(options == "inner" & input[1] == min. & input[2] == max.){
+  if (length(input) > 1) {
+    # don't compare if everything is selected
+    if (options == "inner" & input[1] == min. & input[2] == max.) {
       return(rep(TRUE, length(choices)))
     }
 
     selection <- vapply(choices, FUN.VALUE = logical(1), function(x) {
       # NA & NaN == FALSE
-      if(is.na(x) | is.nan(x)){
+      if (is.na(x) | is.nan(x)) {
         return(FALSE)
       }
 
-      #range
-      if("inner" == options){
-        if(x >= input[1] & x <= input[2]) return(TRUE)
+      # range
+      if ("inner" == options){
+        if (x >= input[1] & x <= input[2]) return(TRUE)
       }
-      if("outer" == options){
-        if(x < input[1] | x > input[2]) return(TRUE)
+      if ("outer" == options) {
+        if (x < input[1] | x > input[2]) return(TRUE)
       }
 
       return(FALSE)
     })
-  }else{
+  } else {
     selection <- vapply(choices, FUN.VALUE = logical(1), function(x) {
       # NA & NaN == FALSE
-      if(is.na(x) | is.nan(x)){
+      if (is.na(x) | is.nan(x)) {
         return(FALSE)
       }
 
       #single point
-      if(any("=" == options)){
-        if(x == input) return(TRUE)
+      if (any("=" == options)) {
+        if (x == input) return(TRUE)
       }
-      if(any("<" == options)){
-        if(x < input) return(TRUE)
+      if (any("<" == options)) {
+        if (x < input) return(TRUE)
       }
-      if(any(">" == options)){
-        if(x > input) return(TRUE)
+      if (any(">" == options)) {
+        if (x > input) return(TRUE)
       }
 
       return(FALSE)
@@ -1230,7 +1228,6 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   # save plots depending on given plot object
   if (ggplot2::is.ggplot(plot)) {
     # ggplot
-
     ggplot2::ggsave(plot_file_pdf, plot = plot, width = width, height = height, units = "cm", device = "pdf", useDingbats = FALSE)
     ggplot2::ggsave(plot_file_png, plot = plot, width = width, height = height, units = "cm", device = "png", dpi = ppi)
   } else if (class(plot)[1] == "plotly") {
