@@ -798,7 +798,7 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
 
   # place former colnames in cols
   data$cols <- data_cols
-  data.table::setcolorder(data, c("cols", colnames(data)[1:ncol(data) - 1]))
+  data.table::setcolorder(data, c("cols", colnames(data)[seq_len(ncol(data)) - 1]))
   # reattach ids as colnames
   names(data)[2:ncol(data)] <- data_id
 

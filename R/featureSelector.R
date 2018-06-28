@@ -99,7 +99,7 @@ featureSelector <- function(input, output, session, clarion, multiple = TRUE, co
   # row_selector choices
   choices <- shiny::reactive({
     if (nrow(data_output()$data) > 0) {
-      c(1:nrow(data_output()$data))
+      seq_len(nrow(data_output()$data))
     } else {
       c(0, 0)
     }

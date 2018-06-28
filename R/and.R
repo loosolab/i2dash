@@ -134,7 +134,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
       # keep grouping order
       grouping <- grouping[unique(element.grouping[[2]])]
 
-      return <- lapply(1:length(grouping), function(i){
+      return <- lapply(seq_len(length(grouping)), function(i){
         group <- lapply(unlist(grouping[i]), function(x){
           progress$inc(step, detail = x)
 
@@ -164,7 +164,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
         shiny::tagList(shinydashboard::box(width = 12, collapsible = TRUE, collapsed = TRUE, title = names(grouping[i]), shiny::tagList(group)))
       })
     } else {
-      return <- lapply(1:ncol(data), function(x) {
+      return <- lapply(seq_len(ncol(data)), function(x) {
         progress$inc(step, detail = names(data)[x])
         if (is.numeric(data[[x]])) {
           ui <- orNumericUI(id = session$ns(openssl::sha1(names(data)[x])))
@@ -205,7 +205,7 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
     progress$set(0, message = "Filtering Module:")
     step <- ncol(data_r())
 
-    lapply(1:ncol(data_r()), function(x) {
+    lapply(seq_len(ncol(data_r())), function(x) {
       progress$inc(step, detail = names(data_r())[x])
       if (is.numeric(data_r()[[x]])) {
         if (parameter()$ranged[x]) {
