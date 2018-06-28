@@ -324,7 +324,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     )
 
     # merge all
-    all <- list(data = data, options = options)
+    list(data = data, options = options)
   })
 
   # notifications #####
