@@ -34,11 +34,11 @@ marker <- function(input, output, session, clarion){
     if (shiny::is.reactive(clarion)) {
       if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion()
+      clarion()
     } else {
       if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
 
-      obj <- clarion
+      clarion
     }
   })
 
@@ -50,7 +50,7 @@ marker <- function(input, output, session, clarion){
     list(
       highlight = shiny::reactive(input$highlight),
       color = shiny::reactive(color()$palette),
-      labelColumn = shiny::reactive(labeller()$selected),
+      label_column = shiny::reactive(labeller()$selected),
       label = shiny::reactive(labeller()$label),
       clarion = object
     )

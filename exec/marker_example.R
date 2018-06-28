@@ -6,7 +6,7 @@ source("../R/label.R")
 source("../R/limit.R")
 source("../R/clarion.R")
 
-####Test Data
+#### Test Data
 data <- data.table::as.data.table(mtcars, keep.rowname = "id")
 # create metadata
 metadata <- data.table::data.table(names(data), level = c("feature", rep("sample", 7), rep("condition", 4)))
@@ -26,7 +26,7 @@ server <- function(input, output) {
     list(
       highlight = marker$highlight(),
       color = marker$color(),
-      labelColumn = marker$labelColumn(),
+      label_column = marker$label_column(),
       label = marker$label(),
       clarion = marker$clarion()
     )
