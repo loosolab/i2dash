@@ -128,7 +128,7 @@ transformation <- function(input, output, session, data, transpose = FALSE, pseu
 
     # replace infinite with NA & NA with 0
     if (replaceInf) {
-      is.na(output) <- sapply(output, is.infinite)
+      is.na(output) <- vapply(output, FUN = is.infinite, FUN.VALUE = logical(1))
     }
     if (replaceNA) {
       output[is.na(output)] <- 0

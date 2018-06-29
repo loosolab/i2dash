@@ -245,7 +245,7 @@ Clarion <- R6::R6Class("Clarion",
                            } else {
                              expected_numeric_cols <- self$metadata[level %in% c("sample", "condition", "contrast")][["key"]]
                            }
-                           not_numeric <- names(self$data[, expected_numeric_cols, with = FALSE][, which(!sapply(self$data[, expected_numeric_cols, with = FALSE], is.numeric))])
+                           not_numeric <- names(self$data[, expected_numeric_cols, with = FALSE][, which(!vapply(self$data[, expected_numeric_cols, with = FALSE], is.numeric, FUN.VALUE = logical(1)))])
                            if (length(not_numeric) > 0) {
                              stop("Data: Column(s): ", paste0(not_numeric, collapse = ", "), " not numeric! Probably wrong decimal separator.")
                            }

@@ -260,20 +260,16 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
 
     step <- 0.9 / length(or_modules)
     # OR modules selection
-    or_selection_bool <- sapply(or_modules, function(x) {
+    or_selection_bool <- vapply(or_modules, FUN.VALUE = logical(nrow(data_r())), FUN = function(x) {
       progress$inc(step, detail = x()$label)
       x()$bool
     })
-    or_selection_text <- sapply(or_modules, function(x) {
+
+    or_selection_text <- lapply(or_modules, function(x) {
       if (shiny::isTruthy(x()$text)) {
         return(paste0(x()$label, ": ", paste(x()$text, collapse = ","), collapse = ""))
       }
     })
-
-    # cast to matrix if sapply returns vector
-    if (is.vector(or_selection_bool)) {
-      or_selection_bool <- t(as.matrix(or_selection_bool))
-    }
 
     # selected rows (and selection)
     and_selection_bool <- apply(or_selection_bool, 1, all)

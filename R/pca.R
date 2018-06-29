@@ -249,11 +249,17 @@ pca <- function(input, output, session, clarion, width = 28, height = 28, ppi = 
 
   # group data by dimension
   reorganized_data <- shiny::reactive({
-    sapply(colnames(plot()$data$var$coord), USE.NAMES = TRUE, simplify = FALSE, function(dim) {
-      sapply(plot()$data$var, function(table) {
+    dims <- lapply(colnames(plot()$data$var$coord), function(dim) {
+      dim_data <- lapply(plot()$data$var, function(table) {
         table[, dim]
       })
+
+      do.call(cbind, dim_data)
     })
+
+    names(dims) <- colnames(plot()$data$var$coord)
+
+    return(dims)
   })
 
   # download #####

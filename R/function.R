@@ -690,10 +690,10 @@ create_heatmap <- function(data, unitlabel = "auto", row.label = TRUE, row.custo
     ))
 
     # width/ height calculation
-    col_names_maxlength_label_width <- max(sapply(colnames(prep_data), graphics::strwidth, units = "in", font = 12))	# longest column label when plotted in inches
-    col_names_maxlength_label_height <- max(sapply(colnames(prep_data), graphics::strheight, units = "in", font = 12))	# highest column label when plotted in inches
-    row_names_maxlength_label_width <- max(sapply(rownames(prep_data), graphics::strwidth, units = "in", font = 12))	# longest row label when plotted in inches
-    row_names_maxlength_label_height <- max(sapply(rownames(prep_data), graphics::strheight, units = "in", font = 12))	# highest row label when plotted in inches
+    col_names_maxlength_label_width <- max(vapply(colnames(prep_data), FUN.VALUE = numeric(1), graphics::strwidth, units = "in", font = 12))	# longest column label when plotted in inches
+    col_names_maxlength_label_height <- max(vapply(colnames(prep_data), FUN.VALUE = numeric(1), graphics::strheight, units = "in", font = 12))	# highest column label when plotted in inches
+    row_names_maxlength_label_width <- max(vapply(rownames(prep_data), FUN.VALUE = numeric(1), graphics::strwidth, units = "in", font = 12))	# longest row label when plotted in inches
+    row_names_maxlength_label_height <- max(vapply(rownames(prep_data), FUN.VALUE = numeric(1), graphics::strheight, units = "in", font = 12))	# highest row label when plotted in inches
 
     # width
     if (row.label) {
@@ -791,7 +791,7 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
   } else {
     data_id <- gene.label
   }
-  data <- data[, sapply(data, is.numeric), with = FALSE]
+  data <- data[, vapply(data, is.numeric, FUN.VALUE = logical(1)), with = FALSE]
 
   data_cols <- names(data)
   data <- data.table::transpose(data) 								# switch columns <> rows
