@@ -12,7 +12,7 @@ parser(file, dec = ".")
 \item{dec}{The decimal separator. See \code{\link[data.table]{fread}}.}
 }
 \value{
-named list containing list(header = list(), metadata = data.table, data = data.table)
+Clarion object. See \code{\link[wilson]{Clarion}}
 }
 \description{
 Method to parse input file.

@@ -37,10 +37,10 @@ orTextualUI <- function(id){
 #'
 #' @export
 orTextual <- function(input, output, session, choices, selected = NULL, label = "Column", delimiter = NULL, multiple = TRUE, contains = FALSE, reset = NULL){
-  raw.choices <- choices
+  raw_choices <- choices
 
-  #delimit choices
-  if(!is.null(delimiter) & contains == FALSE){
+  # delimit choices
+  if (!is.null(delimiter) & contains == FALSE) {
     choices <- unlist(strsplit(choices, split = delimiter, fixed = TRUE))
   }
 
@@ -49,11 +49,11 @@ orTextual <- function(input, output, session, choices, selected = NULL, label = 
   })
 
   output$select <- shiny::renderUI({
-    if(contains){
+    if (contains) {
       ui <- shiny::textInput(session$ns("column"), label = NULL)
-    }else{
+    } else {
       ui <- shiny::selectizeInput(session$ns("column"), label = NULL, choices = NULL, multiple = multiple, selected = NULL)
-      #only fetch needed data (calculation on server-side)
+      # only fetch needed data (calculation on server-side)
       shiny::updateSelectizeInput(session, "column", choices = unique(choices), selected = selected, server = TRUE)
     }
 
@@ -62,28 +62,28 @@ orTextual <- function(input, output, session, choices, selected = NULL, label = 
 
   output$info <- shiny::renderUI({
     shiny::tagList(
-      #added css so that padding won't be added everytime (sums up) modal is shown
-      shiny::tags$style(type="text/css", "body {padding-right: 0px !important;}"),
+      # added css so that padding won't be added everytime (sums up) modal is shown
+      shiny::tags$style(type = "text/css", "body {padding-right: 0px !important;}"),
       shiny::actionLink(session$ns("infobutton"), label = NULL, icon = shiny::icon("question-circle"))
     )
   })
 
-  if(shiny::is.reactive(reset)) {
+  if (shiny::is.reactive(reset)) {
     shiny::observeEvent(reset(), {
-      if(is.null(selected)){
+      if (is.null(selected)) {
         shinyjs::reset("column")
-      }else{
+      } else {
         shiny::updateSelectizeInput(session, "column", selected = selected)
       }
     })
   }
 
-  #show right info
+  # show right info
   shiny::observeEvent(input$infobutton, {
-    if(contains){
+    if (contains) {
       title <- "Textsearch"
       content <- shiny::HTML("Enter some text which will be used for textsearch.")
-    }else{
+    } else {
       title <- "Text"
       content <- shiny::HTML("Select one or multiple values to filter.")
     }
@@ -98,27 +98,27 @@ orTextual <- function(input, output, session, choices, selected = NULL, label = 
     )
   })
 
-  selected.choices <- shiny::reactive({
-    if(!is.null(input$column)){
-      #escape all regex symbols
-      esc.choices <- paste0("\\Q", input$column, "\\E")
+  selected_choices <- shiny::reactive({
+    if (!is.null(input$column)) {
+      # escape all regex symbols
+      esc_choices <- paste0("\\Q", input$column, "\\E")
 
-      if(contains | !is.null(delimiter)){
-        result <- grepl(pattern = paste0(esc.choices, paste0("($|", delimiter, ")"), collapse = "|"), raw.choices, perl = TRUE)
-      }else{
-        result <- grepl(pattern = paste0("^(", esc.choices, ")$", collapse = "|"), raw.choices, perl = TRUE)
+      if (contains | !is.null(delimiter)) {
+        result <- grepl(pattern = paste0(esc_choices, paste0("($|", delimiter, ")"), collapse = "|"), raw_choices, perl = TRUE)
+      } else {
+        result <- grepl(pattern = paste0("^(", esc_choices, ")$", collapse = "|"), raw_choices, perl = TRUE)
       }
 
-      #set all TRUE if nothing selected
-      if(is.null(input$column) | input$column[1] == "" & !all(result)){
+      # set all TRUE if nothing selected
+      if (is.null(input$column) | input$column[1] == "" & !all(result)) {
         result <- !result
       }
 
       return(result)
-    }else{
-      return(!logical(length = length(raw.choices)))
+    } else {
+      return(!logical(length = length(raw_choices)))
     }
   })
 
-  return(shiny::reactive(list(label = label, bool = selected.choices(), text = input$column)))
+  return(shiny::reactive(list(label = label, bool = selected_choices(), text = input$column)))
 }

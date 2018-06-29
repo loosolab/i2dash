@@ -16,13 +16,13 @@ transformationUI <- function(id, label = "Transformation", selected = "raw", cho
 
   ret <- list(
     shiny::tags$b(label),
-    #shiny::actionLink(ns("help"), label = NULL, icon = shiny::icon("question-circle")), # removed for now
+    # shiny::actionLink(ns("help"), label = NULL, icon = shiny::icon("question-circle")), # removed for now
     shiny::selectInput(ns("transform"),
                             label = NULL,
                             choices = choices,
                             selected = selected,
-                            multiple = F))
-  if(transposeOptions){
+                            multiple = FALSE))
+  if (transposeOptions) {
     ret <- list(ret, shinyjs::useShinyjs(), shiny::radioButtons(ns("transpose"), label = NULL, choices = c(`row-wise` = "row", `column-wise` = "column")))
   }
 
@@ -49,20 +49,20 @@ transformationUI <- function(id, label = "Transformation", selected = "raw", cho
 #'
 #' @export
 transformation <- function(input, output, session, data, transpose = FALSE, pseudocount = 1, replaceInf = TRUE, replaceNA = TRUE) {
-  #handle reactive data
-  data.r <- shiny::reactive({
-    if(shiny::is.reactive(data)){
+  # handle reactive data
+  data_r <- shiny::reactive({
+    if (shiny::is.reactive(data)) {
       data()
-    }else{
+    } else {
       data
     }
   })
 
-  #reset
+  # reset
   shinyjs::reset("transform")
   shinyjs::reset("transpose")
 
-  #helptext
+  # helptext
   # shiny::observeEvent(input$help, {
   #   title <- "Data transformation"
   #   content <- shiny::HTML("Choose a method with which the given data is transformed:<br/>")
@@ -109,13 +109,13 @@ transformation <- function(input, output, session, data, transpose = FALSE, pseu
   }
 
   transformed_data <- shiny::reactive({
-    data <- data.r()
+    data <- data_r()
 
-    if(transpose | ifelse(!is.null(input$transpose), input$transpose == "row", FALSE) & input$transform == "zscore"){
+    if (transpose | ifelse(!is.null(input$transpose), input$transpose == "row", FALSE) & input$transform == "zscore") {
       data <- t(data)
     }
 
-    #transform data
+    # transform data
     output <- switch(input$transform,
       log2 = log2(data + pseudocount),
       `-log2` = -log2(data + pseudocount),
@@ -126,32 +126,32 @@ transformation <- function(input, output, session, data, transpose = FALSE, pseu
       raw = data
     )
 
-    #replace infinite with NA & NA with 0
-    if(replaceInf){
-      is.na(output) <- sapply(output, is.infinite)
+    # replace infinite with NA & NA with 0
+    if (replaceInf) {
+      is.na(output) <- vapply(output, FUN = is.infinite, FUN.VALUE = logical(1))
     }
-    if(replaceNA){
+    if (replaceNA) {
       output[is.na(output)] <- 0
     }
 
-    if(transpose | ifelse(!is.null(input$transpose), input$transpose == "row", FALSE) & input$transform == "zscore"){
+    if (transpose | ifelse(!is.null(input$transpose), input$transpose == "row", FALSE) & input$transform == "zscore") {
       output <- t(output)
     }
 
     return(output)
   })
 
-  #enable transposeOptions only if relevant
+  # enable transposeOptions only if relevant
   shiny::observe({
-    if(input$transform == "zscore"){
+    if (input$transform == "zscore") {
       shinyjs::enable("transpose")
-    }else{
+    } else {
       shinyjs::disable("transpose")
     }
   })
 
   method <- shiny::reactive({
-    if(input$transform == "zscore") {
+    if (input$transform == "zscore") {
       paste(input$transform, input$transpose)
     } else {
       input$transform

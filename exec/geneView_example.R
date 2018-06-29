@@ -2,19 +2,21 @@
 library(shiny)
 library(shinydashboard)
 source("../R/function.R")
-source("../R/colorPicker2.R")
+source("../R/colorPicker.R")
 source("../R/transformation.R")
 source("../R/geneView.R")
 source("../R/columnSelector.R")
 source("../R/label.R")
 source("../R/limit.R")
 source("../R/global.R")
+source("../R/clarion.R")
 
-####Test Data
-data <- data.table::data.table(id = rownames(mtcars), names = rownames(mtcars), mtcars)
+# test data
+data <- data.table::as.data.table(mtcars, keep.rowname = "id")
 # create metadata
-metadata <- data.table::data.table(names(data), factor1 = rep("", length.out = length(names(data))), level = c(rep("annotation", 2), rep("performance", 7), rep("design", 4)))
+metadata <- data.table::data.table(names(data), level = c("feature", rep("sample", 7), rep("condition", 4)), factor1 = c(rep("a", 5), rep("b", 7)), factor2 = c(rep("1", 7), rep("2", 5)), factor3 = c(rep("", 4), rep("test", 5), rep("test2", 3)))
 names(metadata)[1] <- "key"
+clarion <- Clarion$new(data = data, metadata = metadata)
 ####
 
 ui <- dashboardPage(header = dashboardHeader(), sidebar = dashboardSidebar(
@@ -26,17 +28,7 @@ ui <- dashboardPage(header = dashboardHeader(), sidebar = dashboardSidebar(
 )))
 
 server <- function(input, output) {
-  table.r <- reactive({
-    data
-  })
-  metadata.r <- reactive({
-    metadata
-  })
-  level.r <- reactive({
-    metadata[level != "annotation"][["level"]]
-  })
-
-  gene <- callModule(geneView, "id", data = table.r, metadata.r, level.r, custom.label = table.r, plot.method = "static", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
+  gene <- callModule(geneView, "id", clarion = clarion, plot.method = "static", width = reactive(input$width), height = reactive(input$height), scale = reactive(input$scale))
 
   observe({
     print(gene())

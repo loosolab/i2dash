@@ -4,12 +4,10 @@
 \alias{geneViewGuide}
 \title{geneView module guide}
 \usage{
-geneViewGuide(session, label = FALSE)
+geneViewGuide(session)
 }
 \arguments{
 \item{session}{The shiny session}
-
-\item{label}{Boolean to show custom label step.}
 }
 \value{
 A shiny reactive that contains the texts for the Guide steps.

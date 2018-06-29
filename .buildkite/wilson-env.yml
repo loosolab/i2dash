@@ -43,4 +43,3 @@ dependencies:
   - r-devtools
   - "readline==6.3"
   - r-roxygen2
-  - r-shinybs

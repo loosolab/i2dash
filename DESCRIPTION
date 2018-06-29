@@ -1,13 +1,13 @@
 Package: wilson
 Type: Package
-Title: WIlsON Webbased Interactive Omics visualizatioN
-Version: 1.0.0
+Title: Web-Based Interactive Omics Visualization
+Version: 2.0.0
 Authors@R: c(
     person("Hendrik", "Schultheis", email = "hendrik.schultheis@mpi-bn.mpg.de", role = c("aut", "cre")),
     person("Jens", "Preussner", email = "jens.preussner@mpi-bn.mpg.de", role = "aut"),
     person("Looso", "Mario", email = "mario.looso@mpi-bn.mpg.de", role = "aut"))
-Description: This package provides modules for webbased tools that use plot based strategies to visualize and analyze multi-omics data.
-    WIlsON utilizes the Rshiny and Plotly frameworks to provide a user friendly dashboard for interactive plotting.
+Description: This package provides modules for web-based tools that use plot based strategies to visualize and analyze multi-omics data.
+    'wilson' utilizes the 'shiny' and 'plotly' frameworks to provide a user friendly dashboard for interactive plotting.
 URL: https://github.molgen.mpg.de/loosolab/wilson
 BugReports: https://github.molgen.mpg.de/loosolab/wilson/issues
 License: MIT + file LICENSE
@@ -34,7 +34,6 @@ Imports: shiny,
     gplots,
     reshape,
     rintrojs,
-    webshot,
     RJSONIO,
     ggrepel (>= 0.6.12),
     DESeq2,
@@ -42,11 +41,10 @@ Imports: shiny,
     FactoMineR,
     factoextra,
     heatmaply (>= 0.14.1),
-    shinyBS,
-    shinythemes,
     shinycssloaders,
     log4r,
     openssl,
-    methods
+    methods,
+    R6
 RoxygenNote: 6.0.1
 biocViews:

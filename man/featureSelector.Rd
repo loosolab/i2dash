@@ -4,8 +4,7 @@
 \alias{featureSelector}
 \title{featureSelector module server logic}
 \usage{
-featureSelector(input, output, session, data, features = NULL,
-  feature.grouping = NULL, delimiter = "|", multiple = TRUE,
+featureSelector(input, output, session, clarion, multiple = TRUE,
   contains = FALSE, ranged = TRUE, step = 100, truncate = 30,
   selection.default = "all")
 }
@@ -16,13 +15,7 @@ featureSelector(input, output, session, data, features = NULL,
 
 \item{session}{Shiny's session object.}
 
-\item{data}{data.table from which to select (Supports reactive).}
-
-\item{features}{List of features (i.e. columnnames) the and module will show (Defaults to names(data))(Supports reactive).}
-
-\item{feature.grouping}{Display features seperated in boxes. (Data.table: first column = columnnames, second column = groupnames) (Supports reactive)}
-
-\item{delimiter}{A single character, or a vector indicating how column values are delimited. (Fills vector sequentially if needed)(Supports reactive)}
+\item{clarion}{A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)}
 
 \item{multiple}{Whether or not textual ORs should allow multiple selections. (Fills vector sequentially if needed)(Supports reactive)}
 
@@ -30,18 +23,18 @@ featureSelector(input, output, session, data, features = NULL,
 
 \item{ranged}{Whether or not numeric ORs are ranged. (Fills vector sequentially if needed)(Supports reactive)}
 
-\item{step}{Set numeric ORs slider steps. (Fills vector sequentially if needed)(Supports reactive)}
+\item{step}{Set numeric ORs number of slider steps. (Fills vector sequentially if needed)(Supports reactive)}
 
 \item{truncate}{Truncate datatable entries at x characters (Default = 30).}
 
 \item{selection.default}{Decide whether everything or nothing is selected on default (no filters applied). Either "all" or "none" (Default = "all").}
 }
 \value{
-Reactive containing names list: Selected data as reactive containing data.table (data). Used filter to select data (filter).
+Reactive containing names list: Selected data as reactive containing clarion object (object). Used filter to select data (filter).
 }
 \description{
 featureSelector module server logic
 }
 \details{
-Keep in mind that the order of features is the order in which delimiter, multiple, contains, ranged and step are evaluated.
+Keep in mind that the order of features (columns in clarion$data) is the order in which multiple, contains, ranged and step are evaluated.
 }

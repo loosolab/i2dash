@@ -10,20 +10,20 @@ ui <- fluidPage(
   tags$br(),
   column(width = 6,
          orNumericUI(id = "ranged"),
-         verbatimTextOutput("ran.out")
+         verbatimTextOutput("ran_out")
          ),
   column(width = 6,
          orNumericUI(id = "single"),
-         verbatimTextOutput("sin.out")
+         verbatimTextOutput("sin_out")
          )
 )
 
 server <- function(input, output) {
-  choices1 <- c(0,1,2,3,4,5,6,7,8,9,10)
-  choices2 <- c(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+  choices1 <- c(0:10)
+  choices2 <- c(11:20)
 
   choices <- reactive({
-    if(input$test == 1) {
+    if (input$test == 1) {
       choices1
     } else {
       choices2
@@ -36,11 +36,11 @@ server <- function(input, output) {
     c(min(choices()), max(choices()))
   })
 
-  single <-callModule(orNumeric, "single", choices = choices, value = 3, label = "Title single", step = 11, zoomable = FALSE, reset = reactive(input$reset))
-  ranged <-callModule(orNumeric, "ranged", choices = choices, value = value, label = "Title ranged", stepsize = 1, reset = reactive(input$reset))
+  single <- callModule(orNumeric, "single", choices = choices, value = 3, label = "Title single", step = 11, zoomable = FALSE, reset = reactive(input$reset))
+  ranged <- callModule(orNumeric, "ranged", choices = choices, value = value, label = "Title ranged", stepsize = 1, reset = reactive(input$reset))
 
-  output$ran.out <- renderPrint(ranged())
-  output$sin.out <- renderPrint(single())
+  output$ran_out <- renderPrint(ranged())
+  output$sin_out <- renderPrint(single())
 }
 
 # Run the application

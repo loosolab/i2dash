@@ -4,8 +4,8 @@
 \alias{pca}
 \title{pca module server logic}
 \usage{
-pca(input, output, session, data, types, levels = NULL, entryLabel = NULL,
-  width = 28, height = 28, ppi = 72, scale = 1)
+pca(input, output, session, clarion, width = 28, height = 28, ppi = 72,
+  scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object}
@@ -14,17 +14,7 @@ pca(input, output, session, data, types, levels = NULL, entryLabel = NULL,
 
 \item{session}{Shiny's session object}
 
-\item{data}{data.table data visualized in plot. (Supports Reactive)}
-
-\item{types}{data.table: (Supports reactive)
-column1: colnames of data
-column2: corresponding column typ
-column3: label (optional, used instead of id)
-column4: sub_label (optional, added to id/ label)}
-
-\item{levels}{Levels from which data is selected (Defaults to unique(metadata[["level"]])). (Supports Reactive)}
-
-\item{entryLabel}{Define additional columns added to each entry (Default = NULL). Use a vector containing the desired columnnames e.g. c("column1", "column2").}
+\item{clarion}{A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)}
 
 \item{width}{Width of the plot in cm. Defaults to 28 and supports reactive.}
 

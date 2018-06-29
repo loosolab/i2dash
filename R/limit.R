@@ -11,8 +11,8 @@ limitUI <- function(id, label = "Limit"){
 
   shiny::tagList(
     list(shinyjs::useShinyjs(), shiny::checkboxInput(inputId = ns("enable"), label = label, value = FALSE)),
-    shiny::fluidRow(shiny::column(shiny::numericInput(ns("lowerLimit"), label = "Lower limit", value = -2), width = 6),
-                    shiny::column(shiny::numericInput(ns("upperLimit"), label = "Upper limit", value = 2), width = 6))
+    shiny::fluidRow(shiny::column(shiny::numericInput(ns("lower_limit"), label = "Lower limit", value = -2), width = 6),
+                    shiny::column(shiny::numericInput(ns("upper_limit"), label = "Upper limit", value = 2), width = 6))
   )
 }
 
@@ -30,20 +30,20 @@ limitUI <- function(id, label = "Limit"){
 limit <- function(input, output, session, lower = NULL, upper = NULL){
   # reset on re-run
   shinyjs::reset("enable")
-  shinyjs::reset("lowerLimit")
-  shinyjs::reset("upperLimit")
+  shinyjs::reset("lower_limit")
+  shinyjs::reset("upper_limit")
 
   # evaluate reactive parameter
-  lower.r <- shiny::reactive({
-    if(shiny::is.reactive(lower)) {
+  lower_r <- shiny::reactive({
+    if (shiny::is.reactive(lower)) {
       lower()
     } else {
       lower
     }
   })
 
-  upper.r <- shiny::reactive({
-    if(shiny::is.reactive(upper)) {
+  upper_r <- shiny::reactive({
+    if (shiny::is.reactive(upper)) {
       upper()
     } else {
       upper
@@ -52,42 +52,42 @@ limit <- function(input, output, session, lower = NULL, upper = NULL){
 
   # update ui
   shiny::observe({
-    if(!is.null(input$enable) && input$enable) {
-      shiny::isolate(shiny::updateNumericInput(session = session, inputId = "lowerLimit", value = lower.r()))
+    if (!is.null(input$enable) && input$enable) {
+      shiny::isolate(shiny::updateNumericInput(session = session, inputId = "lower_limit", value = lower_r()))
     }
   })
 
   shiny::observe({
-    if(!is.null(input$enable) && input$enable) {
-      shiny::isolate(shiny::updateNumericInput(session = session, inputId = "upperLimit", value = upper.r()))
+    if (!is.null(input$enable) && input$enable) {
+      shiny::isolate(shiny::updateNumericInput(session = session, inputId = "upper_limit", value = upper_r()))
     }
   })
 
   shiny::observe({
     # lowerLimit = smaller than upper
-    shiny::updateNumericInput(session = session, inputId = "lowerLimit", max = input$upperLimit - 1)
+    shiny::updateNumericInput(session = session, inputId = "lower_limit", max = input$upper_limit - 1)
     # upperLimit = greater than lower
-    shiny::updateNumericInput(session = session, inputId = "upperLimit", min = input$lowerLimit + 1)
+    shiny::updateNumericInput(session = session, inputId = "upper_limit", min = input$lower_limit + 1)
   })
 
   # enable ui if checkbox checked
   shiny::observeEvent(input$enable, {
-    if(input$enable) {
-      shinyjs::enable("lowerLimit")
-      shinyjs::enable("upperLimit")
+    if (input$enable) {
+      shinyjs::enable("lower_limit")
+      shinyjs::enable("upper_limit")
     } else {
-      shinyjs::disable("lowerLimit")
-      shinyjs::disable("upperLimit")
+      shinyjs::disable("lower_limit")
+      shinyjs::disable("upper_limit")
     }
   })
 
   # return values
   shiny::reactive({
-    if(!is.null(input$enable) && !input$enable) {
+    if (!is.null(input$enable) && !input$enable) {
       NULL
     } else {
-     list(lower = input$lowerLimit,
-         upper = input$upperLimit)
+     list(lower = input$lower_limit,
+         upper = input$upper_limit)
     }
   })
 }

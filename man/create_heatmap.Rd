@@ -4,11 +4,12 @@
 \alias{create_heatmap}
 \title{Method for heatmap creation}
 \usage{
-create_heatmap(data, unitlabel = "auto", row.label = T,
-  row.custom.label = NULL, column.label = T, column.custom.label = NULL,
-  clustering = "none", clustdist = "auto", clustmethod = "auto",
-  colors = NULL, winsorize.colors = NULL, plot.method = "static",
-  width = "auto", height = "auto", ppi = 72, scale = 1)
+create_heatmap(data, unitlabel = "auto", row.label = TRUE,
+  row.custom.label = NULL, column.label = TRUE,
+  column.custom.label = NULL, clustering = "none", clustdist = "auto",
+  clustmethod = "auto", colors = NULL, winsorize.colors = NULL,
+  plot.method = "static", width = "auto", height = "auto", ppi = 72,
+  scale = 1)
 }
 \arguments{
 \item{data}{data.table containing plot data. First column contains row labels.}

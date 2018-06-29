@@ -4,24 +4,24 @@
 \alias{colorPickerUI}
 \title{colorPicker module UI representation}
 \usage{
-colorPickerUI(id, label = "Color scheme", choices = c("Blues", "Greens",
-  "Greys", "Oranges", "Purples", "Reds"), selected.choice = NULL,
-  show.reverse = TRUE, show.transparency = TRUE, single.colors = FALSE)
+colorPickerUI(id, label = "Color scheme", custom = FALSE,
+  multiple = FALSE, show.reverse = TRUE, show.scaleoptions = TRUE,
+  show.transparency = TRUE)
 }
 \arguments{
 \item{id}{The ID of the modules namespace.}
 
 \item{label}{Either a character vector of length one with the label for the color scheme dropdown, or a character vector containing labels of the single colors.}
 
-\item{choices}{A character vector with choices for the color scheme dropdown. See \code{\link[shiny]{selectInput}}.}
+\item{custom}{Boolean if TRUE custom colors can be selected (Default = FALSE).}
 
-\item{selected.choice}{The initially selected value(s) of the dropdown. If NULL (default), the first value of schemes will be taken.}
+\item{multiple}{Boolean value, if set to TRUE custom colorpalettes can be made. Only if custom = TRUE (Default = FALSE).}
 
-\item{show.reverse}{Logical, whether or not to show the reverse switch.}
+\item{show.reverse}{Logical, whether or not to show the reverse switch (Default = TRUE).}
 
-\item{show.transparency}{Logical, whether or not to show the transparency slider.}
+\item{show.scaleoptions}{Logical, whether or not to show color scaling option winsorize (Default = TRUE).}
 
-\item{single.colors}{Logical, whether or not to make a single color chooser. (Only if length(label) == 1 needed)}
+\item{show.transparency}{Logical, whether or not to show the transparency slider (Default = TRUE).}
 }
 \value{
 A list with HTML tags from \code{\link[shiny]{tag}}.
@@ -30,13 +30,3 @@ A list with HTML tags from \code{\link[shiny]{tag}}.
 The functions creates HTML tag definitions of its representation based on the parameters supplied.
 Currently, two UI can be created for the user to choose either (a) colors from a given color scheme, or (b) choose one or more single colors.
 }
-\section{Single color mode}{
-
-If one or more single colors can be chosen, the UI element names are prefix by \emph{color} followed by \code{make.names} ouput of \code{label}.
-}
-
-\section{To do}{
-
-Replace ordinary textInput for single colors by a real colorPicker, e.g. from https://github.com/daattali/colourpicker
-}
-

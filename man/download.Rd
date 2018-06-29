@@ -24,7 +24,7 @@ download(file, filename, plot, width, height, ppi = 72, save_plot = TRUE,
 
 \item{save_plot}{Logical if plot object should be saved as .RData.}
 
-\item{ui}{List of user inputs. Will be converted to Javascript Object Notation. See \code{\link[RJSONIO]{toJSON}}}
+\item{ui}{List of user inputs. Will be converted to JavaScript Object Notation. See \code{\link[RJSONIO]{toJSON}}}
 }
 \value{
 See \code{\link[utils]{zip}}.

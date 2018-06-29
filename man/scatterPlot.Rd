@@ -4,8 +4,7 @@
 \alias{scatterPlot}
 \title{scatterPlot module server logic}
 \usage{
-scatterPlot(input, output, session, data, types, x.names = NULL,
-  y.names = NULL, z.names = NULL, features = NULL, markerReac = NULL,
+scatterPlot(input, output, session, clarion, marker.output = NULL,
   plot.method = "static", width = "auto", height = "auto", ppi = 72,
   scale = 1)
 }
@@ -16,23 +15,9 @@ scatterPlot(input, output, session, data, types, x.names = NULL,
 
 \item{session}{Shiny's session object}
 
-\item{data}{data.table data visualized in plot (Supports reactive).}
+\item{clarion}{A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)}
 
-\item{types}{data.table: (Supports reactive)
-column1: colnames of data
-column2: corresponding column type
-column3: label (optional, used instead of id)
-column4: sub_label (optional, added to id/ label)}
-
-\item{x.names}{Character vector of column names(data column names) which will be available for x-axis. Can be reactive.}
-
-\item{y.names}{Character vector of column names(data column names) which will be available for y-axis. Can be reactive.}
-
-\item{z.names}{Character vector of column names(data column names) which will be available for z-axis. Can be reactive.}
-
-\item{features}{data.table of the features to mark (first column = id)}
-
-\item{markerReac}{reactive containing inputs of marker module.}
+\item{marker.output}{Marker module output. See \code{\link[wilson]{marker}}.}
 
 \item{plot.method}{Choose to rather render a 'interactive' or 'static' plot. Defaults to 'static'.}
 
@@ -51,5 +36,7 @@ Returns reactive containing data used for plot.
 scatterPlot module server logic
 }
 \details{
-Make sure to have the same columnnames in data and features.
+As markerOutput provides a second dataset used for highlighting it is crucial for it to have the same columnnames as the dataset provided by clarion.
+
+Intersections between marker and clarion will be removed from clarion in favor of highlighting them.
 }

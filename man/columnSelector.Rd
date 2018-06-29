@@ -5,7 +5,7 @@
 \title{columnSelector module server logic}
 \usage{
 columnSelector(input, output, session, type.columns, type = NULL,
-  columnTypeLabel = "Type of Column", labelLabel = "Label",
+  column.type.label = "Type of Column", label.label = "Label",
   multiple = TRUE, none = FALSE, sep = ", ", suffix = NULL)
 }
 \arguments{
@@ -16,27 +16,27 @@ columnSelector(input, output, session, type.columns, type = NULL,
 \item{session}{Shiny's session object}
 
 \item{type.columns}{data.table: (Supports reactive)
-column1 = columnnames (id)
-column2 = type (datalevel)
-column3 = label (optional, used instead of id)
-column4 = sub_label (optional, added to id/ label)}
+key = columnnames (id)
+level = datalevel/ type of column
+label = optional, used instead of id
+sub_label = optional, added to id/ label}
 
 \item{type}{The type (contrast/group/sample of the type dropdown menu, selected in step 1 (upper dropdown). Defaults to unique(type.columns[,2]) (Supports reactive)}
 
-\item{columnTypeLabel}{Changes the label of the first UI element}
+\item{column.type.label}{Changes the label of the first UI element}
 
-\item{labelLabel}{Change label above label text input.}
+\item{label.label}{Change label above label text input.}
 
 \item{multiple}{Boolean value whether multiple values can be selected in second selector. (Default = TRUE)}
 
 \item{none}{If TRUE adds "None to secondSelector and select is. (Default = FALSE)}
 
-\item{sep}{Used to seperate labels on multi value selection.}
+\item{sep}{Used to separate labels on multi value selection.}
 
-\item{suffix}{Added to label only on multiple = FALSE (supports reactive). Also uses sep as seperator.}
+\item{suffix}{Added to label only on multiple = FALSE (supports reactive). Also uses sep as separator.}
 }
 \value{
-Returns the input. As named list: names("type", "selectedColumns", "label")
+Returns the input. As named list: names("type", "selected_columns", "label")
 }
 \description{
 columnSelector module server logic

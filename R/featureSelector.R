@@ -30,7 +30,7 @@ featureSelectorUI <- function(id){
                             shiny::actionButton(ns("guide"), "Launch guide", style = "color: #fff; background-color: #3c8dbc", icon = shiny::icon("question-circle")),
                             shiny::downloadButton(ns("download")),
                             shiny::br(),
-                            shiny::strong("NOTE: The SELECT button only evaluates the filter(s) below.",shiny::br(),
+                            shiny::strong("NOTE: The SELECT button only evaluates the filter(s) below.", shiny::br(),
                                           "Manual sub-selections on table applies instantly!", shiny::br(),
                                           "Repress of SELECT button discards manual selections!")
                             )
@@ -52,65 +52,54 @@ featureSelectorUI <- function(id){
 #' @param input Shiny's input object.
 #' @param output Shiny's output object.
 #' @param session Shiny's session object.
-#' @param data data.table from which to select (Supports reactive).
-#' @param features List of features (i.e. columnnames) the and module will show (Defaults to names(data))(Supports reactive).
-#' @param feature.grouping Display features seperated in boxes. (Data.table: first column = columnnames, second column = groupnames) (Supports reactive)
-#' @param delimiter A single character, or a vector indicating how column values are delimited. (Fills vector sequentially if needed)(Supports reactive)
+#' @param clarion A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)
 #' @param multiple Whether or not textual ORs should allow multiple selections. (Fills vector sequentially if needed)(Supports reactive)
 #' @param contains Whether or not textual ORs are initialized as textInput checking entries for given string. (Fills vector sequentially if needed)(Supports reactive)
 #' @param ranged Whether or not numeric ORs are ranged. (Fills vector sequentially if needed)(Supports reactive)
-#' @param step Set numeric ORs slider steps. (Fills vector sequentially if needed)(Supports reactive)
+#' @param step Set numeric ORs number of slider steps. (Fills vector sequentially if needed)(Supports reactive)
 #' @param truncate Truncate datatable entries at x characters (Default = 30).
 #' @param selection.default Decide whether everything or nothing is selected on default (no filters applied). Either "all" or "none" (Default = "all").
 #'
-#' @details Keep in mind that the order of features is the order in which delimiter, multiple, contains, ranged and step are evaluated.
+#' @details Keep in mind that the order of features (columns in clarion$data) is the order in which multiple, contains, ranged and step are evaluated.
 #'
-#' @return Reactive containing names list: Selected data as reactive containing data.table (data). Used filter to select data (filter).
+#' @return Reactive containing names list: Selected data as reactive containing clarion object (object). Used filter to select data (filter).
 #'
 #' @export
-featureSelector <- function(input, output, session, data, features = NULL, feature.grouping = NULL, delimiter = "|", multiple = TRUE, contains = FALSE, ranged = TRUE, step = 100, truncate = 30, selection.default = "all"){
-  # handle reactive data
-  data.r <- shiny::reactive({
-    if(shiny::is.reactive(data)){
-      data.table::copy(data())
-    }else{
-      data.table::copy(data)
+featureSelector <- function(input, output, session, clarion, multiple = TRUE, contains = FALSE, ranged = TRUE, step = 100, truncate = 30, selection.default = "all"){
+  # object/ data preparation
+  object <- shiny::reactive({
+    # support reactive
+    if (shiny::is.reactive(clarion)) {
+      if (!methods::is(clarion(), "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
+
+      clarion()$clone(deep = TRUE)
+    } else {
+      if (!methods::is(clarion, "Clarion")) shiny::stopApp("Object of class 'Clarion' needed!")
+
+      clarion$clone(deep = TRUE)
     }
   })
 
-  # handle reactive features
-  features.r <- shiny::reactive({
-    if(is.null(features)){
-      names(data.r())
-    }else{
-      if(shiny::is.reactive(features)){
-        if(is.null(features())){
-          names(data.r())
-        }else{
-          features()
-        }
-      }else{
-        features
+  # delimiter vector
+  # only delimit type = array
+  delimiter <- shiny::reactive({
+    lapply(object()$metadata[["key"]], function(x) {
+      if (object()$is_delimited(x)) {
+        return(object()$get_delimiter())
+      } else {
+        return(NULL)
       }
-    }
+    })
   })
 
-  # handle reactive grouping
-  feature.grouping.r <- shiny::reactive({
-    if(shiny::is.reactive(feature.grouping)){
-      feature.grouping()
-    }else{
-      feature.grouping
-    }
-  })
 
-  and_selected <- shiny::callModule(and, "and", data = data.r, show.elements = features.r, element.grouping = feature.grouping.r, delimiter = delimiter, multiple = multiple, contains = contains, ranged = ranged, step = step, reset = shiny::reactive(input$reset))
+  and_selected <- shiny::callModule(and, "and", data = shiny::reactive(object()$data), element.grouping = shiny::reactive(object()$metadata[, c("key", "level")]), delimiter = delimiter, multiple = multiple, contains = contains, ranged = ranged, step = step, reset = shiny::reactive(input$reset))
   row_selector <- shiny::callModule(orNumeric, "row_selector", choices = choices, value = value_wrapper, label = "Select n features from the top and/or bottom of the list", stepsize = 1)
 
   # row_selector choices
   choices <- shiny::reactive({
-    if(nrow(data_output()$data) > 0) {
-      c(1:nrow(data_output()$data))
+    if (nrow(data_output()$data) > 0) {
+      seq_len(nrow(data_output()$data))
     } else {
       c(0, 0)
     }
@@ -121,7 +110,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
 
   # select all if no values stored
   value_wrapper <- shiny::reactive({
-    if(is.null(value())) {
+    if (is.null(value())) {
       value(c(min(choices()), max(choices())))
     }
 
@@ -130,8 +119,8 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
 
   # safe row_selector value
   shiny::observeEvent(input$select, {
-    if(shiny::isTruthy(input$table_rows_selected)) {
-      if(grepl("outer", row_selector()$text)) { # accomodate for outer selection
+    if (shiny::isTruthy(input$table_rows_selected)) {
+      if (grepl("outer", row_selector()$text)) { # accomodate for outer selection
         diff <- setdiff(input$table_rows_all, input$table_rows_selected)
         value(c(min(diff), max(diff)))
       } else {
@@ -142,7 +131,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     }
   })
   # reset row_selector value on data change
-  shiny::observeEvent(data.r(), {
+  shiny::observeEvent(object(), {
     value(NULL)
   })
 
@@ -155,7 +144,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
   })
 
   # Fetch reactive guide for this module
-  guide <- featureSelectorGuide(session, !is.null(feature.grouping))
+  guide <- featureSelectorGuide(session)
   shiny::observeEvent(input$guide, {
     rintrojs::introjs(session, options = list(steps = guide(), scrollToElement = FALSE))
   })
@@ -178,7 +167,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
           shiny::column(
             width = 1,
             # added css so that padding won't be added everytime (sums up) modal is shown
-            shiny::tags$style(type="text/css", "body {padding-right: 0px !important;}"),
+            shiny::tags$style(type = "text/css", "body {padding-right: 0px !important;}"),
             shiny::actionLink(session$ns("infobutton"), label = NULL, icon = shiny::icon("question-circle"))
           )
         ),
@@ -220,7 +209,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     row_order <- input$table_rows_all
 
     # don't select whole table
-    if(any(row_selector()$bool == FALSE) & length(row_selector()$bool) == length(row_order)) {
+    if (any(row_selector()$bool == FALSE) & length(row_selector()$bool) == length(row_order)) {
       DT::selectRows(proxy, row_order[row_selector()$bool])
     } else {
       # delete selection
@@ -247,15 +236,15 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
   select <- shiny::eventReactive(eventExpr = input$select, {
     log_message(message = "Filtering data", level = "INFO", token = session$token)
 
-    data <- data.r()[and_selected()$bool]
+    data <- object()$data[and_selected()$bool]
   })
 
   # second filter (highlighted rows) selected via click and/ or 'select rows' ui
   result <- shiny::reactive({
     # create subset
-    if(!is.null(input$table_rows_selected)) {
+    if (!is.null(input$table_rows_selected)) {
       data <- data_output()$data[input$table_rows_selected]
-    } else if(!is.null(input$table_rows_all)) {
+    } else if (!is.null(input$table_rows_all)) {
       data <- data_output()$data[input$table_rows_all]
     } else {
       data <- data_output()$data
@@ -265,7 +254,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     filter <- data_output()$filter
 
     # number of rows selected
-    if(!is.null(input$table_rows_selected)) {
+    if (!is.null(input$table_rows_selected)) {
       filter <- append(filter, after = 1,
                        values = paste("Selected:", length(input$table_rows_selected))
                        )
@@ -274,8 +263,8 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     # TODO add order information to filter
 
     # search text
-    if(!is.null(input$table_search)) {
-      if(nchar(input$table_search) > 0) {
+    if (!is.null(input$table_search)) {
+      if (nchar(input$table_search) > 0) {
         hits <- ifelse(is.null(input$table_rows_all), 0, length(input$table_rows_all))
         filter <- append(filter, after = 1,
                          values = paste("Search:", paste0("'", input$table_search, "'"), paste0("(Hits: ", hits, ")"))
@@ -283,7 +272,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
       }
     }
 
-    return(list(data = data, filter = filter))
+    return(list(object = Clarion$new(header = object()$header, metadata = object()$metadata, data = data, validate = FALSE), filter = filter))
   })
 
   # store change
@@ -291,28 +280,28 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
 
   # return on file change unprocessed table
   data_output <- shiny::reactive({
-    if(data_change() == 0) {
-      if(selection.default == "all") {
-        data <- data.r()
-      } else if(selection.default == "none") {
-        data <- data.r()[FALSE]
+    if (data_change() == 0) {
+      if (selection.default == "all") {
+        data <- object()$data
+      } else if (selection.default == "none") {
+        data <- object()$data[FALSE]
       }
 
       # create filter text
-      filter <- paste("Result:" , nrow(data), "hits")
-    } else if(data_change() == 1) {
+      filter <- paste("Result:", nrow(data), "hits")
+    } else if (data_change() == 1) {
       data <- select()
 
       # create filter text
       filter <- c(paste("Result:", nrow(data), "hits"), "", shiny::isolate(and_selected()$text))
     }
 
-    return(list(data = data , filter = filter))
+    return(list(data = data, filter = filter))
   })
 
   # observe most recent change
   shiny::observe({
-    data.r()
+    object()$data
     data_change(0)
   })
   shiny::observe({
@@ -326,7 +315,7 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
     content = function(file) {
       log_message("FeatureSelector: download", "INFO", token = session$token)
 
-      data.table::fwrite(x = result()$data, file = file, sep = "\t")
+      data.table::fwrite(x = result()$object$data, file = file, sep = "\t")
     }
   )
 
@@ -336,12 +325,14 @@ featureSelector <- function(input, output, session, data, features = NULL, featu
 #' featureSelector module guide
 #'
 #' @param session The shiny session
-#' @param grouping Logical if Text for grouping should be displayed (Default = FALSE).
 #'
 #' @return A shiny reactive that contains the texts for the guide steps.
 #'
-featureSelectorGuide <- function(session, grouping = FALSE) {
-  steps <- list(
+featureSelectorGuide <- function(session) {
+  steps <- list("guide_and" = "<h4>Grouping</h4>
+      These boxes contain several selectors each.<br/>
+      Expand/ Collapse them with a click on the '+'/ '-' on the right side.<br/>
+      Please expand now one or more of those boxes.",
     "guide_and" = paste0("<h4>Selectors</h4>
       The selectors are presented row-wise, so that each line represents a seperate selector.<br/>
       Each one operates on a single column of the dataset defined by the columnname on the left side.<br/>
@@ -362,15 +353,6 @@ featureSelectorGuide <- function(session, grouping = FALSE) {
       <b>text search</b>: Use the field on the top right for text search.<br/>
       <b>select rows</b>: Either use the slider or directly click on rows to select only certain rows in the table."
   )
-
-  if(grouping) {
-    steps <- append(steps,
-                    list("guide_and" = "<h4>Grouping</h4>
-                          These boxes contain several selectors each.<br/>
-                          Expand/ Collapse them with a click on the '+'/ '-' on the right side.<br/>
-                          Please expand now one or more of those boxes."),
-                    0)
-  }
 
   shiny::reactive(data.frame(element = paste0("#", session$ns(names(steps))), intro = unlist(steps)))
 }

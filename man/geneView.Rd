@@ -4,9 +4,9 @@
 \alias{geneView}
 \title{geneView's module server logic}
 \usage{
-geneView(input, output, session, data, metadata, level = NULL,
-  plot.method = "static", custom.label = NULL, label.sep = ", ",
-  width = "auto", height = "auto", ppi = 72, scale = 1)
+geneView(input, output, session, clarion, plot.method = "static",
+  label.sep = ", ", width = "auto", height = "auto", ppi = 72,
+  scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object.}
@@ -15,23 +15,11 @@ geneView(input, output, session, data, metadata, level = NULL,
 
 \item{session}{Shiny's session object.}
 
-\item{data}{data.table:
-column1   : ids
-column2   : symbol (data used for selection)
-column3-n : data}
-
-\item{metadata}{data.table:
-column1: ids
-column2: factor1 (conditions)
-column3: level (condition type)}
-
-\item{level}{Vector containing data levels to select from (default: unique(metadata[["level"]])).}
+\item{clarion}{A clarion object. See \code{\link[wilson]{Clarion}}. (Supports reactive)}
 
 \item{plot.method}{Choose which method is used for plotting. Either "static" or "interactive" (Default = "static").}
 
-\item{custom.label}{Data.table used for creating custom labels (supports reactive).}
-
-\item{label.sep}{Seperator used for label merging (Default = ", ").}
+\item{label.sep}{Separator used for label merging (Default = ", ").}
 
 \item{width}{Width of the plot in cm. Defaults to minimal size for readable labels and supports reactive.}
 
