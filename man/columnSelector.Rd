@@ -23,6 +23,8 @@ sub_label = optional, added to id/ label}
 
 \item{type}{The type (contrast/group/sample of the type dropdown menu, selected in step 1 (upper dropdown). Defaults to unique(type.columns[,2]) (Supports reactive)}
 
+\item{column.type.label}{Changes the label of the first UI element}
+
 \item{label.label}{Change label above label text input.}
 
 \item{multiple}{Boolean value whether multiple values can be selected in second selector. (Default = TRUE)}
@@ -32,8 +34,6 @@ sub_label = optional, added to id/ label}
 \item{sep}{Used to separate labels on multi value selection.}
 
 \item{suffix}{Added to label only on multiple = FALSE (supports reactive). Also uses sep as separator.}
-
-\item{column.type.tabel}{Changes the label of the first UI element}
 }
 \value{
 Returns the input. As named list: names("type", "selected_columns", "label")

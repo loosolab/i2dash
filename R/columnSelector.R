@@ -31,7 +31,7 @@ columnSelectorUI <- function(id, label = FALSE, title = NULL) {
 #'                                label = optional, used instead of id
 #'                                sub_label = optional, added to id/ label
 #' @param type The type (contrast/group/sample of the type dropdown menu, selected in step 1 (upper dropdown). Defaults to unique(type.columns[,2]) (Supports reactive)
-#' @param column.type.tabel Changes the label of the first UI element
+#' @param column.type.label Changes the label of the first UI element
 #' @param label.label Change label above label text input.
 #' @param multiple Boolean value whether multiple values can be selected in second selector. (Default = TRUE)
 #' @param none If TRUE adds "None to secondSelector and select is. (Default = FALSE)
