@@ -10,7 +10,7 @@
 |language |(EN)                         |
 |collate  |German_Germany.1252          |
 |tz       |Europe/Berlin                |
-|date     |2018-06-27                   |
+|date     |2018-06-29                   |
 
 ## Packages
 
@@ -44,10 +44,8 @@
 |shinycssloaders |   |0.2.0   |2017-05-12 |CRAN (R 3.5.0)                      |
 |shinydashboard  |   |0.7.0   |2018-03-21 |CRAN (R 3.5.0)                      |
 |shinyjs         |   |1.0     |2018-01-08 |CRAN (R 3.5.0)                      |
-|shinythemes     |   |1.1.1   |2016-10-12 |CRAN (R 3.5.0)                      |
 |viridis         |   |0.5.1   |2018-03-29 |CRAN (R 3.5.0)                      |
-|webshot         |   |0.5.0   |2017-11-29 |CRAN (R 3.5.0)                      |
-|wilson          |   |2.0.0   |2018-06-27 |local (HendrikSchultheis/wilson@NA) |
+|wilson          |   |2.0.0   |2018-06-29 |local (HendrikSchultheis/wilson@NA) |
 
 # Check results
 
