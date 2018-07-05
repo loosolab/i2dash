@@ -16,7 +16,7 @@ dependencies:
   - r-RColorBrewer
   - r-shinyjs
   - r-viridis
-#  - r-rje
+  - r-rje
 #  - r-grdevices # base package
 #  - r-grid # base package
   - r-plyr
