@@ -1,11 +1,7 @@
 steps:
   - label: ":stopwatch: Running checks for Wilson"
     command:
-      - "Rscript -e 'devtools::check()'"
+      - Rscript -e \'devtools::check()\'
     plugins:
       https://github.com/loosolab/conda-buildkite-plugin.git#master:
 
-#  - wait
-
-# - label: "Package check"
-#    command:
