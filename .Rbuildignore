@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^\.buildkite.*
 ^revdep$
+^cran-comments.md$
