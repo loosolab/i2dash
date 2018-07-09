@@ -3,6 +3,6 @@
 release_questions <- function() {
   c(
     "Re-run reverse dependencies?",
-    "Abide good practices?",
+    "Abide good practices?"
   )
 }
