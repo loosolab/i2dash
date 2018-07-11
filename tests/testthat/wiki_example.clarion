@@ -1,0 +1,23 @@
+!format=Clarion											
+!version=1.0											
+!experiment_id=123456											
+!delimiter=|											
+#key	factor1	factor2	level	type	label	sub_label					
+#id			feature	unique_id	Identifier	unique					
+#name			feature	name	Name						
+#active			feature	category	Active						
+#attr			feature	array	Attributes						
+#sample_a_1	sample_a	6h	sample	score	Sample A	first					
+#sample_a_2	sample_a	12h	sample	score	Sample A	second					
+#sample_b_1	sample_b	6h	sample	score	Sample B	first					
+#sample_b_2	sample_b	12h	sample	score	Sample B	second					
+#mean_a	sample_a		condition	score	Sample A	mean					
+#mean_b	sample_b		condition	score	Sample B	mean					
+#fc_ab			contrast	ratio	Sample A|Sample B	Fold change					
+#pval			contrast	probability	Sample A|Sample B	P-Value					
+id	name	active	attr	sample_a_1	sample_a_2	sample_b_1	sample_b_2	mean_a	mean_b	fc_ab	pval
+id_1	AAA	Yes	attr1|attr2	10000	100	50	500	5050	275	18,36363636	0,1
+id_2	BBB	Yes	attr2|attr3	300	400	40000	2302	350	21151	0,016547681	0,2
+id_3	CCC	No	attr3|attr4	20	2300	12002	5600	1160	8801	0,131803204	0,4
+id_4	DDD	No	attr5	1234	10	9500	1200	622	5350	0,116261682	0,01
+id_5	EEE	No	attr7|attr8|attr1	900	450	940	60	675	500	1,35	0,9
