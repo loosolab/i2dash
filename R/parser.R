@@ -25,6 +25,8 @@
 #' @param version pre-header information about version (optional)
 #' @param experiment_id pre-header information about experiment id (optional)
 #'
+#' @return 1 on success
+#'
 #' @export
 parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduced, config = system.file("extdata", "parser_MaxQuant_config.json", package = "wilson"), delimiter = ";", format = NULL, version = NULL, experiment_id = NULL){
   if (missing(proteinGroups_in)) {
@@ -188,12 +190,20 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   # reading files in data tables
   proteinGroups <- data.table::fread(proteinGroups_in, header = TRUE, quote = "")
   summary_file <- data.table::fread(summary_in, header = TRUE)
-  meta_config <- rjson::fromJSON(file = config)
+  meta_config <- tryCatch({rjson::fromJSON(file = config)},
+                          error=function(cond){
+                            stop("Could not read config file")
+                          })
 
   # getting experiment names
-  exp_names <- (unique(summary_file[Experiment != "", Experiment]))
+  if("Experiment" %in% colnames(summary_file)){
+    exp_names <- (unique(summary_file[Experiment != "", Experiment]))
+  } else {
+    stop("wrong format on summary file: column \'Experiment\' misssing")
+  }
 
   meta <- get_meta_from_config(meta_config = meta_config)
+
 
   sample_scores <- meta_config$type_scores
   sample_ratios <- meta_config$type_ratios
@@ -203,6 +213,9 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   sample_ary <- meta_config$type_array
   reduced_list <- meta_config$reduced_list
   full_sample_list <- c(sample_scores, sample_ratios, sample_probability, sample_category, sample_ary)
+  if(is.null(reduced_list)){
+    stop("reduced_list is missing in config file")
+  }
 
   # get column names
   col_names <- colnames(proteinGroups)
@@ -286,6 +299,8 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   # writing reduced CLARION file
   write_clarion_file(meta = meta_reduced, out = outfile_reduced, format = format,
                      version = version, exp_id = experiment_id, pGroups = proteinGroups, delimiter = delimiter)
+
+  return(1)
 }
 
 #' Method to parse input file.
