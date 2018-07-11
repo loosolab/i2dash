@@ -1152,7 +1152,7 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
       }
 
       # range
-      if ("inner" == options){
+      if ("inner" == options) {
         if (x >= input[1] & x <= input[2]) return(TRUE)
       }
       if ("outer" == options) {
