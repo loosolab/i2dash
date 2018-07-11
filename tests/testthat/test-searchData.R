@@ -3,7 +3,7 @@ context("orNumeric searchData function")
 test_that("no selection returns all TRUE", {
   input <- c(5)
   choices <- c(seq_len(20), NA, NaN)
-  selection <- wilson:::searchData(input = input, choices = choices, options = NULL)
+  selection <- searchData(input = input, choices = choices, options = NULL)
 
   expect_length(selection, length(choices))
   expect_type(selection, "logical")
@@ -13,8 +13,8 @@ test_that("no selection returns all TRUE", {
 test_that("ranged selection is correct", {
   input <- c(2, 5)
   choices <- c(seq_len(20), NA, NaN)
-  selection_inner <- wilson:::searchData(input = input, choices = choices, options = "inner")
-  selection_outer <- wilson:::searchData(input = input, choices = choices, options = "outer")
+  selection_inner <- searchData(input = input, choices = choices, options = "inner")
+  selection_outer <- searchData(input = input, choices = choices, options = "outer")
 
   expect_length(selection_inner, length(choices))
   expect_type(selection_inner, "logical")
@@ -28,10 +28,10 @@ test_that("ranged selection is correct", {
 test_that("single selection is correct", {
   input <- c(2)
   choices <- c(seq_len(20), NA, NaN)
-  selection_equal <- wilson:::searchData(input = input, choices = choices, options = "=")
-  selection_smaller <- wilson:::searchData(input = input, choices = choices, options = "<")
-  selection_greater <- wilson:::searchData(input = input, choices = choices, options = ">")
-  selection_all <- wilson:::searchData(input = input, choices = choices, options = c("=", "<", ">"))
+  selection_equal <- searchData(input = input, choices = choices, options = "=")
+  selection_smaller <- searchData(input = input, choices = choices, options = "<")
+  selection_greater <- searchData(input = input, choices = choices, options = ">")
+  selection_all <- searchData(input = input, choices = choices, options = c("=", "<", ">"))
 
   expect_length(selection_equal, length(choices))
   expect_type(selection_equal, "logical")
