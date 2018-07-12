@@ -125,7 +125,7 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
   if (density) {
     ### kernel density
     # plot$layers <- c(stat_density2d(geom = "tile", aes(fill = ..density..^0.25), n=200, contour=FALSE) + aes_(fill = as.name(var)), plot$layers) # n = resolution; density less sparse
-    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes_(fill = ~ ..density.. ^ 0.25), n = 200, contour = FALSE)
+    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes_(fill = ~ ..density.. ^ 0.25, color = NULL), n = 200, contour = FALSE)
 
     plot <- plot + ggplot2::scale_fill_gradient(low = "white", high = "black") +
       # guides(fill=FALSE) +		# remove density legend
