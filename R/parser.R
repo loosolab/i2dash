@@ -25,7 +25,7 @@
 #' @param version pre-header information about version (optional)
 #' @param experiment_id pre-header information about experiment id (optional)
 #'
-#' @return 1 on success
+#' @return TRUE on success
 #'
 #' @export
 parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduced, config = system.file("extdata", "parser_MaxQuant_config.json", package = "wilson"), delimiter = ";", format = NULL, version = NULL, experiment_id = NULL){
@@ -300,7 +300,7 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   write_clarion_file(meta = meta_reduced, out = outfile_reduced, format = format,
                      version = version, exp_id = experiment_id, pGroups = proteinGroups, delimiter = delimiter)
 
-  return(1)
+  return(TRUE)
 }
 
 #' Method to parse input file.
