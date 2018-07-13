@@ -16,7 +16,7 @@ dependencies:
   - r-RColorBrewer
   - r-shinyjs
   - r-viridis
-#  - r-rje
+  - r-rje
 #  - r-grdevices # base package
 #  - r-grid # base package
   - r-plyr
@@ -43,3 +43,6 @@ dependencies:
   - r-devtools
   - "readline==6.3"
   - r-roxygen2
+  - r-markdown
+  - r-testthat
+#  - r-vdiffr # not yet in conda-forge
