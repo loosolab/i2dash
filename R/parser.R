@@ -167,7 +167,7 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   # @param version version number
   # @param exp_id experiment id
   # @param pGroups data table protein groups file
-  write_clarion_file <- function(meta, out, format, version, exp_id, pGroups, delimiter){
+  write_clarion_file <- function(meta, out, format, version, exp_id, pGroups, delimiter) {
     to_append <- FALSE
     if (!missing(format)) {
       write(paste0("!format=", format), file = out, append = to_append)
@@ -190,20 +190,19 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   # reading files in data tables
   proteinGroups <- data.table::fread(proteinGroups_in, header = TRUE, quote = "")
   summary_file <- data.table::fread(summary_in, header = TRUE)
-  meta_config <- tryCatch({rjson::fromJSON(file = config)},
-                          error=function(cond){
+  meta_config <- tryCatch( {rjson::fromJSON(file = config)},
+                          error = function(cond){
                             stop("Could not read config file")
-                          })
+                          } )
 
   # getting experiment names
-  if("Experiment" %in% colnames(summary_file)){
+  if ("Experiment" %in% colnames(summary_file)) {
     exp_names <- (unique(summary_file[Experiment != "", Experiment]))
   } else {
     stop("wrong format on summary file: column \'Experiment\' misssing")
   }
 
   meta <- get_meta_from_config(meta_config = meta_config)
-
 
   sample_scores <- meta_config$type_scores
   sample_ratios <- meta_config$type_ratios
@@ -213,7 +212,7 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   sample_ary <- meta_config$type_array
   reduced_list <- meta_config$reduced_list
   full_sample_list <- c(sample_scores, sample_ratios, sample_probability, sample_category, sample_ary)
-  if(is.null(reduced_list)){
+  if (is.null(reduced_list)) {
     stop("reduced_list is missing in config file")
   }
 
@@ -227,7 +226,7 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   # append rows to data table with metadata
   samples_list <- lapply(col_names, function(col_head) {
 
-    unlist(lapply(exp_names, function(name){
+    unlist(lapply(exp_names, function(name) {
       name_brackets <- paste0("\\Q", name)
       exp_regex <- paste0("\\Q ", name)
       sample_description <- strsplit(col_head, exp_regex)
