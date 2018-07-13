@@ -15,10 +15,9 @@ testthat::test_that("mq_parser",{
                                       summary_in = system.file("/tests/testthat", "summary_test_2.txt", package = "wilson"),
                                       outfile = "./out", outfile_reduced = "./outres" ),
                "wrong format on summary file: column \'Experiment\' misssing")
-  expect_equal(wilson::parse_MaxQuant(proteinGroups_in = system.file("/tests/testthat", "proteinGroups_test.txt", package = "wilson"),
+  expect_true(wilson::parse_MaxQuant(proteinGroups_in = system.file("/tests/testthat", "proteinGroups_test.txt", package = "wilson"),
                                       summary_in = system.file("/tests/testthat", "summary_test.txt", package = "wilson"),
-                                      outfile = "./out", outfile_reduced = "./outres", config = system.file("/tests/testthat", "success_config.json", package = "wilson")),
-               TRUE)
+                                      outfile = "./out", outfile_reduced = "./outres", config = system.file("/tests/testthat", "success_config.json", package = "wilson")))
   expect_error(wilson::parse_MaxQuant(proteinGroups_in = system.file("/tests/testthat", "proteinGroups_test.txt", package = "wilson"),
                                       summary_in = system.file("/tests/testthat", "summary_test.txt", package = "wilson"),
                                       outfile = "./out", outfile_reduced = "./outres", config = "" ),
