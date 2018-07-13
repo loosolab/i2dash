@@ -190,10 +190,10 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   # reading files in data tables
   proteinGroups <- data.table::fread(proteinGroups_in, header = TRUE, quote = "")
   summary_file <- data.table::fread(summary_in, header = TRUE)
-  meta_config <- tryCatch( {rjson::fromJSON(file = config)},
-                          error = function(cond){
+  meta_config <- tryCatch({rjson::fromJSON(file = config)},
+                          error = function(cond) {
                             stop("Could not read config file")
-                          } )
+                          })
 
   # getting experiment names
   if ("Experiment" %in% colnames(summary_file)) {
