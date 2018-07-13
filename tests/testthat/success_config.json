@@ -1,0 +1,322 @@
+{
+  "meta": [
+  {
+    "col_name": "Protein IDs",
+    "level": "feature",
+    "type": "array",
+    "label": "IDs",
+    "sublabel": "proteins"
+  },
+  {
+    "col_name": "Majority protein IDs",
+    "level": "feature",
+    "type": "array",
+    "label": "IDs",
+    "sublabel": "majority protein"
+  },
+  {
+    "col_name": "Protein names",
+    "level": "feature",
+    "type": "array",
+    "label": "protein names",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Gene names",
+    "level": "feature",
+    "type": "array",
+    "label": "gene names",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Fasta headers",
+    "level": "feature",
+    "type": "array",
+    "label": "fasta headers",
+    "sublabel": ""
+  },
+  {
+    "col_name": "id",
+    "level": "feature",
+    "type": "unique_id",
+    "label": "unique identifier",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Peptide IDs",
+    "level": "feature",
+    "type": "array",
+    "label": "IDs",
+    "sublabel": "peptide"
+  },
+  {
+    "col_name": "Mod. peptide IDs",
+    "level": "feature",
+    "type": "array",
+    "label": "IDs",
+    "sublabel": "mod. peptide"
+  },
+  {
+    "col_name": "Evidence IDs",
+    "level": "feature",
+    "type": "array",
+    "label": "IDs",
+    "sublabel": "evidence"
+  },
+  {
+    "col_name": "MS/MS IDs",
+    "level": "feature",
+    "type": "array",
+    "label": "IDs",
+    "sublabel": "MS/MS"
+  },
+  {
+    "col_name": "Mol. weight [kDa]",
+    "level": "feature",
+    "type": "category",
+    "label": "Mol. weight [kDa]",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Sequence length",
+    "level": "feature",
+    "type": "category",
+    "label": "length",
+    "sublabel": "Sequence"
+  },
+  {
+    "col_name": "Sequence lengths",
+    "level": "feature",
+    "type": "array",
+    "label": "lengths",
+    "sublabel": "Sequence"
+  },
+  {
+    "col_name": "Reverse",
+    "level": "feature",
+    "type": "category",
+    "label": "Reverse",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Potential contaminant",
+    "level": "feature",
+    "type": "category",
+    "label": "Potential contaminant",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Oxidation (M) site IDs",
+    "level": "feature",
+    "type": "array",
+    "label": "IDs",
+    "sublabel": "Oxidation (M) site"
+  },
+  {
+    "col_name": "Oxidation (M) site positions",
+    "level": "feature",
+    "type": "array",
+    "label": "positions",
+    "sublabel": "Oxidation (M) site"
+  },
+  {
+    "col_name": "Phospho (STY) site IDs",
+    "level": "feature",
+    "type": "array",
+    "label": "IDs",
+    "sublabel": "Phospho (STY) site"
+  },
+  {
+    "col_name": "Phospho (STY) site positions",
+    "level": "feature",
+    "type": "array",
+    "label": "positions",
+    "sublabel": "Phospho (STY) site"
+  },
+  {
+    "col_name": "Peptide counts (all)",
+    "level": "condition",
+    "type": "array",
+    "label": "counts",
+    "sublabel": "all peptide"
+  },
+  {
+    "col_name": "Peptide counts (razor+unique)",
+    "level": "condition",
+    "type": "array",
+    "label": "counts",
+    "sublabel": "razor+unique peptides"
+  },
+  {
+    "col_name": "Peptide counts (unique)",
+    "level": "condition",
+    "type": "array",
+    "label": "counts",
+    "sublabel": "unique peptides"
+  },
+  {
+    "col_name": "Number of proteins",
+    "level": "condition",
+    "type": "score",
+    "label": "count",
+    "sublabel": "proteins"
+  },
+  {
+    "col_name": "Peptides",
+    "level": "condition",
+    "type": "score",
+    "label": "count",
+    "sublabel": "Peptides"
+  },
+  {
+    "col_name": "Razor + unique peptides",
+    "level": "condition",
+    "type": "score",
+    "label": "count",
+    "sublabel": "Razor + unique peptides"
+  },
+  {
+    "col_name": "Unique peptides",
+    "level": "condition",
+    "type": "score",
+    "label": "count",
+    "sublabel": "Unique peptides"
+  },
+  {
+    "col_name": "MS/MS count",
+    "level": "condition",
+    "type": "score",
+    "label": "count",
+    "sublabel": "MS/MS"
+  },
+  {
+    "col_name": "Fraction average",
+    "level": "condition",
+    "type": "score",
+    "label": "fraction",
+    "sublabel": "average"
+  },
+  {
+    "col_name": "Best MS/MS",
+    "level": "condition",
+    "type": "array",
+    "label": "MS/MS",
+    "sublabel": "best"
+  },
+  {
+    "col_name": "Intensity",
+    "level": "condition",
+    "type": "score",
+    "label": "Intensity",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Intensity L",
+    "level": "condition",
+    "type": "score",
+    "label": "Intensity",
+    "sublabel": "L"
+  },
+  {
+    "col_name": "Intensity M",
+    "level": "condition",
+    "type": "score",
+    "label": "Intensity",
+    "sublabel": "M"
+  },
+  {
+    "col_name": "Intensity H",
+    "level": "condition",
+    "type": "score",
+    "label": "Intensity",
+    "sublabel": "H"
+  },
+  {
+    "col_name": "Q-value",
+    "level": "condition",
+    "type": "probability",
+    "label": "q-value",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Score",
+    "level": "condition",
+    "type": "probability",
+    "label": "score",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Unique sequence coverage [%]",
+    "level": "condition",
+    "type": "ratio",
+    "label": "sequence coverage",
+    "sublabel": "Unique"
+  },
+  {
+    "col_name": "Unique + razor sequence coverage [%]",
+    "level": "condition",
+    "type": "ratio",
+    "label": "sequence coverage",
+    "sublabel": "Unique + razor"
+  },
+  {
+    "col_name": "Sequence coverage [%]",
+    "level": "condition",
+    "type": "ratio",
+    "label": "sequence coverage",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Only identified by site",
+    "level": "feature",
+    "type": "category",
+    "label": "identified by site",
+    "sublabel": ""
+  },
+  {
+    "col_name": "Peptide is razor",
+    "level": "condition",
+    "type": "array",
+    "label": "peptide",
+    "sublabel": "is razor"
+  }
+  ],
+
+  "type_scores":
+  ["Peptides", "Razor + unique peptides", "Unique peptides", "Ratio M/L count", "Ratio M/L iso-count", "Ratio H/L count", "Ratio H/L iso-count" ,
+   "Ratio H/M count", "Ratio H/M iso-count", "Intensity", "Intensity L", "Intensity M", "Intensity H", "MS/MS count", "LFQ intensity",
+   "Reporter intensity count", "Reporter intensity corrected", "Reporter intensity", "Fraction", "iBAQ",
+   "Reporter intensity corrected 0", "Reporter intensity corrected 1","Reporter intensity corrected 2", "Reporter intensity corrected 3",
+   "Reporter intensity corrected 4", "Reporter intensity corrected 5", "Reporter intensity 0", "Reporter intensity 1",
+   "Reporter intensity 2", "Reporter intensity 3", "Reporter intensity 4", "Reporter intensity 5", "Reporter intensity count 0",
+   "Reporter intensity count 1", "Reporter intensity count 2", "Reporter intensity count 3", "Reporter intensity count 4",
+   "Reporter intensity count 5" ],
+
+  "type_ratios":
+  ["Sequence coverage", "Ratio H/M variability [%]", "Ratio H/M normalized", "Ratio H/M", "Ratio H/L variability [%]", "Ratio H/L normalized", "Ratio H/L",
+   "Ratio M/L", "Ratio M/L variability [%]", "Ratio M/L normalized"],
+
+  "type_probability":[],
+
+  "type_category":
+  ["Ratio H/M type", "Ratio H/L type", "Ratio M/L type", "Identification type"],
+
+  "type_array":
+  [],
+
+  "reduced_list":
+  ["Protein IDs", "Majority protein IDs", "Protein names", "Gene names", "Fasta headers",
+  "Peptides;exp", "Razor + unique peptides;exp", "Unique peptides;exp", "Mol. weight [kDa]",
+  "Sequence length", "Sequence coverage;exp", "Intensity;exp", "Reverse", "Potential contaminant",
+  "id", "Peptide IDs", "Mod. peptide IDs", "Evidence IDs", "Sequence lengths", "Phospho (STY) site IDs",
+  "Reporter intensity corrected 0;exp",
+  "Reporter intensity corrected 1;exp",
+  "Reporter intensity corrected 2;exp",
+  "Reporter intensity corrected 3;exp",
+  "Reporter intensity corrected 4;exp",
+  "Reporter intensity corrected 5;exp",
+  "LFQ intensity",
+  "Intensity L", "Intensity H", "Intensity M", "Ratio M/L normalized;exp", "Ratio H/L normalized;exp",
+  "Ratio H/M normalized;exp"]
+}
+
