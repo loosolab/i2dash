@@ -18,7 +18,7 @@ testthat::test_that("mq_parser",{
   expect_equal(wilson::parse_MaxQuant(proteinGroups_in = system.file("/tests/testthat", "proteinGroups_test.txt", package = "wilson"),
                                       summary_in = system.file("/tests/testthat", "summary_test.txt", package = "wilson"),
                                       outfile = "./out", outfile_reduced = "./outres" ),
-               1)
+               TRUE)
   expect_error(wilson::parse_MaxQuant(proteinGroups_in = system.file("/tests/testthat", "proteinGroups_test.txt", package = "wilson"),
                                       summary_in = system.file("/tests/testthat", "summary_test.txt", package = "wilson"),
                                       outfile = "./out", outfile_reduced = "./outres", config = "" ),
