@@ -1,3 +1,5 @@
+# wilson 2.0.1
+- tests added
 # wilson 2.0.0 
 ## Features
 - clarion class:
