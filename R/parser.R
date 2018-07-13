@@ -87,7 +87,7 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   # @return String level of given column
   get_sample_level <- function(col_head, isSample, full_list) {
     # Get the level of all 'sample' columns.
-    # Default: level <- "sample"
+    # Default: level is "sample"
     if (grepl("Ratio", col_head, perl = TRUE)) {
       if (grepl("type", col_head, perl = TRUE)) return("feature")
       return("contrast")
@@ -191,14 +191,13 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
   proteinGroups <- data.table::fread(proteinGroups_in, header = TRUE, quote = "")
   summary_file <- data.table::fread(summary_in, header = TRUE)
 
-  if (config == "") {
+  meta_config <- tryCatch({
+    rjson::fromJSON(file = config)
+  }, error = function(cond) {
     stop("Could not read config file")
-  }
-
-  meta_config <- tryCatch({rjson::fromJSON(file = config)},
-                          error = function(cond) {
-                            stop("Could not read config file")
-                          })
+  }, warning = function(w) {
+    stop("Could not read config file")
+  })
 
   # getting experiment names
   if ("Experiment" %in% colnames(summary_file)) {
