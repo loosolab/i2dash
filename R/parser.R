@@ -197,7 +197,7 @@ parse_MaxQuant <- function(proteinGroups_in, summary_in, outfile, outfile_reduce
 
   # getting experiment names
   if ("Experiment" %in% colnames(summary_file)) {
-    exp_names <- (unique(summary_file[Experiment != "", Experiment]))
+    exp_names <- unique(summary_file[Experiment != "", Experiment])
   } else {
     stop("wrong format on summary file: column \'Experiment\' misssing")
   }
