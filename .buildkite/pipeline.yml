@@ -5,4 +5,4 @@ steps:
     plugins:
       https://github.com/loosolab/conda-buildkite-plugin.git#master:
     artifact_paths:
-      - "wilson.Rcheck/00check.log"
+      - "wilson.Rcheck/*"
