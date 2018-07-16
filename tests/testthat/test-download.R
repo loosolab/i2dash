@@ -13,6 +13,8 @@ test_that("ggplot is downloadable", {
 })
 
 test_that("plotly is downloadable", {
+  skip_on_cran()
+
   plot <- plotly::ggplotly(ggplot2::ggplot(mtcars, ggplot2::aes(mpg, hp)) + ggplot2::geom_point())
   width <- 20
   height <- 20
