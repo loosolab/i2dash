@@ -1,8 +1,9 @@
 steps:
   - label: ":stopwatch: Running checks for Wilson"
     command:
-      - "Rscript -e 'devtools::check()'"
+      - "R CMD build ."
+      - "R CMD check *tar.gz --as-cran"
     plugins:
       https://github.com/loosolab/conda-buildkite-plugin.git#master:
     artifact_paths:
-      - "/tmp/**/wilson.Rcheck/*"
+      - "wilson.Rcheck/*"
