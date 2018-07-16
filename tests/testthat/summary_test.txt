@@ -1,0 +1,3 @@
+Raw file	Experiment
+raw_file1	Exp1
+raw_file2	Exp2
