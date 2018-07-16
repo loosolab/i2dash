@@ -43,6 +43,6 @@ dependencies:
   - r-devtools
   - "readline==6.3"
   - r-roxygen2
-  - r-markdown
+  - r-rmarkdown
   - r-testthat
 #  - r-vdiffr # not yet in conda-forge
