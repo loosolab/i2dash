@@ -5,7 +5,8 @@ steps:
       - ". /etc/profile.d/conda.sh"
       - "conda activate wilson"
 #      - "Rscript -e 'install.packages(\"rje\")'"
-      - "Rscript -e 'devtools::check()'"
+      - "R CMD build ."
+      - "R CMD check *tar.gz --as-cran"
 
 #  - wait
 

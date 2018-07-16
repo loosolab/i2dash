@@ -10,7 +10,7 @@
 |language |(EN)                         |
 |collate  |German_Germany.1252          |
 |tz       |Europe/Berlin                |
-|date     |2018-07-04                   |
+|date     |2018-07-16                   |
 
 ## Packages
 
@@ -24,10 +24,10 @@
 |DT              |   |0.4     |2018-01-30 |CRAN (R 3.5.1)                      |
 |factoextra      |   |1.0.5   |2017-08-22 |CRAN (R 3.5.1)                      |
 |FactoMineR      |   |1.41    |2018-05-04 |CRAN (R 3.5.1)                      |
-|ggplot2         |   |2.2.1   |2016-12-30 |CRAN (R 3.5.1)                      |
+|ggplot2         |   |3.0.0   |2018-07-03 |CRAN (R 3.5.1)                      |
 |ggrepel         |   |0.8.0   |2018-05-09 |CRAN (R 3.5.1)                      |
 |gplots          |   |3.0.1   |2016-03-30 |CRAN (R 3.5.1)                      |
-|heatmaply       |   |0.15.0  |2018-06-23 |CRAN (R 3.5.1)                      |
+|heatmaply       |   |0.15.2  |2018-07-06 |CRAN (R 3.5.1)                      |
 |knitr           |   |1.20    |2018-02-20 |CRAN (R 3.5.1)                      |
 |log4r           |   |0.2     |2014-09-29 |CRAN (R 3.5.1)                      |
 |openssl         |   |1.0.1   |2018-03-03 |CRAN (R 3.5.1)                      |
@@ -46,8 +46,10 @@
 |shinycssloaders |   |0.2.0   |2017-05-12 |CRAN (R 3.5.1)                      |
 |shinydashboard  |   |0.7.0   |2018-03-21 |CRAN (R 3.5.1)                      |
 |shinyjs         |   |1.0     |2018-01-08 |CRAN (R 3.5.1)                      |
+|testthat        |   |2.0.0   |2017-12-13 |CRAN (R 3.5.1)                      |
+|vdiffr          |   |0.2.3   |2018-04-27 |CRAN (R 3.5.1)                      |
 |viridis         |   |0.5.1   |2018-03-29 |CRAN (R 3.5.1)                      |
-|wilson          |*  |2.0.0   |2018-07-04 |local (HendrikSchultheis/wilson@NA) |
+|wilson          |   |2.0.1   |2018-07-16 |local (HendrikSchultheis/wilson@NA) |
 
 # Check results
 
