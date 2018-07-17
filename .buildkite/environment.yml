@@ -1,8 +1,8 @@
 name: wilson
 channels:
-  - defaults
-  - conda-forge
   - bioconda
+  - conda-forge
+  - defaults
 dependencies:
   - r-base
   - r-shiny
