@@ -4,7 +4,7 @@ steps:
       - "R CMD build ."
       - "R CMD check *tar.gz --as-cran"
     plugins:
-      https://github.com/loosolab/conda-buildkite-plugin.git#master:
+      https://github.com/loosolab/conda-buildkite-plugin.git#v0.1.0:
         environment: .buildkite/environment.yml
         update: true
     artifact_paths:
