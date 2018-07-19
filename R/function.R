@@ -125,7 +125,7 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
   if (density) {
     ### kernel density
     # plot$layers <- c(stat_density2d(geom = "tile", aes(fill = ..density..^0.25), n=200, contour=FALSE) + aes_(fill = as.name(var)), plot$layers) # n = resolution; density less sparse
-    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes_(fill = ~ ..density.. ^ 0.25), n = 200, contour = FALSE)
+    plot <- plot + ggplot2::stat_density2d(geom = "tile", ggplot2::aes_(fill = ~ ..density.. ^ 0.25, color = NULL), n = 200, contour = FALSE)
 
     plot <- plot + ggplot2::scale_fill_gradient(low = "white", high = "black") +
       # guides(fill=FALSE) +		# remove density legend
@@ -1152,7 +1152,7 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
       }
 
       # range
-      if ("inner" == options){
+      if ("inner" == options) {
         if (x >= input[1] & x <= input[2]) return(TRUE)
       }
       if ("outer" == options) {
@@ -1203,15 +1203,17 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
 download <- function(file, filename, plot, width, height, ppi = 72, save_plot = TRUE, ui = NULL) {
   session <- shiny::getDefaultReactiveDomain()
 
-  # show notification
-  shiny::showNotification(
-    id = session$ns("download-note"),
-    shiny::tags$b("Preparing download files. Please wait..."),
-    duration = NULL,
-    closeButton = FALSE,
-    type = "message"
-  )
-  shinyjs::runjs(paste0("$(document.getElementById('", paste0("shiny-notification-", session$ns("download-note")), "')).addClass('notification-position-center');"))
+  if (!is.null(session)) {
+    # show notification
+    shiny::showNotification(
+      id = session$ns("download-note"),
+      shiny::tags$b("Preparing download files. Please wait..."),
+      duration = NULL,
+      closeButton = FALSE,
+      type = "message"
+    )
+    shinyjs::runjs(paste0("$(document.getElementById('", paste0("shiny-notification-", session$ns("download-note")), "')).addClass('notification-position-center');"))
+  }
 
   # cut off file extension
   name <- sub("(.*)\\..*$", replacement = "\\1", filename)
@@ -1283,8 +1285,10 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   # remove tmp files
   file.remove(files)
 
-  # remove notification
-  shiny::removeNotification(session$ns("download-note"))
+  if (!is.null(session)) {
+    # remove notification
+    shiny::removeNotification(session$ns("download-note"))
+  }
 
   return(out)
 }

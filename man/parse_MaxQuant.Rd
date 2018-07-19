@@ -29,6 +29,9 @@ parse_MaxQuant(proteinGroups_in, summary_in, outfile, outfile_reduced,
 
 \item{experiment_id}{pre-header information about experiment id (optional)}
 }
+\value{
+TRUE on success
+}
 \description{
 List with columns of reduced version (see config.json file)
 If you only want the samples of a specific keyword write: column;exp
