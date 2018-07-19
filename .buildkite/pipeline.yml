@@ -5,5 +5,7 @@ steps:
       - "R CMD check *tar.gz --as-cran"
     plugins:
       https://github.com/loosolab/conda-buildkite-plugin.git#master:
+        environment: .buildkite/environment.yml
+        update: true
     artifact_paths:
       - "wilson.Rcheck/*"
