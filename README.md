@@ -1,4 +1,6 @@
 # WIlsON: Webbased Interactive Omics visualizatioN -  The R Package
+[![CRAN](https://www.r-pkg.org/badges/version/wilson)](https://cran.r-project.org/package=wilson)
+
 *Buildkite:* ![Build status](https://badge.buildkite.com/d79f55bb3e3cf0d70d6784feb8c6e26182d602f534e74fac4e.svg?branch=master)
 
 ## Abstract
