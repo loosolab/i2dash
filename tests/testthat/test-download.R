@@ -6,6 +6,7 @@ test_that("ggplot is downloadable", {
   height <- 20
   file <- tempfile(fileext = ".zip")
   filename <- "plot"
+  message(file)
 
   expect_false(file.exists(file))
   expect_silent(download(file = file, filename = filename, plot = plot, width = width, height = height))
