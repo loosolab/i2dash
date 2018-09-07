@@ -46,7 +46,7 @@ Imports: shiny,
     openssl,
     methods,
     R6
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 biocViews: 
 Suggests: knitr,
     rmarkdown,

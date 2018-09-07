@@ -4,8 +4,8 @@
 \alias{colorPicker}
 \title{colorPicker module server logic}
 \usage{
-colorPicker(input, output, session, num.colors = 256, distribution = "all",
-  winsorize = NULL, selected = NULL)
+colorPicker(input, output, session, num.colors = 256,
+  distribution = "all", winsorize = NULL, selected = NULL)
 }
 \arguments{
 \item{input}{Shiny's input object}

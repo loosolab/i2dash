@@ -4,8 +4,9 @@
 \alias{global_cor_heatmap}
 \title{global correlation heatmap module server logic}
 \usage{
-global_cor_heatmap(input, output, session, clarion, plot.method = "static",
-  width = "auto", height = "auto", ppi = 72, scale = 1)
+global_cor_heatmap(input, output, session, clarion,
+  plot.method = "static", width = "auto", height = "auto",
+  ppi = 72, scale = 1)
 }
 \arguments{
 \item{input}{Shiny's input object}

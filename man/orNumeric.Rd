@@ -5,8 +5,9 @@
 \title{orNumeric module server logic}
 \usage{
 orNumeric(input, output, session, choices, value, label = "Column",
-  step = 100, stepsize = NULL, min. = shiny::reactive(min(choices_r(),
-  na.rm = TRUE)), max. = shiny::reactive(max(choices_r(), na.rm = TRUE)),
+  step = 100, stepsize = NULL,
+  min. = shiny::reactive(min(choices_r(), na.rm = TRUE)),
+  max. = shiny::reactive(max(choices_r(), na.rm = TRUE)),
   label.slider = NULL, zoomable = TRUE, reset = NULL)
 }
 \arguments{
