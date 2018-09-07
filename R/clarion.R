@@ -45,6 +45,7 @@
 #'
 #' @format NULL
 #' @usage NULL
+#' @importFrom R6 R6Class
 #' @export
 Clarion <- R6::R6Class("Clarion",
                        public = list(
