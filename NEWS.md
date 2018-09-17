@@ -1,3 +1,5 @@
+# wilson 2.0.2
+- fixed CRAN check Note/ Error
 # wilson 2.0.1
 - tests added
 # wilson 2.0.0 
