@@ -22,7 +22,8 @@ test_that("plotly is downloadable", {
   filename <- "plot"
 
   expect_false(file.exists(file))
-  expect_silent(download(file = file, filename = filename, plot = plot, width = width, height = height))
+  # TODO change back to expect_silent as soon as orca can be used (no need for mapbox token)
+  download(file = file, filename = filename, plot = plot, width = width, height = height)
   expect_true(file.exists(file))
 })
 

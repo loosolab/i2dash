@@ -3,7 +3,7 @@ context("Create static plots")
 test_that("scatterplot can be created", {
   data <- data.table::data.table(mtcars[, c("mpg", "hp", "vs")], keep.rownames = "id")
 
-  out <- create_scatterplot(data, highlight.data = data[1:3,], highlight.color = "blue", color = c("red", "green"), categorized = TRUE)
+  out <- create_scatterplot(data, highlight.data = data[1:3,], highlight.color = "blue", color = c("red", "green"), categorized = TRUE, density = FALSE)
   vdiffr::expect_doppelganger("static scatterplot", out$plot)
 })
 

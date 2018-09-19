@@ -10,8 +10,8 @@ create_scatterplot(data, data.labels = NULL, data.hovertext = NULL,
   line = TRUE, categorized = FALSE, highlight.data = NULL,
   highlight.labels = NULL, highlight.hovertext = NULL,
   highlight.color = "#FF0000", xlim = NULL, ylim = NULL,
-  colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72,
-  plot.method = "static", scale = 1)
+  colorbar.limits = NULL, width = "auto", height = "auto",
+  ppi = 72, plot.method = "static", scale = 1)
 }
 \arguments{
 \item{data}{data.table containing plot data

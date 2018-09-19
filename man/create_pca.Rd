@@ -4,11 +4,12 @@
 \alias{create_pca}
 \title{Method for pca creation.}
 \usage{
-create_pca(data, color.group = NULL, color.title = NULL, palette = NULL,
-  shape.group = NULL, shape.title = NULL, shapes = c(15:25),
-  dimension.a = 1, dimension.b = 2, dimensions = 6, on.columns = TRUE,
-  labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3,
-  width = 28, height = 28, ppi = 72, scale = 1)
+create_pca(data, color.group = NULL, color.title = NULL,
+  palette = NULL, shape.group = NULL, shape.title = NULL,
+  shapes = c(15:25), dimension.a = 1, dimension.b = 2,
+  dimensions = 6, on.columns = TRUE, labels = FALSE,
+  custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28,
+  height = 28, ppi = 72, scale = 1)
 }
 \arguments{
 \item{data}{data.table from which the plot is created (First column will be handled as rownames if not numeric).}

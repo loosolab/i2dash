@@ -5,8 +5,8 @@
 \title{orTextual module server logic}
 \usage{
 orTextual(input, output, session, choices, selected = NULL,
-  label = "Column", delimiter = NULL, multiple = TRUE, contains = FALSE,
-  reset = NULL)
+  label = "Column", delimiter = NULL, multiple = TRUE,
+  contains = FALSE, reset = NULL)
 }
 \arguments{
 \item{input}{Shiny's input object.}
