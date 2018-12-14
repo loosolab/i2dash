@@ -1,0 +1,22 @@
+image: continuumio/miniconda3:4.5.11
+
+before_script:
+  - conda env create -c bioconda -c conda-forge .buildkite/environment.yml
+
+build:
+  stage: build
+  tags:
+    - docker
+  script:
+    - R CMD BUILD .
+
+test:
+  stage: test
+  tags:
+    - docker
+  script:
+    - R CMD check *tar.gz --as-cran
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - wilson.Rcheck/*
