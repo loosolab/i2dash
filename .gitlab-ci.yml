@@ -1,21 +1,32 @@
 image: continuumio/miniconda3:4.5.11
 
+stages:
+  - build
+  - check
+
 before_script:
-  - conda env create -c bioconda -c conda-forge .buildkite/environment.yml
+  - .ci/setup.sh
 
 build:
   stage: build
   tags:
     - docker
   script:
-    - R CMD BUILD .
+    - R CMD build .
+  artifacts:
+    paths:
+      - wilson_*.tar.gz
+    name: "$CI_COMMIT_REF_NAME-builds"
 
-test:
-  stage: test
+check:
+  stage: check
   tags:
     - docker
+  variables:
+    http_proxy: http://www-proxy.t-online.de:80
+    R_ZIPCMD: /opt/conda/bin/zip
   script:
-    - R CMD check *tar.gz --as-cran
+    - R CMD check *tar.gz --as-cran --no-manual
   artifacts:
     expire_in: 1 week
     paths:
