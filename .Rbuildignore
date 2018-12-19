@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.buildkite.*
 ^revdep$
 ^cran-comments.md$
+^.ci$
+^.gitlab-ci.yml$
