@@ -478,7 +478,7 @@ tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", 
       second_condition <- gsub(pattern = paste0("(^", condition_pattern, ").*"), replacement = "\\1", x = stripped_condition)
 
       label <- paste0(first_condition, "|", second_condition)
-      sub_label <- substring(stripped_condition, first = nchar(second_condition) + 1)
+      sub_label <- substring(stripped_condition, first = nchar(second_condition) + 2) # + 1 because parameter is inclusive and + 1 because of whitespace
     } else {
       label <- paste0(label_parts[-length(label_parts)], collapse = " ")
       sub_label <- label_parts[length(label_parts)]
