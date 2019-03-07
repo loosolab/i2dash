@@ -387,8 +387,9 @@ parser <- function(file, dec = ".") {
 #' @param groups Keep columns related to given groups. Default = c("TFBS", "peak", "feature", "condition").
 #' @param in_field_delimiter Only applied on non numeric columns (?)
 #' @param dec Decimal separator.
+#' @param ... Used as header information
 #'
-tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", "peak", "feature", "condition"), in_field_delimiter = NULL, dec = ".") {
+tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", "peak", "feature", "condition"), in_field_delimiter = ",", dec = ".", ...) {
   ##### data
   data <- data.table::fread(input, dec = dec, header = TRUE)
   columns <- names(data)
@@ -404,7 +405,10 @@ tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", 
   }
 
   delete_columns <- grep(pattern = paste0(groups, collapse = "|"), x = columns, value = TRUE, invert = TRUE)
-  data[, (delete_columns) := NULL]
+  if (length(delete_columns) > 0) {
+    data[, (delete_columns) := NULL]
+  }
+
 
   # omit na
   if (omit_NA) {
@@ -413,19 +417,19 @@ tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", 
 
   # create id column
   data[, id := seq_len(nrow(data))]
+  # move id column to first position
+  new_order <- c("id", names(data)[ names(data) != "id"])
+  data <- data[, new_order, with = FALSE]
 
   ##### metadata
   metadata <- data.table::data.table(names(data))
-  names(metadata) <- "key"
-
-  meta_columns <- c("level", "type", "label", "sub_label")
 
   # create metadata row by row
-  condition_pattern <- paste0(conditions, collape = "|")
-  meta_rows <- vapply(metadata[["key"]], FUN.VALUE = character(4), function(x) {
+  condition_pattern <- paste0(conditions, collapse = "|")
+  meta_rows <- lapply(metadata[[1]], function(x) {
     # level
-    if (grepl(pattern = condition_pattern, x = x)) {
-      if (grepl(pattern = "score|bound", x = x)) {
+    if (grepl(pattern = condition_pattern, x = x, perl = TRUE)) {
+      if (grepl(pattern = "score|bound", x = x, perl = TRUE)) {
         level <- "condition"
       } else {
         level <- "contrast"
@@ -446,15 +450,70 @@ tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", 
     } else {
       if (!is.numeric(data[[x]])) {
         type <- "array"
-      } else if (grepl(pattern = "score|bound", x = x)) {
+      } else if (grepl(pattern = "score|bound", x = x, perl = TRUE)) {
         type <- "score"
+      } else if (grepl(pattern = "log2fc$", x = x, perl = TRUE)) {
+        type <- "ratio"
       }
+    }
+
+    # label/ sub_label
+    label <- sub_label <- ""
+    label_parts <- unlist(strsplit(x = x, split = "_"))
+
+    if (length(label_parts) == 1) {
+      label <- label_parts
+    } else if (length(label_parts) == 2) {
+      label <- label_parts[1]
+      sub_label <- label_parts[2]
+    } else if (length(label_parts) >= 3 && level == "contrast") {
+      # replace '_' with whitespace
+      condition_pattern <- gsub(pattern = "_", replacement = " ", x = condition_pattern, fixed = TRUE)
+      x <- gsub(pattern = "_", replacement = " ", x = x, fixed = TRUE)
+      # get first condition using all identified conditions as pattern
+      first_condition <- gsub(pattern = paste0("(^", condition_pattern, ").*"), replacement = "\\1", x = x)
+      # strip first condition
+      stripped_condition <- substring(x, first = nchar(first_condition) + 2) # + 1 because parameter is inclusive and + 1 because of whitespace
+      # get new first condition
+      second_condition <- gsub(pattern = paste0("(^", condition_pattern, ").*"), replacement = "\\1", x = stripped_condition)
+
+      label <- paste0(first_condition, "|", second_condition)
+      sub_label <- substring(stripped_condition, first = nchar(second_condition) + 1)
+    } else {
+      label <- paste0(label_parts[-length(label_parts)], collapse = " ")
+      sub_label <- label_parts[length(label_parts)]
     }
 
     return(c(level, type, label, sub_label))
   })
 
+  # list of vectors (rows) to matrix
+  meta_matrix <- do.call(rbind, meta_rows)
+  metadata <- cbind(metadata, meta_matrix)
+  names(metadata) <- c("key", "level", "type", "label", "sub_label")
 
+  ##### header
 
-  return(data)
+  header <- c(
+    format = "Clarion",
+    version = "1.0",
+    delimiter = in_field_delimiter,
+    list(...)
+  )
+
+  # create clarion object for validation
+  clarion <- Clarion$new(header = header, metadata = metadata, data = data)
+
+  # TODO implement and use clarion write function
+  # write clarion
+  # header
+  flat_header <- data.table::data.table(paste0("!", names(clarion$header), "=", clarion$header))
+  data.table::fwrite(x = flat_header, file = output, col.names = FALSE, sep = "\t")
+  # metadata
+  # add '#'
+  names(clarion$metadata)[1] <- paste0("#", names(clarion$metadata)[1])
+  clarion$metadata[, names(clarion$metadata)[1] := paste0("#", clarion$metadata[[1]])]
+  data.table::fwrite(x = clarion$metadata, file = output, col.names = TRUE, sep = "\t", append = TRUE, quote = FALSE)
+  # data
+  data.table::fwrite(x = clarion$data, file = output, col.names = TRUE, sep = "\t", append = TRUE)
 }
