@@ -378,3 +378,83 @@ parser <- function(file, dec = ".") {
 
   return(Clarion$new(header = header, metadata = metadata, data = data))
 }
+
+#' TOBIAS single TFBS table to clarion converter
+#'
+#' @param input Path to input table
+#' @param output Output path.
+#' @param omit_NA Logical whether all rows containing NA should be removed.
+#' @param groups Keep columns related to given groups. Default = c("TFBS", "peak", "feature", "condition").
+#' @param in_field_delimiter Only applied on non numeric columns (?)
+#' @param dec Decimal separator.
+#'
+tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", "peak", "feature", "condition"), in_field_delimiter = NULL, dec = ".") {
+  ##### data
+  data <- data.table::fread(input, dec = dec, header = TRUE)
+  columns <- names(data)
+
+  # filter groups
+  if (is.element("feature", groups)) {
+    groups <- c(groups[which(groups != "feature")], "feat", "distance", "gene_biotype", "gene_id", "gene_name")
+  }
+
+  conditions <- gsub(pattern = "_bound", replacement = "", x = grep(pattern = "_bound$", x = columns, value = TRUE))
+  if (is.element("condition", groups)) {
+    groups <- c(groups[which(groups != "condition")], conditions)
+  }
+
+  delete_columns <- grep(pattern = paste0(groups, collapse = "|"), x = columns, value = TRUE, invert = TRUE)
+  data[, (delete_columns) := NULL]
+
+  # omit na
+  if (omit_NA) {
+    data <- na.omit(data)
+  }
+
+  # create id column
+  data[, id := seq_len(nrow(data))]
+
+  ##### metadata
+  metadata <- data.table::data.table(names(data))
+  names(metadata) <- "key"
+
+  meta_columns <- c("level", "type", "label", "sub_label")
+
+  # create metadata row by row
+  condition_pattern <- paste0(conditions, collape = "|")
+  meta_rows <- vapply(metadata[["key"]], FUN.VALUE = character(4), function(x) {
+    # level
+    if (grepl(pattern = condition_pattern, x = x)) {
+      if (grepl(pattern = "score|bound", x = x)) {
+        level <- "condition"
+      } else {
+        level <- "contrast"
+      }
+    } else {
+      level <- "feature"
+    }
+
+    # type
+    if (level == "feature") {
+      if (x == "id") {
+        type <- "unique_id"
+      } else if (any(grepl(pattern = in_field_delimiter, x = data[[x]], fixed = TRUE))) {
+        type <- "array"
+      } else {
+        type <- "category"
+      }
+    } else {
+      if (!is.numeric(data[[x]])) {
+        type <- "array"
+      } else if (grepl(pattern = "score|bound", x = x)) {
+        type <- "score"
+      }
+    }
+
+    return(c(level, type, label, sub_label))
+  })
+
+
+
+  return(data)
+}
