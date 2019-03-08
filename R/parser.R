@@ -381,6 +381,8 @@ parser <- function(file, dec = ".") {
 
 #' TOBIAS TFBS table to clarion parser
 #'
+#' Click \href{https://github.molgen.mpg.de/loosolab/TOBIAS}{here} for more information about TOBIAS.
+#'
 #' @param input Path to input table
 #' @param output Output path.
 #' @param filter_columns Either a vector of columnnames or a file containing one columnname per row.
@@ -392,6 +394,9 @@ parser <- function(file, dec = ".") {
 #' @param in_field_delimiter Delimiter for multi value fields. Default = ','.
 #' @param dec Decimal separator. Used in file reading and writing.
 #' @param ... Used as header information.
+#'
+#' @details During conversion the parser will try to use the given config (if provided) to create the \href{https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format}{Clarion} metadata. In the case of insufficient config information it will try to approximate by referencing condition names issuing warnings in the process.
+#' @details Factor grouping (metadata factor columns) is currently not implemented!
 #'
 #' @export
 tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern = NULL, config = system.file("extdata", "tobias_config.json", package = "wilson"), omit_NA = FALSE, condition_names = NULL, condition_pattern = "_bound$", in_field_delimiter = ",", dec = ".", ...) {
