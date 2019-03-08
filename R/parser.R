@@ -379,38 +379,45 @@ parser <- function(file, dec = ".") {
   return(Clarion$new(header = header, metadata = metadata, data = data))
 }
 
-#' TOBIAS single TFBS table to clarion converter
+#' TOBIAS TFBS table to clarion parser
 #'
 #' @param input Path to input table
 #' @param output Output path.
+#' @param filter_columns Either a vector of columnnames or a file containing one columnname per row.
+#' @param filter_pattern Keep columns matching the given pattern. Parameter filter_columns will be combined with the actual columnnames from the table before pattern is matched. In the case of no matches a warning will be issued and all columns will be used.
+#' @param config Json file containing metadata information for all columns.
 #' @param omit_NA Logical whether all rows containing NA should be removed.
-#' @param groups Keep columns related to given groups. Default = c("TFBS", "peak", "feature", "condition").
-#' @param in_field_delimiter Only applied on non numeric columns (?)
-#' @param dec Decimal separator.
-#' @param ... Used as header information
+#' @param condition_names Vector of condition names. Default = NULL. Used to classify columns not provided in config.
+#' @param condition_pattern Used to identify condition names by matching und removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.
+#' @param in_field_delimiter Delimiter for multi value fields. Default = ','.
+#' @param dec Decimal separator. Used in file reading and writing.
+#' @param ... Used as header information.
 #'
-tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", "peak", "feature", "condition"), in_field_delimiter = ",", dec = ".", ...) {
+#' @export
+tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern = NULL, config = system.file("extdata", "tobias_config.json", package = "wilson"), omit_NA = FALSE, condition_names = NULL, condition_pattern = "_bound$", in_field_delimiter = ",", dec = ".", ...) {
+  ## filter data columns
+  # check if filter columns is a file or a vector
+  if (!is.null(filter_columns) && file.exists(filter_columns)) {
+    select_columns <- scan(file = filter_columns, what = character())
+  } else {
+    select_columns <- filter_columns
+  }
+
+  # filter pattern
+  if (!is.null(filter_pattern)) {
+    # only read header
+    columns <- names(data.table::fread(input = input, header = TRUE, nrows = 0))
+
+    select_columns <- grep(pattern = filter_pattern, x = unique(c(select_columns, columns)), value = TRUE)
+
+    if (identical(select_columns, character(0))) {
+      warning("No column matches for given filter pattern! Proceeding with all columns")
+    }
+  }
   ##### data
-  data <- data.table::fread(input, dec = dec, header = TRUE)
-  columns <- names(data)
+  data <- data.table::fread(input, dec = dec, select = select_columns, header = TRUE)
 
-  # filter groups
-  if (is.element("feature", groups)) {
-    groups <- c(groups[which(groups != "feature")], "feat", "distance", "gene_biotype", "gene_id", "gene_name")
-  }
-
-  conditions <- gsub(pattern = "_bound", replacement = "", x = grep(pattern = "_bound$", x = columns, value = TRUE))
-  if (is.element("condition", groups)) {
-    groups <- c(groups[which(groups != "condition")], conditions)
-  }
-
-  delete_columns <- grep(pattern = paste0(groups, collapse = "|"), x = columns, value = TRUE, invert = TRUE)
-  if (length(delete_columns) > 0) {
-    data[, (delete_columns) := NULL]
-  }
-
-
-  # omit na
+  # omit na rows
   if (omit_NA) {
     data <- na.omit(data)
   }
@@ -424,40 +431,75 @@ tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", 
   ##### metadata
   metadata <- data.table::data.table(names(data))
 
-  # create metadata row by row
+  # load config
+  if (!is.null(config)) {
+    config_file <- RJSONIO::fromJSON(config)
+    # get column names from config file
+    col_names <- vapply(X = config_file$meta, FUN.VALUE = character(1), FUN = function(x) {
+      x[["col_name"]]
+    })
+  } else {
+    config_file <- NULL
+  }
+
+  # identify conditions
+  if (is.null(condition_names)) {
+    conditions <- gsub(pattern = condition_pattern, replacement = "", x = grep(pattern = condition_pattern, x = metadata[[1]], value = TRUE))
+  } else {
+    conditions <- condition_names
+  }
+
+
+  ## create metadata row by row
+  unique_id_fallback <- NULL
   condition_pattern <- paste0(conditions, collapse = "|")
+
   meta_rows <- lapply(metadata[[1]], function(x) {
-    # level
-    if (grepl(pattern = condition_pattern, x = x, perl = TRUE)) {
-      if (grepl(pattern = "score|bound", x = x, perl = TRUE)) {
-        level <- "condition"
-      } else {
-        level <- "contrast"
-      }
+    # is column information provided in config?
+    if (!is.null(config_file) && is.element(x, col_names)) {
+      return(config_file$meta[[which(col_names == x)]][-1])
+    }
+
+    # if no information is provided via config try to guess meta-information
+    # utilize condition names to do so
+    warning("No information for ", x, " in config! Trying to guess meta-information.")
+
+    ## level
+    # get distance of all conditions matched to x
+    # count number of exact substring matches
+    match_dist <- adist(conditions, x) - nchar(x) + nchar(conditions)
+    count_matches <- sum(match_dist == 0)
+
+    if (count_matches == 1) {
+      level <- "condition"
+    } else if (count_matches > 1) {
+      level <- "contrast"
     } else {
       level <- "feature"
     }
 
-    # type
+    ## type
     if (level == "feature") {
-      if (x == "id") {
-        type <- "unique_id"
-      } else if (any(grepl(pattern = in_field_delimiter, x = data[[x]], fixed = TRUE))) {
+      if (any(grepl(pattern = in_field_delimiter, x = data[[x]], fixed = TRUE))) {
         type <- "array"
       } else {
+        # define fallback unique_id in case none is defined through config
+        if (is.null(unique_id_fallback) && anyDuplicated(data[[x]]) == 0) {
+          unique_id_fallback <<- x
+        }
         type <- "category"
       }
     } else {
       if (!is.numeric(data[[x]])) {
         type <- "array"
-      } else if (grepl(pattern = "score|bound", x = x, perl = TRUE)) {
-        type <- "score"
-      } else if (grepl(pattern = "log2fc$", x = x, perl = TRUE)) {
+      } else if (grepl(pattern = "fc|foldchange", x = x, perl = TRUE, ignore.case = TRUE)) {
         type <- "ratio"
+      } else {
+        type <- "score"
       }
     }
 
-    # label/ sub_label
+    ## label/ sub_label
     label <- sub_label <- ""
     label_parts <- unlist(strsplit(x = x, split = "_"))
 
@@ -473,12 +515,12 @@ tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", 
       # get first condition using all identified conditions as pattern
       first_condition <- gsub(pattern = paste0("(^", condition_pattern, ").*"), replacement = "\\1", x = x)
       # strip first condition
-      stripped_condition <- substring(x, first = nchar(first_condition) + 2) # + 1 because parameter is inclusive and + 1 because of whitespace
+      stripped_condition <- substring(x, first = nchar(first_condition) + 2) # + 1 because parameter is inclusive and + 1 for whitespace
       # get new first condition
       second_condition <- gsub(pattern = paste0("(^", condition_pattern, ").*"), replacement = "\\1", x = stripped_condition)
 
       label <- paste0(first_condition, "|", second_condition)
-      sub_label <- substring(stripped_condition, first = nchar(second_condition) + 2) # + 1 because parameter is inclusive and + 1 because of whitespace
+      sub_label <- substring(stripped_condition, first = nchar(second_condition) + 2) # + 1 because parameter is inclusive and + 1 for whitespace
     } else {
       label <- paste0(label_parts[-length(label_parts)], collapse = " ")
       sub_label <- label_parts[length(label_parts)]
@@ -492,28 +534,39 @@ tobias_converter <- function(input, output, omit_NA = FALSE, groups = c("TFBS", 
   metadata <- cbind(metadata, meta_matrix)
   names(metadata) <- c("key", "level", "type", "label", "sub_label")
 
-  ##### header
+  # set unique_id fallback
+  if (!any(metadata[["type"]] == "unique_id")) {
+    metadata[key == unique_id_fallback, "type"] <- "unique_id"
+  }
 
+  ##### header
   header <- c(
-    format = "Clarion",
-    version = "1.0",
-    delimiter = in_field_delimiter,
+    list(
+      format = "Clarion",
+      version = "1.0"),
     list(...)
   )
 
+  # add delimiter if necessary
+  if (any(metadata[["type"]] == "array")) {
+    header <- append(x = header, values = list(delimiter = in_field_delimiter), after = 2)
+  }
+
+  ##### validate
   # create clarion object for validation
   clarion <- Clarion$new(header = header, metadata = metadata, data = data)
 
+  ##### write
   # TODO implement and use clarion write function
   # write clarion
   # header
   flat_header <- data.table::data.table(paste0("!", names(clarion$header), "=", clarion$header))
-  data.table::fwrite(x = flat_header, file = output, col.names = FALSE, sep = "\t")
+  data.table::fwrite(x = flat_header, file = output, col.names = FALSE, sep = "\t", dec = dec)
   # metadata
   # add '#'
   names(clarion$metadata)[1] <- paste0("#", names(clarion$metadata)[1])
   clarion$metadata[, names(clarion$metadata)[1] := paste0("#", clarion$metadata[[1]])]
-  data.table::fwrite(x = clarion$metadata, file = output, col.names = TRUE, sep = "\t", append = TRUE, quote = FALSE)
+  data.table::fwrite(x = clarion$metadata, file = output, col.names = TRUE, sep = "\t", append = TRUE, quote = FALSE, dec = dec)
   # data
-  data.table::fwrite(x = clarion$data, file = output, col.names = TRUE, sep = "\t", append = TRUE)
+  data.table::fwrite(x = clarion$data, file = output, col.names = TRUE, sep = "\t", append = TRUE, dec = dec)
 }
