@@ -424,11 +424,11 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
 
   # omit na rows
   if (omit_NA) {
-    data <- na.omit(data)
+    data <- stats::na.omit(data)
   }
 
   # create id column
-  data[, id := seq_len(nrow(data))]
+  data[, "id" := seq_len(nrow(data))]
   # move id column to first position
   new_order <- c("id", names(data)[ names(data) != "id"])
   data <- data[, new_order, with = FALSE]
@@ -472,7 +472,7 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
     ## level
     # get distance of all conditions matched to x
     # count number of exact substring matches
-    match_dist <- adist(conditions, x) - nchar(x) + nchar(conditions)
+    match_dist <- utils::adist(conditions, x) - nchar(x) + nchar(conditions)
     count_matches <- sum(match_dist == 0)
 
     if (count_matches == 1) {
