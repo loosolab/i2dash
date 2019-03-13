@@ -393,13 +393,14 @@ parser <- function(file, dec = ".") {
 #' @param condition_pattern Used to identify condition names by matching und removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.
 #' @param in_field_delimiter Delimiter for multi value fields. Default = ','.
 #' @param dec Decimal separator. Used in file reading and writing.
+#' @param unique_id Whether the table contains an unique id column. If FALSE (default) will create one at first position.
 #' @param ... Used as header information.
 #'
 #' @details During conversion the parser will try to use the given config (if provided) to create the \href{https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format}{Clarion} metadata. In the case of insufficient config information it will try to approximate by referencing condition names issuing warnings in the process.
 #' @details Factor grouping (metadata factor columns) is currently not implemented!
 #'
 #' @export
-tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern = NULL, config = system.file("extdata", "tobias_config.json", package = "wilson"), omit_NA = FALSE, condition_names = NULL, condition_pattern = "_bound$", in_field_delimiter = ",", dec = ".", ...) {
+tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern = NULL, config = system.file("extdata", "tobias_config.json", package = "wilson"), omit_NA = FALSE, condition_names = NULL, condition_pattern = "_bound$", in_field_delimiter = ",", dec = ".", unique_id = FALSE, ...) {
   ## filter data columns
   # check if filter columns is a file or a vector
   if (!is.null(filter_columns) && file.exists(filter_columns)) {
@@ -422,6 +423,7 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
       warning("No column matches for given filter pattern! Proceeding with all columns.")
     }
   }
+
   ##### data
   data <- data.table::fread(input, dec = dec, select = select_columns, header = TRUE)
 
@@ -431,10 +433,12 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
   }
 
   # create id column
-  data[, "id" := seq_len(nrow(data))]
-  # move id column to first position
-  new_order <- c("id", names(data)[ names(data) != "id"])
-  data <- data[, new_order, with = FALSE]
+  if (!unique_id) {
+    data[, "id" := seq_len(nrow(data))]
+    # move id column to first position
+    new_order <- c("id", names(data)[ names(data) != "id"])
+    data <- data[, new_order, with = FALSE]
+  }
 
   ##### metadata
   metadata <- data.table::data.table(names(data))
@@ -461,6 +465,7 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
   ## create metadata row by row
   unique_id_fallback <- NULL
   condition_pattern <- paste0(conditions, collapse = "|")
+  approx_columns <- NULL
 
   meta_rows <- lapply(metadata[[1]], function(x) {
     # is column information provided in config?
@@ -470,7 +475,7 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
 
     # if no information is provided via config try to guess meta-information
     # utilize condition names to do so
-    warning("No information for ", x, " in config! Trying to guess meta-information.")
+    approx_columns <<- c(approx_columns, x)
 
     ## level
     # get distance of all conditions matched to x
@@ -539,6 +544,11 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
 
     return(c(level, type, label, sub_label))
   })
+
+  # meta approximation warning
+  if (!is.null(approx_columns)) {
+    warning("Missing information in config! Tried guessing meta-information for ", paste0(approx_columns, collapse = ", "))
+  }
 
   # list of vectors (rows) to matrix
   meta_matrix <- do.call(rbind, meta_rows)
