@@ -492,6 +492,7 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
         type <- "array"
       } else {
         # define fallback unique_id in case none is defined through config
+        # this will define first unique feature category as unqiue_id
         if (is.null(unique_id_fallback) && anyDuplicated(data[[x]]) == 0) {
           unique_id_fallback <<- x
         }
@@ -500,8 +501,10 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
     } else {
       if (!is.numeric(data[[x]])) {
         type <- "array"
-      } else if (grepl(pattern = "fc|foldchange", x = x, perl = TRUE, ignore.case = TRUE)) {
+      } else if (grepl(pattern = "fc|fold[\\._\\- ]?change", x = x, perl = TRUE, ignore.case = TRUE)) {
         type <- "ratio"
+      } else if (grepl(pattern = "p[\\._\\- ]?val|p[\\._\\- ]?adj", x = x, perl = TRUE, ignore.case = TRUE)) {
+        type <- "probability"
       } else {
         type <- "score"
       }
