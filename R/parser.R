@@ -386,7 +386,7 @@ parser <- function(file, dec = ".") {
 #' @param input Path to input table
 #' @param output Output path.
 #' @param filter_columns Either a vector of columnnames or a file containing one columnname per row.
-#' @param filter_pattern Keep columns matching the given pattern. Parameter filter_columns will be combined with the actual columnnames from the table before pattern is matched. In the case of no matches a warning will be issued and all columns will be used.
+#' @param filter_pattern Keep columns matching the given pattern. Uses parameter filter_columns for matching if set. In the case of no matches a warning will be issued and all columns will be used.
 #' @param config Json file containing metadata information for all columns.
 #' @param omit_NA Logical whether all rows containing NA should be removed.
 #' @param condition_names Vector of condition names. Default = NULL. Used to classify columns not provided in config.
@@ -410,13 +410,16 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
 
   # filter pattern
   if (!is.null(filter_pattern)) {
-    # only read header
-    columns <- names(data.table::fread(input = input, header = TRUE, nrows = 0))
+    # use file header if filter_columns is empty
+    if (is.null(select_columns)) {
+      # only read header
+      select_columns <- names(data.table::fread(input = input, header = TRUE, nrows = 0))
+    }
 
-    select_columns <- grep(pattern = filter_pattern, x = unique(c(select_columns, columns)), value = TRUE)
+    select_columns <- grep(pattern = filter_pattern, x = select_columns, value = TRUE)
 
     if (identical(select_columns, character(0))) {
-      warning("No column matches for given filter pattern! Proceeding with all columns")
+      warning("No column matches for given filter pattern! Proceeding with all columns.")
     }
   }
   ##### data
