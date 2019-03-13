@@ -387,7 +387,7 @@ parser <- function(file, dec = ".") {
 #' @param output Output path.
 #' @param filter_columns Either a vector of columnnames or a file containing one columnname per row.
 #' @param filter_pattern Keep columns matching the given pattern. Uses parameter filter_columns for matching if set. In the case of no matches a warning will be issued and all columns will be used.
-#' @param config Json file containing metadata information for all columns.
+#' @param config Json file containing metadata information for all columns. Will use first occurence for duplicate column names.
 #' @param omit_NA Logical whether all rows containing NA should be removed.
 #' @param condition_names Vector of condition names. Default = NULL. Used to classify columns not provided in config.
 #' @param condition_pattern Used to identify condition names by matching und removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.
@@ -470,7 +470,8 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
   meta_rows <- lapply(metadata[[1]], function(x) {
     # is column information provided in config?
     if (!is.null(config_file) && is.element(x, col_names)) {
-      return(config_file$meta[[which(col_names == x)]][-1])
+      # uses first appearance in config file in case of duplicates
+      return(config_file$meta[[which.max(col_names == x)]][-1])
     }
 
     # if no information is provided via config try to guess meta-information
