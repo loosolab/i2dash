@@ -19,7 +19,7 @@ tobias_parser(input, output, filter_columns = NULL,
 
 \item{filter_pattern}{Keep columns matching the given pattern. Uses parameter filter_columns for matching if set. In the case of no matches a warning will be issued and all columns will be used.}
 
-\item{config}{Json file containing metadata information for all columns.}
+\item{config}{Json file containing metadata information for all columns. Will use first occurence for duplicate column names.}
 
 \item{omit_NA}{Logical whether all rows containing NA should be removed.}
 
