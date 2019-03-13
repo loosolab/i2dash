@@ -8,7 +8,7 @@ tobias_parser(input, output, filter_columns = NULL,
   filter_pattern = NULL, config = system.file("extdata",
   "tobias_config.json", package = "wilson"), omit_NA = FALSE,
   condition_names = NULL, condition_pattern = "_bound$",
-  in_field_delimiter = ",", dec = ".", ...)
+  in_field_delimiter = ",", dec = ".", unique_id = FALSE, ...)
 }
 \arguments{
 \item{input}{Path to input table}
@@ -30,6 +30,8 @@ tobias_parser(input, output, filter_columns = NULL,
 \item{in_field_delimiter}{Delimiter for multi value fields. Default = ','.}
 
 \item{dec}{Decimal separator. Used in file reading and writing.}
+
+\item{unique_id}{Whether the table contains an unique id column. If FALSE (default) will create one at first position.}
 
 \item{...}{Used as header information.}
 }

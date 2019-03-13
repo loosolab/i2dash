@@ -497,7 +497,7 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
         type <- "array"
       } else {
         # define fallback unique_id in case none is defined through config
-        # this will define first unique feature category as unqiue_id
+        # this will redefine first unique feature with type category as unqiue_id
         if (is.null(unique_id_fallback) && anyDuplicated(data[[x]]) == 0) {
           unique_id_fallback <<- x
         }
