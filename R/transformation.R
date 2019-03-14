@@ -37,10 +37,10 @@ transformationUI <- function(id, label = "Transformation", selected = "raw", cho
 #' @param output Shiny's output object.
 #' @param session Shiny's session object.
 #' @param data Numeric matrix on which transformation is performed (column-wise). (Supports reactive)
-#' @param transpose Whether the matrix should be transposed to enable row-wise transformation.
-#' @param pseudocount Numeric Variable to add a pseudocount to log-based transformations.
-#' @param replaceInf Change Infinite to NA, applied after transformation.
-#' @param replaceNA Change NA to 0, applied after transformation.
+#' @param transpose Whether the matrix should be transposed to enable row-wise transformation. (Supports reactive)
+#' @param pseudocount Numeric Variable to add a pseudocount to log-based transformations. (Supports reactive)
+#' @param replaceInf Change Infinite to NA, applied after transformation. (Supports reactive)
+#' @param replaceNA Change NA to 0, applied after transformation. (Supports reactive)
 #'
 #' @return Namedlist of two containing data and name of the used method.
 #'         data: Reactive containing the transformed matrix. Infinite values are replaced by NA and NA values are replaced by 0.
@@ -49,12 +49,44 @@ transformationUI <- function(id, label = "Transformation", selected = "raw", cho
 #'
 #' @export
 transformation <- function(input, output, session, data, transpose = FALSE, pseudocount = 1, replaceInf = TRUE, replaceNA = TRUE) {
-  # handle reactive data
+  # handle reactive parameter
   data_r <- shiny::reactive({
     if (shiny::is.reactive(data)) {
       data()
     } else {
       data
+    }
+  })
+
+  transpose_r <- shiny::reactive({
+    if (shiny::is.reactive(transpose)) {
+      transpose()
+    } else {
+      transpose
+    }
+  })
+
+  pseudocount_r <- shiny::reactive({
+    if (shiny::is.reactive(pseudocount)) {
+      pseudocount()
+    } else {
+      pseudocount
+    }
+  })
+
+  replaceInf_r <- shiny::reactive({
+    if (shiny::is.reactive(replaceInf)) {
+      replaceInf()
+    } else {
+      replaceInf
+    }
+  })
+
+  replaceNA_r <- shiny::reactive({
+    if (shiny::is.reactive(replaceNA)) {
+      replaceNA()
+    } else {
+      replaceNA
     }
   })
 
@@ -111,30 +143,31 @@ transformation <- function(input, output, session, data, transpose = FALSE, pseu
   transformed_data <- shiny::reactive({
     data <- data_r()
 
-    if (transpose | ifelse(!is.null(input$transpose), input$transpose == "row", FALSE) & input$transform == "zscore") {
+    if (transpose_r() | ifelse(!is.null(input$transpose), input$transpose == "row", FALSE) & input$transform == "zscore") {
       data <- t(data)
     }
 
     # transform data
     output <- switch(input$transform,
-      log2 = log2(data + pseudocount),
-      `-log2` = -log2(data + pseudocount),
-      log10 = log10(data + pseudocount),
-      `-log10` = -log10(data + pseudocount),
+      log2 = log2(data + pseudocount_r()),
+      `-log2` = -log2(data + pseudocount_r()),
+      log10 = log10(data + pseudocount_r()),
+      `-log10` = -log10(data + pseudocount_r()),
       zscore = scale(data, center = TRUE, scale = TRUE),
-      rlog = try_rlog(round(data) + pseudocount),
+      rlog = try_rlog(round(data) + pseudocount_r()),
       raw = data
     )
 
     # replace infinite with NA & NA with 0
-    if (replaceInf) {
+    if (replaceInf_r()) {
       is.na(output) <- vapply(output, FUN = is.infinite, FUN.VALUE = logical(1))
     }
-    if (replaceNA) {
+
+    if (replaceNA_r()) {
       output[is.na(output)] <- 0
     }
 
-    if (transpose | ifelse(!is.null(input$transpose), input$transpose == "row", FALSE) & input$transform == "zscore") {
+    if (transpose_r() | ifelse(!is.null(input$transpose), input$transpose == "row", FALSE) & input$transform == "zscore") {
       output <- t(output)
     }
 
