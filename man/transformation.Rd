@@ -16,13 +16,13 @@ transformation(input, output, session, data, transpose = FALSE,
 
 \item{data}{Numeric matrix on which transformation is performed (column-wise). (Supports reactive)}
 
-\item{transpose}{Whether the matrix should be transposed to enable row-wise transformation.}
+\item{transpose}{Whether the matrix should be transposed to enable row-wise transformation. (Supports reactive)}
 
-\item{pseudocount}{Numeric Variable to add a pseudocount to log-based transformations.}
+\item{pseudocount}{Numeric Variable to add a pseudocount to log-based transformations. (Supports reactive)}
 
-\item{replaceInf}{Change Infinite to NA, applied after transformation.}
+\item{replaceInf}{Change Infinite to NA, applied after transformation. (Supports reactive)}
 
-\item{replaceNA}{Change NA to 0, applied after transformation.}
+\item{replaceNA}{Change NA to 0, applied after transformation. (Supports reactive)}
 }
 \value{
 Namedlist of two containing data and name of the used method.

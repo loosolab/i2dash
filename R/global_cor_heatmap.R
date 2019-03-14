@@ -207,7 +207,7 @@ global_cor_heatmap <- function(input, output, session, clarion, plot.method = "s
 
   # load internal modules
   columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
-  transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])))
+  transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == columns$selected_columns()[1]][["level"]] == "contrast", 0, 1)), replaceNA = FALSE)
   color <- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
 
   # load dynamic ui
@@ -235,7 +235,7 @@ global_cor_heatmap <- function(input, output, session, clarion, plot.method = "s
     shinyjs::reset("row_label")
     shinyjs::reset("column_label")
     columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
-    transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])))
+    transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == columns$selected_columns()[1]][["level"]] == "contrast", 0, 1)), replaceNA = FALSE)
     color <<- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(result_data()[, -1])))
     clear_plot(TRUE)
   })

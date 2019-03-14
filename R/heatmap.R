@@ -155,7 +155,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
 
   # modules/ ui #####
   columns <- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
-  transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])))
+  transform <- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == columns$selected_columns()[1]][["level"]] == "contrast", 0, 1)), replaceNA = FALSE)
   color <- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
   custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row_label))
 
@@ -177,7 +177,7 @@ heatmap <- function(input, output, session, clarion, plot.method = "static", lab
     shinyjs::reset("row_label")
     shinyjs::reset("column_label")
     columns <<- shiny::callModule(columnSelector, "select", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column types to choose from")
-    transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])))
+    transform <<- shiny::callModule(transformation, "transform", data = shiny::reactive(as.matrix(object()$data[, columns$selected_columns(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == columns$selected_columns()[1]][["level"]] == "contrast", 0, 1)), replaceNA = FALSE)
     color <<- shiny::callModule(colorPicker, "color", distribution = shiny::reactive(tolower(input$distribution)), winsorize = shiny::reactive(equalize(transform$data())))
     custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data), label = "Select row label", sep = label.sep, disable = shiny::reactive(!input$row_label))
     clear_plot(TRUE)
