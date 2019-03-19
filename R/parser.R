@@ -378,3 +378,217 @@ parser <- function(file, dec = ".") {
 
   return(Clarion$new(header = header, metadata = metadata, data = data))
 }
+
+#' TOBIAS TFBS table to clarion parser
+#'
+#' Click \href{https://github.molgen.mpg.de/loosolab/TOBIAS}{here} for more information about TOBIAS.
+#'
+#' @param input Path to input table
+#' @param output Output path.
+#' @param filter_columns Either a vector of columnnames or a file containing one columnname per row.
+#' @param filter_pattern Keep columns matching the given pattern. Uses parameter filter_columns for matching if set. In the case of no matches a warning will be issued and all columns will be used.
+#' @param config Json file containing metadata information for all columns. Will use first occurence for duplicate column names.
+#' @param omit_NA Logical whether all rows containing NA should be removed.
+#' @param condition_names Vector of condition names. Default = NULL. Used to classify columns not provided in config.
+#' @param condition_pattern Used to identify condition names by matching und removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.
+#' @param in_field_delimiter Delimiter for multi value fields. Default = ','.
+#' @param dec Decimal separator. Used in file reading and writing.
+#' @param unique_id Whether the table contains an unique id column. If FALSE (default) will create one at first position.
+#' @param ... Used as header information.
+#'
+#' @details During conversion the parser will try to use the given config (if provided) to create the \href{https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format}{Clarion} metadata. In the case of insufficient config information it will try to approximate by referencing condition names issuing warnings in the process.
+#' @details Factor grouping (metadata factor columns) is currently not implemented!
+#'
+#' @export
+tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern = NULL, config = system.file("extdata", "tobias_config.json", package = "wilson"), omit_NA = FALSE, condition_names = NULL, condition_pattern = "_bound$", in_field_delimiter = ",", dec = ".", unique_id = FALSE, ...) {
+  ## filter data columns
+  # check if filter columns is a file or a vector
+  if (!is.null(filter_columns) && file.exists(filter_columns)) {
+    select_columns <- scan(file = filter_columns, what = character())
+  } else {
+    select_columns <- filter_columns
+  }
+
+  # filter pattern
+  if (!is.null(filter_pattern)) {
+    # use file header if filter_columns is empty
+    if (is.null(select_columns)) {
+      # only read header
+      select_columns <- names(data.table::fread(input = input, header = TRUE, nrows = 0))
+    }
+
+    select_columns <- grep(pattern = filter_pattern, x = select_columns, value = TRUE)
+
+    if (identical(select_columns, character(0))) {
+      warning("No column matches for given filter pattern! Proceeding with all columns.")
+    }
+  }
+
+  ##### data
+  data <- data.table::fread(input, dec = dec, select = select_columns, header = TRUE)
+
+  # omit na rows
+  if (omit_NA) {
+    data <- stats::na.omit(data)
+  }
+
+  # create id column
+  if (!unique_id) {
+    data[, "id" := seq_len(nrow(data))]
+    # move id column to first position
+    new_order <- c("id", names(data)[ names(data) != "id"])
+    data <- data[, new_order, with = FALSE]
+  }
+
+  ##### metadata
+  metadata <- data.table::data.table(names(data))
+
+  # load config
+  if (!is.null(config)) {
+    config_file <- RJSONIO::fromJSON(config)
+    # get column names from config file
+    col_names <- vapply(X = config_file$meta, FUN.VALUE = character(1), FUN = function(x) {
+      x[["col_name"]]
+    })
+  } else {
+    config_file <- NULL
+  }
+
+  # identify conditions
+  if (is.null(condition_names)) {
+    conditions <- gsub(pattern = condition_pattern, replacement = "", x = grep(pattern = condition_pattern, x = metadata[[1]], value = TRUE))
+  } else {
+    conditions <- condition_names
+  }
+
+
+  ## create metadata row by row
+  unique_id_fallback <- NULL
+  condition_pattern <- paste0(conditions, collapse = "|")
+  approx_columns <- NULL
+
+  meta_rows <- lapply(metadata[[1]], function(x) {
+    # is column information provided in config?
+    if (!is.null(config_file) && is.element(x, col_names)) {
+      # uses first appearance in config file in case of duplicates
+      return(config_file$meta[[which.max(col_names == x)]][-1])
+    }
+
+    # if no information is provided via config try to guess meta-information
+    # utilize condition names to do so
+    approx_columns <<- c(approx_columns, x)
+
+    ## level
+    # get distance of all conditions matched to x
+    # count number of exact substring matches
+    match_dist <- utils::adist(conditions, x) - nchar(x) + nchar(conditions)
+    count_matches <- sum(match_dist == 0)
+
+    if (count_matches == 1) {
+      level <- "condition"
+    } else if (count_matches > 1) {
+      level <- "contrast"
+    } else {
+      level <- "feature"
+    }
+
+    ## type
+    if (level == "feature") {
+      if (any(grepl(pattern = in_field_delimiter, x = data[[x]], fixed = TRUE))) {
+        type <- "array"
+      } else {
+        # define fallback unique_id in case none is defined through config
+        # this will redefine first unique feature with type category as unqiue_id
+        if (is.null(unique_id_fallback) && anyDuplicated(data[[x]]) == 0) {
+          unique_id_fallback <<- x
+        }
+        type <- "category"
+      }
+    } else {
+      if (!is.numeric(data[[x]])) {
+        type <- "array"
+      } else if (grepl(pattern = "fc|fold[\\._\\- ]?change", x = x, perl = TRUE, ignore.case = TRUE)) {
+        type <- "ratio"
+      } else if (grepl(pattern = "p[\\._\\- ]?val|p[\\._\\- ]?adj", x = x, perl = TRUE, ignore.case = TRUE)) {
+        type <- "probability"
+      } else {
+        type <- "score"
+      }
+    }
+
+    ## label/ sub_label
+    label <- sub_label <- ""
+    label_parts <- unlist(strsplit(x = x, split = "_"))
+
+    if (length(label_parts) == 1) {
+      label <- label_parts
+    } else if (length(label_parts) == 2) {
+      label <- label_parts[1]
+      sub_label <- label_parts[2]
+    } else if (length(label_parts) >= 3 && level == "contrast") {
+      # replace '_' with whitespace
+      condition_pattern <- gsub(pattern = "_", replacement = " ", x = condition_pattern, fixed = TRUE)
+      x <- gsub(pattern = "_", replacement = " ", x = x, fixed = TRUE)
+      # get first condition using all identified conditions as pattern
+      first_condition <- gsub(pattern = paste0("(^", condition_pattern, ").*"), replacement = "\\1", x = x)
+      # strip first condition
+      stripped_condition <- substring(x, first = nchar(first_condition) + 2) # + 1 because parameter is inclusive and + 1 for whitespace
+      # get new first condition
+      second_condition <- gsub(pattern = paste0("(^", condition_pattern, ").*"), replacement = "\\1", x = stripped_condition)
+
+      label <- paste0(first_condition, "|", second_condition)
+      sub_label <- substring(stripped_condition, first = nchar(second_condition) + 2) # + 1 because parameter is inclusive and + 1 for whitespace
+    } else {
+      label <- paste0(label_parts[-length(label_parts)], collapse = " ")
+      sub_label <- label_parts[length(label_parts)]
+    }
+
+    return(c(level, type, label, sub_label))
+  })
+
+  # meta approximation warning
+  if (!is.null(approx_columns)) {
+    warning("Missing information in config! Tried guessing meta-information for ", paste0(approx_columns, collapse = ", "))
+  }
+
+  # list of vectors (rows) to matrix
+  meta_matrix <- do.call(rbind, meta_rows)
+  metadata <- cbind(metadata, meta_matrix)
+  names(metadata) <- c("key", "level", "type", "label", "sub_label")
+
+  # set unique_id fallback
+  if (!any(metadata[["type"]] == "unique_id")) {
+    metadata[key == unique_id_fallback, "type"] <- "unique_id"
+  }
+
+  ##### header
+  header <- c(
+    list(
+      format = "Clarion",
+      version = "1.0"),
+    list(...)
+  )
+
+  # add delimiter if necessary
+  if (any(metadata[["type"]] == "array")) {
+    header <- append(x = header, values = list(delimiter = in_field_delimiter), after = 2)
+  }
+
+  ##### validate
+  # create clarion object for validation
+  clarion <- Clarion$new(header = header, metadata = metadata, data = data)
+
+  ##### write
+  # TODO implement and use clarion write function
+  # write clarion
+  # header
+  flat_header <- data.table::data.table(paste0("!", names(clarion$header), "=", clarion$header))
+  data.table::fwrite(x = flat_header, file = output, col.names = FALSE, sep = "\t", dec = dec)
+  # metadata
+  # add '#'
+  names(clarion$metadata)[1] <- paste0("#", names(clarion$metadata)[1])
+  clarion$metadata[, names(clarion$metadata)[1] := paste0("#", clarion$metadata[[1]])]
+  data.table::fwrite(x = clarion$metadata, file = output, col.names = TRUE, sep = "\t", append = TRUE, quote = FALSE, dec = dec)
+  # data
+  data.table::fwrite(x = clarion$data, file = output, col.names = TRUE, sep = "\t", append = TRUE, dec = dec)
+}
