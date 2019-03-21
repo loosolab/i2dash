@@ -393,14 +393,14 @@ parser <- function(file, dec = ".") {
 #' @param condition_pattern Used to identify condition names by matching und removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.
 #' @param in_field_delimiter Delimiter for multi value fields. Default = ','.
 #' @param dec Decimal separator. Used in file reading and writing.
-#' @param unique_id Whether the table contains an unique id column. If FALSE (default) will create one at first position.
 #' @param ... Used as header information.
 #'
 #' @details During conversion the parser will try to use the given config (if provided) to create the \href{https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format}{Clarion} metadata. In the case of insufficient config information it will try to approximate by referencing condition names issuing warnings in the process.
+#' @details As the format requires an unqiue id the parser will create one if necessary.
 #' @details Factor grouping (metadata factor columns) is currently not implemented!
 #'
 #' @export
-tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern = NULL, config = system.file("extdata", "tobias_config.json", package = "wilson"), omit_NA = FALSE, condition_names = NULL, condition_pattern = "_bound$", in_field_delimiter = ",", dec = ".", unique_id = FALSE, ...) {
+tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern = NULL, config = system.file("extdata", "tobias_config.json", package = "wilson"), omit_NA = FALSE, condition_names = NULL, condition_pattern = "_bound$", in_field_delimiter = ",", dec = ".", ...) {
   ## filter data columns
   # check if filter columns is a file or a vector
   if (!is.null(filter_columns) && file.exists(filter_columns)) {
@@ -430,14 +430,6 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
   # omit na rows
   if (omit_NA) {
     data <- stats::na.omit(data)
-  }
-
-  # create id column
-  if (!unique_id) {
-    data[, "id" := seq_len(nrow(data))]
-    # move id column to first position
-    new_order <- c("id", names(data)[ names(data) != "id"])
-    data <- data[, new_order, with = FALSE]
   }
 
   ##### metadata
@@ -558,7 +550,22 @@ tobias_parser <- function(input, output, filter_columns = NULL, filter_pattern =
 
   # set unique_id fallback
   if (!any(metadata[["type"]] == "unique_id")) {
-    metadata[key == unique_id_fallback, "type"] <- "unique_id"
+    if (!is.null(unique_id_fallback)) {
+      metadata[key == unique_id_fallback, "type"] <- "unique_id"
+    } else {
+      # setup unique_id column if there is neither a defined column nor a fallback
+
+      # create id column
+      data[, "id" := seq_len(nrow(data))]
+      # move id column to first position
+      new_order <- c("id", names(data)[ names(data) != "id"])
+      data <- data[, new_order, with = FALSE]
+
+      id_row <- data.table::data.table("id", level = "feature", type = "unique_id", label = "id", sub_label = "")
+      names(id_row)[1] <- "key"
+      # add meta entry
+      metadata <- rbind(id_row, metadata)
+    }
   }
 
   ##### header
