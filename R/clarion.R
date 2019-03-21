@@ -56,7 +56,7 @@ Clarion <- R6::R6Class("Clarion",
                            # return unique_id
                            # if no type return first feature
                            if (is.element("type", names(self$metadata))) {
-                             return(self$metadata[type == "unique_id"][["key"]])
+                             return(self$metadata[type == "unique_id"][["key"]][1])
                            } else {
                              return(self$metadata[level == "feature"][["key"]][1])
                            }
@@ -200,6 +200,10 @@ Clarion <- R6::R6Class("Clarion",
                              # case: no unique_id defined
                              if (!is.element("unique_id", self$metadata[["type"]])) {
                                stop("Metadata: No unique_id defined in type! Please define a unique_id.")
+                             }
+                             # case: multiple unique_ids
+                             if (sum(is.element(self$metadata[["type"]], "unique_id")) > 1) {
+                               warning("Metadata: Found multiple unique_ids! Only first will be used.")
                              }
                              # case: type = array but no delimiter
                              if (is.element("array", self$metadata[["type"]]) && !is.element("delimiter", names(self$header))) {
