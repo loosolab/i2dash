@@ -8,7 +8,7 @@ tobias_parser(input, output, filter_columns = NULL,
   filter_pattern = NULL, config = system.file("extdata",
   "tobias_config.json", package = "wilson"), omit_NA = FALSE,
   condition_names = NULL, condition_pattern = "_bound$",
-  in_field_delimiter = ",", dec = ".", unique_id = FALSE, ...)
+  in_field_delimiter = ",", dec = ".", ...)
 }
 \arguments{
 \item{input}{Path to input table}
@@ -31,8 +31,6 @@ tobias_parser(input, output, filter_columns = NULL,
 
 \item{dec}{Decimal separator. Used in file reading and writing.}
 
-\item{unique_id}{Whether the table contains an unique id column. If FALSE (default) will create one at first position.}
-
 \item{...}{Used as header information.}
 }
 \description{
@@ -40,6 +38,8 @@ Click \href{https://github.molgen.mpg.de/loosolab/TOBIAS}{here} for more informa
 }
 \details{
 During conversion the parser will try to use the given config (if provided) to create the \href{https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format}{Clarion} metadata. In the case of insufficient config information it will try to approximate by referencing condition names issuing warnings in the process.
+
+As the format requires an unqiue id the parser will create one if necessary.
 
 Factor grouping (metadata factor columns) is currently not implemented!
 }
