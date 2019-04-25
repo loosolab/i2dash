@@ -1,0 +1,17 @@
+Package: i2dash
+Type: Package
+Title: Iterative and Interactive Dashboards in R
+Version: 0.1.0
+Authors@R: c(
+    person(given = "Arsenij", family = "Ustjanzew", email = "arsenij.ustjanzews@mpi-bn.mpg.de", role = c("aut", "cre")),
+    person(given = "Jens", family = "Preussner", email = "jens.preussner@mpi-bn.mpg.de", role = c("aut"), comment = c(ORCID = "0000-0003-1927-3458")),
+    person(given = "Mario", family = "Looso", email = "mario.looso@mpi-bn.mpg.de", role = "aut"))
+Description: Iteratively create interactive flexdashboards in R.
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Imports: 
+    knitr,
+    flexdashboard
