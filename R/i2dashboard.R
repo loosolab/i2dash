@@ -22,7 +22,7 @@ setClass("i2dashboard",
     interactive = FALSE,
     theme = "yeti",
     workdir = getwd(),
-    pages = list(default = list(title = "Default page", layout = NULL, menu = NULL, components = list()))
+    pages = list(default = list(title = "Default page", layout = "default", menu = NULL, components = list(), max_components = Inf))
     )
   )
 

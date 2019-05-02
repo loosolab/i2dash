@@ -10,6 +10,17 @@ setGeneric("add_component", function(object, ...) standardGeneric("add_component
 #' @rdname idashboard-class
 #' @export
 setMethod("add_component", "i2dashboard", function(object, page = "default", component, ...) {
+  name <- .create_page_name(page)
+  if (!(name %in% names(object@pages))) {
+    warning(sprintf("i2dashboard object does not contain a page named '%s'", name))
+    return(object)
+  }
+
+  if(length(object@pages[[name]]$components) + 1 > object@pages[[name]]$max_components) {
+    warning(sprintf("Not enough space left on page '%s'", name))
+    return(object)
+  }
+
   pn <- strsplit(component, "::")[[1]]
   eval_function <- if(length(pn) == 1) {
     get(paste0("render_", pn[[1]]), envir = asNamespace("i2dash"), mode = "function")
@@ -18,12 +29,7 @@ setMethod("add_component", "i2dashboard", function(object, page = "default", com
   }
 
   component <- do.call(eval_function, args = list(object, ...))
+  object@pages[[name]]$components <- append(object@pages[[name]]$components, component)
 
-  name <- .create_page_name(page)
-  if (name %in% names(object@pages)){
-    object@pages[[name]]$components <- append(object@pages[[name]]$components, component)
-  } else {
-    warning(sprintf("i2dashboard object does not contain a page named '%s'", name))
-  }
   return(object)
 })
