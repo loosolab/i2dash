@@ -1,0 +1,5 @@
+{{ title }} {{ layout_with_menu }}
+=========================================
+
+<!-- Page created on {{ date }} -->
+{{ components }}
