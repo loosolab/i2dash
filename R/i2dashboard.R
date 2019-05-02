@@ -30,8 +30,9 @@ setMethod("initialize", "i2dashboard", function(.Object, ...) {
   # Do prototyping
   .Object <- callNextMethod()
 
-  # Create envs directory in workdir
-  if(!dir.exists(file.path(.Object@workdir, "envs"))) dir.create(file.path(.Object@workdir, "envs"))
+  # Create working directory and directory for environments
+  dir.create(.Object@workdir, showWarnings = FALSE)
+  dir.create(file.path(.Object@workdir, "envs"), recursive = T, showWarnings = FALSE)
 
   # Validate object - tbd
   return(.Object)

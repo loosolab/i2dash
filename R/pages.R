@@ -24,10 +24,6 @@ setGeneric("add_page", function(object, ...) standardGeneric("add_page"))
 setMethod("add_page", "i2dashboard", function(object, page, title, layout = "storyboard", menu = NULL, ...) {
   name <- .create_page_name(page)
 
-  # Create working directory and directory for environments
-  dir.create(object@workdir, showWarnings = FALSE)
-  dir.create(file.path(object@workdir, "envs"), recursive = T, showWarnings = FALSE)
-
   if (base::interactive()){
     if (name %in% names(object@pages)){
       print("A page with this 'page'-argument already exists.")
