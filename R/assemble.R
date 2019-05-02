@@ -13,6 +13,7 @@ setMethod("assemble", "i2dashboard", function(object, output_file, pages, ...) {
   yaml_list <- list(title = object@title,
                     author = object@author,
                     output = list("flexdashboard::flex_dashboard" = list(theme = object@theme)))
+
   if (object@interactive){
     yaml_list[["runtime"]] <- "shiny"
   }
@@ -20,10 +21,22 @@ setMethod("assemble", "i2dashboard", function(object, output_file, pages, ...) {
   header_string <- paste0("---\n", yaml_part, "---\n")
 
   tmp_document <- tempfile()
+
   # create variable final_document
   final_document <- file.path(object@workdir, output_file)
+
   # write header to tempfile
-  cat(header_string, file = tmp_document, append = FALSE, sep='')
+  cat(header_string,
+      file = tmp_document,
+      append = FALSE,
+      sep='')
+
+  # Add i2dash global setup
+  cat(readLines(system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash")),
+      file = tmp_document,
+      append = T,
+      sep = "")
+
   # write page to tempfile
   for (pagename in pages){
     name <- .create_page_name(pagename)
@@ -50,9 +63,6 @@ setMethod("assemble", "i2dashboard", function(object, output_file, pages, ...) {
       timestamp <- Sys.time()
       full_content <- knitr::knit_expand(file = system.file("templates", "page_template.Rmd", package = "i2dash"), title = title, layout_with_menu = layout_with_menu, components = components, date = timestamp)
       cat(full_content, file = tmp_document, append = TRUE, sep='')
-
-      #cat(object@pages[[name]]$header, file = tmp_document, append = TRUE, sep='')
-      #cat(object@pages[[name]]$components, file = tmp_document, append = TRUE, sep='')
     } else {
       warning(sprintf("i2dashboard object does not contain a page named '%s'", pagename))
     }
