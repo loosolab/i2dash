@@ -1,3 +1,4 @@
-### {{ title }}
+### {{ page_title }}
 
-{{ content }}
+{{ content }}  {.storyboard}
+

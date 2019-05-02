@@ -9,7 +9,7 @@ setGeneric("add_component", function(object, ...) standardGeneric("add_component
 #'
 #' @rdname idashboard-class
 #' @export
-setMethod("add_component", "i2dashboard", function(object, page, component, ...) {
+setMethod("add_component", "i2dashboard", function(object, page = "default", component, ...) {
   pn <- strsplit(component, "::")[[1]]
   eval_function <- if(length(pn) == 1) {
     get(paste0("render_", pn[[1]]), envir = asNamespace("i2dash"), mode = "function")
@@ -17,7 +17,13 @@ setMethod("add_component", "i2dashboard", function(object, page, component, ...)
     get(paste0("render_", pn[[2]]), envir = asNamespace(pn[[1]]), mode = "function")
   }
 
-  component <- do.call(eval_function, args = list(...))
-  object@pages[[page]]$components <- append(object@pages[[page]]$components, component)
+  component <- do.call(eval_function, args = list(object, ...))
+
+  name <- .create_page_name(page)
+  if (name %in% names(object@pages)){
+    object@pages[[name]]$components <- append(object@pages[[name]]$components, component)
+  } else {
+    warning(sprintf("i2dashboard object does not contain Pagename %s", name))
+  }
   return(object)
 })
