@@ -19,10 +19,23 @@ setClass("i2dashboard",
     pages = "list"
     ),
   prototype=list(
+    interactive = FALSE,
     theme = "yeti",
+    workdir = getwd(),
     pages = list(default = list(title = "Default page", layout = NULL, menu = NULL, components = list()))
     )
   )
+
+setMethod("initialize", "i2dashboard", function(.Object, ...) {
+  # Do prototyping
+  .Object <- callNextMethod()
+
+  # Create envs directory in workdir
+  if(!dir.exists(file.path(.Object@workdir, "envs"))) dir.create(file.path(.Object@workdir, "envs"))
+
+  # Validate object - tbd
+  return(.Object)
+})
 
 setMethod("show", "i2dashboard", function(object) {
   cat("A flexdashboard with the title: ", object@title, "\n", sep = "")
