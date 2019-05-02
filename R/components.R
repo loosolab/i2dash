@@ -23,7 +23,7 @@ setMethod("add_component", "i2dashboard", function(object, page = "default", com
   if (name %in% names(object@pages)){
     object@pages[[name]]$components <- append(object@pages[[name]]$components, component)
   } else {
-    warning(sprintf("i2dashboard object does not contain Pagename %s", name))
+    warning(sprintf("i2dashboard object does not contain a page named '%s'", name))
   }
   return(object)
 })

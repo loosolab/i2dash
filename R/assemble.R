@@ -54,7 +54,7 @@ setMethod("assemble", "i2dashboard", function(object, output_file, pages, ...) {
       #cat(object@pages[[name]]$header, file = tmp_document, append = TRUE, sep='')
       #cat(object@pages[[name]]$components, file = tmp_document, append = TRUE, sep='')
     } else {
-      warning(sprintf("i2dashboard object does not contain Pagename '%s'", pagename))
+      warning(sprintf("i2dashboard object does not contain a page named '%s'", pagename))
     }
   }
   # copy tempfile to final_document
