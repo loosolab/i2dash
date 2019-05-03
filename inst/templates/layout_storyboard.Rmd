@@ -1,0 +1,6 @@
+<% title %> {.storyboard data-navmenu="<% menu %>"}
+====================================================
+
+<!-- Page created on <% date %> -->
+
+<% components %>

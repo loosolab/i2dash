@@ -1,0 +1,10 @@
+<% title %> {data-navmenu="<% menu %>"}
+====================================================
+
+<!-- Page created on <% date %> -->
+<% if(!is.null(sidebar)) sidebar %>
+
+Column
+----------------------------------------------------
+
+<% components %>

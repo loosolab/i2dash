@@ -7,3 +7,4 @@ if (any(grepl(pattern = ".switchr", x = .libPaths()))) {
 # Make it possible to reuse chunk labels
 options(knitr.duplicate.label = "allow")
 ```
+

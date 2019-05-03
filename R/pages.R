@@ -21,7 +21,7 @@ setGeneric("add_page", function(object, ...) standardGeneric("add_page"))
 #'
 #' @rdname idashboard-class
 #' @export
-setMethod("add_page", "i2dashboard", function(object, page, title, layout = "storyboard", menu = NULL, ...) {
+setMethod("add_page", "i2dashboard", function(object, page, title, layout = "default", menu = NULL, sidebar = NULL, ...) {
   name <- .create_page_name(page)
 
   max_components <- switch(layout,
@@ -42,7 +42,7 @@ setMethod("add_page", "i2dashboard", function(object, page, title, layout = "sto
     }
   }
 
-  object@pages[[name]] <- list(title = title, layout = layout, menu = menu, components = list(), max_components = max_components)
+  object@pages[[name]] <- list(title = title, layout = layout, menu = menu, components = list(), max_components = max_components, sidebar = sidebar)
   return(object)
 })
 

@@ -15,8 +15,8 @@
 \S4method{add_component}{i2dashboard}(object, page = "default",
   component, ...)
 
-\S4method{add_page}{i2dashboard}(object, page, title,
-  layout = "storyboard", menu = NULL, ...)
+\S4method{add_page}{i2dashboard}(object, page, title, layout = "default",
+  menu = NULL, sidebar = NULL, ...)
 
 \S4method{remove_page}{i2dashboard}(object, page)
 }
