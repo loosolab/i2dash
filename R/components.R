@@ -23,13 +23,20 @@ setMethod("add_component", "i2dashboard", function(object, page = "default", com
 
   pn <- strsplit(component, "::")[[1]]
   eval_function <- if(length(pn) == 1) {
-    get(paste0("render_", pn[[1]]), envir = asNamespace("i2dash"), mode = "function")
+    get(pn[[1]], envir = asNamespace("i2dash"), mode = "function")
   } else {
-    get(paste0("render_", pn[[2]]), envir = asNamespace(pn[[1]]), mode = "function")
+    get(pn[[2]], envir = asNamespace(pn[[1]]), mode = "function")
   }
 
   component <- do.call(eval_function, args = list(object, ...))
-  object@pages[[name]]$components <- append(object@pages[[name]]$components, component)
 
+  if(is.list(component)) {
+    assertive.sets::is_subset(c("appendix", "component", "sidebar"), names(component))
+    object@pages[[name]]$components <- append(object@pages[[name]]$components, component$component)
+    object@pages[[name]]$sidebar <- paste0(object@pages[[name]]$sidebar, component$sidebar)
+    # ToDo: Handle appendix
+  } else {
+    object@pages[[name]]$components <- append(object@pages[[name]]$components, component)
+  }
   return(object)
 })

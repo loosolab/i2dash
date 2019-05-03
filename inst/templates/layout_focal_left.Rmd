@@ -1,0 +1,17 @@
+<% title %> {data-navmenu="<% menu %>"}
+====================================================
+
+<!-- Page created on <% date %> -->
+<% if(!is.null(sidebar)) sidebar %>
+
+Column {data-width=600}
+-------------------------------------
+    
+<% if(length(components) > 0) components[[1]] %>
+   
+Column {data-width=400}
+-------------------------------------
+   
+<% if(length(components) > 1) components[[2]] %>
+
+<% if(length(components) > 2) components[[3]] %>
