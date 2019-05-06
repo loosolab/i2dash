@@ -4,7 +4,7 @@
 <!-- Page created on <% date %> -->
 <% if(!is.null(sidebar)) sidebar %>
 
-Column
+Column {.tabset}
 ----------------------------------------------------
 
 <% components %>
