@@ -4,7 +4,7 @@
 \docType{methods}
 \name{assemble,i2dashboard-method}
 \alias{assemble,i2dashboard-method}
-\alias{add_component,i2dashboard-method}
+\alias{add_component,i2dashboard,character-method}
 \alias{idashboard-class}
 \alias{add_page,i2dashboard-method}
 \alias{remove_page,i2dashboard-method}
@@ -12,8 +12,8 @@
 \usage{
 \S4method{assemble}{i2dashboard}(object, output_file, pages, ...)
 
-\S4method{add_component}{i2dashboard}(object, page = "default",
-  component, ...)
+\S4method{add_component}{i2dashboard,character}(object, component,
+  page = "default", ...)
 
 \S4method{add_page}{i2dashboard}(object, page, title, layout = "default",
   menu = NULL, sidebar = NULL, ...)
@@ -29,9 +29,9 @@
 
 \item{...}{Additional parameters passed to the components render function.}
 
-\item{page}{The name of the page to add the component to.}
-
 \item{component}{The name of the component.}
+
+\item{page}{The name of the page to add the component to.}
 
 \item{title}{The title of the page to be added.}
 

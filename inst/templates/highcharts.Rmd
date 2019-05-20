@@ -1,0 +1,11 @@
+### <% if(!is.null(title)) title %>
+
+<!-- Component created on <% timestamp %> -->
+
+```{r}
+if (!requireNamespace("highcharter", quietly = TRUE)) {
+    stop("The package highcharter is needed to embed objects of class 'highchart'.", call. = FALSE)
+}
+
+readRDS("envs/<% component_id %>.rds")
+```
