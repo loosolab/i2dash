@@ -1,4 +1,4 @@
-<% title %> {data-navmenu="<% menu %>"}
+<% title %> <% if(!is.null(menu)) sprintf('{data-navmenu="%s"}', menu) %>
 ====================================================
 
 <!-- Page created on <% date %> -->
