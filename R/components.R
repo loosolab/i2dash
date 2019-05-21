@@ -40,3 +40,15 @@ setMethod("add_component", "i2dashboard", function(object, page = "default", com
   }
   return(object)
 })
+
+#' Method to download embed files into an Rmd-file
+#'
+#' @param x Data, which will be written to the embedded file.
+#' @param ... Additional parameters.
+#'
+#' @export
+embed_var = function(x, ...) {
+  f = tempfile(fileext = '.csv')
+  write.csv(x, f)
+  xfun::embed_file(f, text = 'Download full data as .csv', ...)
+}
