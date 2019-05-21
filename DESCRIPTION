@@ -18,3 +18,5 @@ Imports:
     flexdashboard,
     yaml,
     assertive.sets
+Suggests: 
+    highcharter

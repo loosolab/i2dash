@@ -1,4 +1,4 @@
-setGeneric("add_component", function(object, ...) standardGeneric("add_component"))
+setGeneric("add_component", function(object, component, ...) standardGeneric("add_component"))
 
 #' Method to add a component to a page of an i2dashboard object
 #'
@@ -9,7 +9,9 @@ setGeneric("add_component", function(object, ...) standardGeneric("add_component
 #'
 #' @rdname idashboard-class
 #' @export
-setMethod("add_component", "i2dashboard", function(object, page = "default", component, ...) {
+setMethod("add_component",
+          signature = signature(object = "i2dashboard", component = "character"),
+          function(object, component, page = "default", ...) {
   name <- .create_page_name(page)
   if (!(name %in% names(object@pages))) {
     warning(sprintf("i2dashboard object does not contain a page named '%s'", name))

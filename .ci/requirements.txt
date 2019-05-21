@@ -3,4 +3,5 @@ r-base
 r-flexdashboard
 r-knitr
 r-yaml
+r-highcharter
 zip

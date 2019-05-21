@@ -32,7 +32,7 @@ setMethod("add_page", "i2dashboard", function(object, page, title, layout = "def
   )
 
   if(name %in% names(object@pages)) {
-    warning(paste("The page", name, "already exists and will be overidden."))
+    warning(paste("The page", name, "already exists and will be overwritten."))
     if(base::interactive()) {
       overwrite_page <- menu(c("Yes, overwrite page", "Cancel"), title = "Do you want to overwrite this page?")
       skip <- switch(overwrite_page,
