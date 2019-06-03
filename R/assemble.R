@@ -18,7 +18,7 @@ setMethod("assemble", "i2dashboard", function(object, output_file, pages, ...) {
     yaml_list[["runtime"]] <- "shiny"
   }
   yaml_part <- yaml::as.yaml(yaml_list)
-  header_string <- paste0("---\n", yaml_part, "---\n")
+  header_string <- paste0("---\n", yaml_part, "---\n<!-- This dashboard was created with the R package 'i2dash'. https://gitlab.gwdg.de/loosolab/software/i2dash -->\n")
 
   tmp_document <- tempfile()
 
