@@ -1,3 +1,5 @@
+# wilson 2.2.0
+- export plotting functions
 # wilson 2.1.1
 - fixed multiple unique_id bug in tobias_parser
 # wilson 2.1.0
