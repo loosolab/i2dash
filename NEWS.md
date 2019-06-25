@@ -1,3 +1,5 @@
+# wilson 2.2.1
+- fixed orTextual selection bug
 # wilson 2.2.0
 - export plotting functions
 # wilson 2.1.1
