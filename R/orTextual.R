@@ -104,7 +104,8 @@ orTextual <- function(input, output, session, choices, selected = NULL, label = 
       esc_choices <- paste0("\\Q", input$column, "\\E")
 
       if (contains | !is.null(delimiter)) {
-        result <- grepl(pattern = paste0(esc_choices, paste0("($|", delimiter, ")"), collapse = "|"), raw_choices, perl = TRUE)
+        print(paste0(paste0("(^|", delimiter, ")"), esc_choices, paste0("($|", delimiter, ")"), collapse = "|"))
+        result <- grepl(pattern = paste0(paste0("(^|", delimiter, ")"), esc_choices, paste0("($|", delimiter, ")"), collapse = "|"), raw_choices, perl = TRUE)
       } else {
         result <- grepl(pattern = paste0("^(", esc_choices, ")$", collapse = "|"), raw_choices, perl = TRUE)
       }
