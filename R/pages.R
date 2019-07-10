@@ -9,8 +9,6 @@
   x %>% tolower %>% gsub(x = ., pattern = " ", replacement = "_") %>% make.names %>% return
 }
 
-setGeneric("add_page", function(object, ...) standardGeneric("add_page"))
-
 #' Method to add a page to an i2dashboard object
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
@@ -45,8 +43,6 @@ setMethod("add_page", "i2dashboard", function(object, page, title, layout = "def
   object@pages[[name]] <- list(title = title, layout = layout, menu = menu, components = list(), max_components = max_components, sidebar = sidebar)
   return(object)
 })
-
-setGeneric("remove_page", function(object, ...) standardGeneric("remove_page"))
 
 #' Method to remove a page to an i2dashboard object
 #'

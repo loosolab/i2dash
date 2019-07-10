@@ -1,5 +1,3 @@
-setGeneric("assemble", function(object, ...) standardGeneric("assemble"))
-
 #' Method to assemble a dashboard and write it to a file
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.

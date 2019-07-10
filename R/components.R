@@ -1,5 +1,3 @@
-setGeneric("add_component", function(object, component, ...) standardGeneric("add_component"))
-
 #' Method to add a component to a page of an i2dashboard object
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
