@@ -1,4 +1,4 @@
-#' Renders a heatmap plot from 'wilson' package
+#' Prepare a heatmap to be rendered with the i2dash package.
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
 #' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in buiding the heatmap.
@@ -8,36 +8,33 @@
 #'
 #' @return A string containing markdown code for the rendered textbox
 #' @export
-heatmap_wilson <- function(object, countTable, group_by, title = NULL, ...) {
+heatmap_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) {
+  if (!requireNamespace("i2dash", quietly = TRUE)) {
+    stop("Package i2dash is needed to use this function. Please install it.")
+  }
+
   # Create random env id
   env_id <- paste0("env_", stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]"))
 
   # Create list if element is not a list already
-  if(!is.list(group_by)) group_by <- list(group_by)
-  #if(!is.list(y)) y <- list(y)
-  #if(!is.list(colour_by) & !is.null(colour_by)) colour_by <- list(colour_by)
-  #if(!is.list(labels) & !is.null(labels)) labels <- list(labels)
+  if (!is.list(group_by)) group_by <- list(group_by)
 
   # Name the lists
-  if(is.null(names(group_by))) group_by %<>% magrittr::set_names("grouping")
-  #if(is.null(names(y))) y %<>% magrittr::set_names("y")
-  #if(is.null(names(colour_by)) & !is.null(colour_by)) colour_by %<>% magrittr::set_names("colour")
-  #if(is.null(names(labels)) & !is.null(labels)) labels %<>% magrittr::set_names("labels")
+  if (is.null(names(group_by))) group_by %<>% magrittr::set_names("grouping")
 
   # Validate input
-  if((!is.matrix(countTable) & !is.data.frame(countTable))) stop("'countTable' should be a class of 'matrix' or 'data.frame'.")
+  if ((!is.matrix(countTable) & !is.data.frame(countTable))) stop("'countTable' should be a class of 'matrix' or 'data.frame'.")
 
   # Check, if lengths in a list are the same and if x and y and label and color_by are the same length
-  if(length(unique(sapply(group_by, length))) != 1) stop("The list 'group_by' should contain elements with the same length.")
+  if (length(unique(sapply(group_by, length))) != 1) stop("The list 'group_by' should contain elements with the same length.")
 
-  if(!identical(ncol(countTable), length(group_by[[1]])) & !is.null(expression)) stop("The number of columns in 'countTable' should be equal to the length of the vector 'group_by'.")
+  if (!identical(ncol(countTable), length(group_by[[1]])) & !is.null(expression)) stop("The number of columns in 'countTable' should be equal to the length of the vector 'group_by'.")
 
   additional_arguments <- list(...)
-  if("data" %in% names(additional_arguments)) warning("The parameters 'countTable' and 'group_by' will be used instead of 'data.table'")
+  if ("data" %in% names(additional_arguments)) warning("The parameters 'countTable' and 'group_by' will be used instead of 'data.table'")
   valid_arguments <- names(as.list(args(wilson::create_scatterplot)))
   invalid_args <- setdiff(names(additional_arguments), valid_arguments)
-  if(length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_heatmap': ", invalid_args))
-  #if(length(additional_arguments) == 0) additional_arguments <- NULL
+  if (length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_heatmap': ", invalid_args))
 
   # Create component environment
   env <- new.env()
@@ -58,7 +55,7 @@ heatmap_wilson <- function(object, countTable, group_by, title = NULL, ...) {
   return(expanded_component)
 }
 
-#' Renders a pca plot from 'wilson' package
+#' Prepare a pca to be rendered with the i2dash package.
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
 #' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in buiding the heatmap.
@@ -68,30 +65,33 @@ heatmap_wilson <- function(object, countTable, group_by, title = NULL, ...) {
 #'
 #' @return A string containing markdown code for the rendered textbox
 #' @export
-pca_wilson <- function(object, countTable, colour_by, title = NULL, ...) {
+pca_to_i2dash <- function(object, countTable, colour_by, title = NULL, ...) {
+  if (!requireNamespace("i2dash", quietly = TRUE)) {
+    stop("Package i2dash is needed to use this function. Please install it.")
+  }
+
   # Create random env id
   env_id <- paste0("env_", stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]"))
 
   # Create list if element is not a list already
-  if(!is.list(colour_by) & !is.null(colour_by)) colour_by <- list(colour_by)
+  if (!is.list(colour_by) & !is.null(colour_by)) colour_by <- list(colour_by)
 
   # Name the lists
-  if(is.null(names(colour_by)) & !is.null(colour_by)) colour_by %<>% magrittr::set_names("grouping")
+  if (is.null(names(colour_by)) & !is.null(colour_by)) colour_by %<>% magrittr::set_names("grouping")
 
   # Validate input
-  if((!is.matrix(countTable) & !is.data.frame(countTable))) stop("'countTable' should be a class of 'matrix' or 'data.frame'.")
+  if ((!is.matrix(countTable) & !is.data.frame(countTable))) stop("'countTable' should be a class of 'matrix' or 'data.frame'.")
 
   # Check lengths
-  if(!is.null(colour_by) & length(unique(sapply(colour_by, length))) != 1) stop("The list 'colour_by' should contain elements with the same length.")
-  if(!identical(ncol(countTable), length(colour_by[[1]])) & !is.null(colour_by)) stop("The number of columns in 'countTable' should be equal to the length of the vector 'colour_by'.")
+  if (!is.null(colour_by) & length(unique(sapply(colour_by, length))) != 1) stop("The list 'colour_by' should contain elements with the same length.")
+  if (!identical(ncol(countTable), length(colour_by[[1]])) & !is.null(colour_by)) stop("The number of columns in 'countTable' should be equal to the length of the vector 'colour_by'.")
 
   additional_arguments <- list(...)
-  if("data" %in% names(additional_arguments)) warning("The parameter 'countTable' will be used instead of 'data.table'.")
-  if("color.group" %in% names(additional_arguments)) stop("The parameter 'color.group' is not usable. Please use 'colour_by' instead.")
+  if ("data" %in% names(additional_arguments)) warning("The parameter 'countTable' will be used instead of 'data.table'.")
+  if ("color.group" %in% names(additional_arguments)) stop("The parameter 'color.group' is not usable. Please use 'colour_by' instead.")
   valid_arguments <- names(as.list(args(wilson::create_scatterplot)))
   invalid_args <- setdiff(names(additional_arguments), valid_arguments)
-  if(length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'wilson::create_pca': ", invalid_args))
-  #if(length(additional_arguments) == 0) additional_arguments <- NULL
+  if (length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'wilson::create_pca': ", invalid_args))
 
   # Create component environment
   env <- new.env()
@@ -112,7 +112,7 @@ pca_wilson <- function(object, countTable, colour_by, title = NULL, ...) {
   return(expanded_component)
 }
 
-#' Method for geneView creation from 'wilson' package
+#' Prepare a geneview to be rendered with the i2dash package.
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
 #' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in buiding the heatmap.
@@ -122,27 +122,30 @@ pca_wilson <- function(object, countTable, colour_by, title = NULL, ...) {
 #'
 #' @return A string containing markdown code for the rendered textbox
 #' @export
-geneview_wilson <- function(object, countTable, group_by, title = NULL, ...) {
+geneview_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) {
+  if (!requireNamespace("i2dash", quietly = TRUE)) {
+    stop("Package i2dash is needed to use this function. Please install it.")
+  }
+
   # Create random env id
   env_id <- paste0("env_", stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]"))
 
   # Create list if element is not a list already
-  if(!is.list(group_by)) group_by <- list(group_by)
+  if (!is.list(group_by)) group_by <- list(group_by)
 
   # Name the lists
-  if(is.null(names(group_by))) group_by %<>% magrittr::set_names("grouping")
+  if (is.null(names(group_by))) group_by %<>% magrittr::set_names("grouping")
 
   # Validate input
-  if(length(unique(sapply(group_by, length))) != 1) stop("The list 'group_by' should contain elements with the same length.")
-  if(!identical(ncol(countTable), length(group_by[[1]])) & !is.null(expression)) stop("The number of columns in 'countTable' should be equal to the length of the vector 'group_by'.")
+  if (length(unique(sapply(group_by, length))) != 1) stop("The list 'group_by' should contain elements with the same length.")
+  if (!identical(ncol(countTable), length(group_by[[1]])) & !is.null(expression)) stop("The number of columns in 'countTable' should be equal to the length of the vector 'group_by'.")
 
   additional_arguments <- list(...)
-  if("data" %in% names(additional_arguments)) warning("The parameter 'countTable' will be used instead of 'data'")
-  if("grouping" %in% names(additional_arguments)) warning("The parameter 'group_by' will be used instead of 'grouping'")
+  if ("data" %in% names(additional_arguments)) warning("The parameter 'countTable' will be used instead of 'data'")
+  if ("grouping" %in% names(additional_arguments)) warning("The parameter 'group_by' will be used instead of 'grouping'")
   valid_arguments <- names(as.list(args(wilson::create_scatterplot)))
   invalid_args <- setdiff(names(additional_arguments), valid_arguments)
-  if(length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_scatterplot': ", invalid_args))
-  #if(length(additional_arguments) == 0) additional_arguments <- NULL
+  if (length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_scatterplot': ", invalid_args))
 
   # Create component environment
   env <- new.env()
@@ -163,7 +166,7 @@ geneview_wilson <- function(object, countTable, group_by, title = NULL, ...) {
   return(expanded_component)
 }
 
-#' Renders a scatter plot from 'wilson' package
+#' Prepare a scatterplot to be rendered with the i2dash package.
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
 #' @param x A vector with numerical values or a named list will be mapped to the x-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
@@ -175,45 +178,44 @@ geneview_wilson <- function(object, countTable, group_by, title = NULL, ...) {
 #'
 #' @return A string containing markdown code for the rendered textbox
 #' @export
-scatterplot_wilson <- function(object, x, y, colour_by = NULL, expression = NULL, title = NULL, ...) {
+scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = NULL, title = NULL, ...) {
+  if (!requireNamespace("i2dash", quietly = TRUE)) {
+    stop("Package i2dash is needed to use this function. Please install it.")
+  }
+
   # Create random env id
   env_id <- paste0("env_", stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]"))
 
   # Create list if element is not a list already
-  if(!is.list(x)) x <- list(x)
-  if(!is.list(y)) y <- list(y)
-  if(!is.list(colour_by) & !is.null(colour_by)) colour_by <- list(colour_by)
-  #if(!is.list(labels) & !is.null(labels)) labels <- list(labels)
+  if (!is.list(x)) x <- list(x)
+  if (!is.list(y)) y <- list(y)
+  if (!is.list(colour_by) & !is.null(colour_by)) colour_by <- list(colour_by)
 
   # Name the lists
-  if(is.null(names(x))) x %<>% magrittr::set_names("x")
-  if(is.null(names(y))) y %<>% magrittr::set_names("y")
-  if(is.null(names(colour_by)) & !is.null(colour_by)) colour_by %<>% magrittr::set_names("colour")
-  #if(is.null(names(labels)) & !is.null(labels)) labels %<>% magrittr::set_names("labels")
+  if (is.null(names(x))) x %<>% magrittr::set_names("x")
+  if (is.null(names(y))) y %<>% magrittr::set_names("y")
+  if (is.null(names(colour_by)) & !is.null(colour_by)) colour_by %<>% magrittr::set_names("colour")
 
   # Validate input
-  if(!all(sapply(x, is.numeric))) stop("'x' should only contain numerical values.")
-  if(!all(sapply(y, is.numeric))) stop("'y' should only contain numerical values.")
-  if((!is.matrix(expression) & !is.data.frame(expression)) & !is.null(expression)) stop("'expression' should be a class of 'matrix' or 'data.frame'.")
+  if (!all(sapply(x, is.numeric))) stop("'x' should only contain numerical values.")
+  if (!all(sapply(y, is.numeric))) stop("'y' should only contain numerical values.")
+  if ((!is.matrix(expression) & !is.data.frame(expression)) & !is.null(expression)) stop("'expression' should be a class of 'matrix' or 'data.frame'.")
 
   # Check, if lengths in a list are the same and if x and y and label and color_by are the same length
-  if(length(unique(sapply(x, length))) != 1) stop("The list 'x' should contain elements with the same length.")
-  if(length(unique(sapply(y, length))) != 1) stop("The list 'y' should contain elements with the same length.")
-  if(length(unique(sapply(colour_by, length))) != 1  & !is.null(colour_by)) stop("The list 'colour_by' should contain elements with the same length.")
-  #if(length(unique(sapply(labels, length))) != 1  & !is.null(labels)) stop("The list 'labels' should contain elements with the same length.")
+  if (length(unique(sapply(x, length))) != 1) stop("The list 'x' should contain elements with the same length.")
+  if (length(unique(sapply(y, length))) != 1) stop("The list 'y' should contain elements with the same length.")
+  if (length(unique(sapply(colour_by, length))) != 1  & !is.null(colour_by)) stop("The list 'colour_by' should contain elements with the same length.")
 
-  if(!identical(length(x[[1]]), length(y[[1]]))) stop("All arguments should be of the the same length.")
-  if(!identical(length(x[[1]]), length(colour_by[[1]])) & !is.null(colour_by)) stop("All arguments should be of the the same length.")
-  #if(!identical(length(x[[1]]), length(labels[[1]])) & !is.null(labels)) stop("All arguments should be of the the same length.")
-  if(!identical(ncol(expression), length(x[[1]])) & !is.null(expression)) stop("The number of columns in 'expression' should be equal to the length of the vector 'x'.")
+  if (!identical(length(x[[1]]), length(y[[1]]))) stop("All arguments should be of the the same length.")
+  if (!identical(length(x[[1]]), length(colour_by[[1]])) & !is.null(colour_by)) stop("All arguments should be of the the same length.")
+  if (!identical(ncol(expression), length(x[[1]])) & !is.null(expression)) stop("The number of columns in 'expression' should be equal to the length of the vector 'x'.")
 
   additional_arguments <- list(...)
-  if("data" %in% names(additional_arguments)) warning("The parameters 'x' and 'y' will be used instead of 'data.table'")
-  if("plot.method" %in% names(additional_arguments)) warning("This parameter will be ignored and 'plot.method' = 'interactive' will be used.")
+  if ("data" %in% names(additional_arguments)) warning("The parameters 'x' and 'y' will be used instead of 'data.table'")
+  if ("plot.method" %in% names(additional_arguments)) warning("This parameter will be ignored and 'plot.method' = 'interactive' will be used.")
   valid_arguments <- names(as.list(args(wilson::create_scatterplot)))
   invalid_args <- setdiff(names(additional_arguments), valid_arguments)
-  if(length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_scatterplot': ", invalid_args))
-  #if(length(additional_arguments) == 0) additional_arguments <- NULL
+  if (length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_scatterplot': ", invalid_args))
 
   # Create component environment
   env <- new.env()
