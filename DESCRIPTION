@@ -51,5 +51,6 @@ biocViews:
 Suggests: knitr,
     rmarkdown,
     testthat,
-    vdiffr
+    vdiffr,
+    i2dash
 VignetteBuilder: knitr
