@@ -1,7 +1,7 @@
 #' Prepare a heatmap to be rendered with the i2dash package.
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
-#' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in buiding the heatmap.
+#' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in building the heatmap.
 #' @param group_by A vector with numerical values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
 #' @param compId (Optional) The component ID provided through add_component and used for linking components together.
 #' @param title (Optional) The title of the components chunk.
@@ -21,7 +21,6 @@ heatmap_to_i2dash <- function(object, countTable, group_by, compId = NULL, title
   } else {
     env_id <- paste0("env_", compId)
   }
-
 
   # Create list if element is not a list already
   if (!is.list(group_by)) group_by <- list(group_by)
