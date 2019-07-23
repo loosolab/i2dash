@@ -10,8 +10,8 @@
 #' @return A string containing markdown code for the rendered textbox
 #' @export
 heatmap_to_i2dash <- function(object, countTable, group_by, compId = NULL, title = NULL, ...) {
-  if (!requireNamespace("i2dash", quietly = TRUE)) {
-    stop("Package i2dash is needed to use this function. Please install it.")
+  if (!requireNamespace("i2dash", quietly = TRUE) || !requireNamespace("i2dash.scrnaseq", quietly = TRUE)) {
+    stop("Packages i2dash and i2dash.scrnaseq are needed to use this function. Please install those.")
   }
 
   # Create env id
@@ -75,8 +75,8 @@ heatmap_to_i2dash <- function(object, countTable, group_by, compId = NULL, title
 #' @return A string containing markdown code for the rendered textbox
 #' @export
 geneview_to_i2dash <- function(object, countTable, group_by, compId = NULL, title = NULL, ...) {
-  if (!requireNamespace("i2dash", quietly = TRUE)) {
-    stop("Package i2dash is needed to use this function. Please install it.")
+  if (!requireNamespace("i2dash", quietly = TRUE) || !requireNamespace("i2dash.scrnaseq", quietly = TRUE)) {
+    stop("Packages i2dash and i2dash.scrnaseq are needed to use this function. Please install those.")
   }
 
   # Create env id
@@ -139,8 +139,8 @@ geneview_to_i2dash <- function(object, countTable, group_by, compId = NULL, titl
 #' @return A string containing markdown code for the rendered textbox
 #' @export
 scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = NULL, compId = NULL, title = NULL, ...) {
-  if (!requireNamespace("i2dash", quietly = TRUE)) {
-    stop("Package i2dash is needed to use this function. Please install it.")
+  if (!requireNamespace("i2dash", quietly = TRUE) || !requireNamespace("i2dash.scrnaseq", quietly = TRUE)) {
+    stop("Packages i2dash and i2dash.scrnaseq are needed to use this function. Please install those.")
   }
 
   # Create env id

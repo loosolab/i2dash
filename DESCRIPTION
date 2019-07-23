@@ -52,5 +52,6 @@ Suggests: knitr,
     rmarkdown,
     testthat,
     vdiffr,
-    i2dash
+    i2dash,
+    i2dash.scrnaseq
 VignetteBuilder: knitr
