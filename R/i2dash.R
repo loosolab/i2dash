@@ -3,18 +3,25 @@
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
 #' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in buiding the heatmap.
 #' @param group_by A vector with numerical values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
+#' @param compId (Optional) The component ID provided through add_component and used for linking components together.
 #' @param title (Optional) The title of the components chunk.
 #' @param (...) Further parameters which are compatible with wilsons create_scatterplot() method. See \code{\link[wilson::create_scatterplot()]{wilson}}.
 #'
 #' @return A string containing markdown code for the rendered textbox
 #' @export
-heatmap_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) {
+heatmap_to_i2dash <- function(object, countTable, group_by, compId = NULL, title = NULL, ...) {
   if (!requireNamespace("i2dash", quietly = TRUE)) {
     stop("Package i2dash is needed to use this function. Please install it.")
   }
 
-  # Create random env id
-  env_id <- paste0("env_", stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]"))
+  # Create env id
+  if (is.null(compId)) {
+    compId <- stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]") # this compId is for the check in the Rmd file and is not saved in object@compIds
+    env_id <- paste0("env_", compId)
+  } else {
+    env_id <- paste0("env_", compId)
+  }
+
 
   # Create list if element is not a list already
   if (!is.list(group_by)) group_by <- list(group_by)
@@ -46,6 +53,8 @@ heatmap_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) {
 
   env$additional_arguments <- additional_arguments
 
+  env$compId <- compId
+
   # Save environment object
   saveRDS(env, file = file.path(object@workdir, "envs", paste0(env_id, ".rds")))
 
@@ -60,18 +69,24 @@ heatmap_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) {
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
 #' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in buiding the heatmap.
 #' @param group_by A vector with values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
+#' @param compId (Optional) The component ID provided through add_component and used for linking components together.
 #' @param title (Optional) The title of the components chunk.
 #' @param (...) Further parameters which are compatible with wilsons create_scatterplot() method. See \code{\link[wilson::create_scatterplot()]{wilson}}.
 #'
 #' @return A string containing markdown code for the rendered textbox
 #' @export
-geneview_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) {
+geneview_to_i2dash <- function(object, countTable, group_by, compId = NULL, title = NULL, ...) {
   if (!requireNamespace("i2dash", quietly = TRUE)) {
     stop("Package i2dash is needed to use this function. Please install it.")
   }
 
-  # Create random env id
-  env_id <- paste0("env_", stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]"))
+  # Create env id
+  if (is.null(compId)) {
+    compId <- stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]") # this compId is for the check in the Rmd file and is not saved in object@compIds
+    env_id <- paste0("env_", compId)
+  } else {
+    env_id <- paste0("env_", compId)
+  }
 
   # Create list if element is not a list already
   if (!is.list(group_by)) group_by <- list(group_by)
@@ -100,6 +115,8 @@ geneview_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) 
 
   env$additional_arguments <- additional_arguments
 
+  env$compId <- compId
+
   # Save environment object
   saveRDS(env, file = file.path(object@workdir, "envs", paste0(env_id, ".rds")))
 
@@ -116,18 +133,24 @@ geneview_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) 
 #' @param y A vector with numerical values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
 #' @param colour_by (Optional) A vector with factorial (= categorical coloring), numerical (= sequential colouring; can be forced to use categorical colouring by providing the parameter '"categorized" = TRUE') or character (= categorical colouring) values or a named list that will be used for colouring. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of the vector should be of the same length as x and y as well as the length of all vectors in case of a named list.
 #' @param expression (Optional) A matrix or dataframe with the same length of columns as 'x'. The sequence and number of the columns should be equal to the sequence and length of 'x'. The rownames represent the feature i.e. gene names and the values represent the expression level. Note: This feature is not compatible with the statical mode (parameter '"interactive" = TRUE'). Alternatively you can provide a vector as colour_by.
+#' @param compId (Optional) The component ID provided through add_component and used for linking components together.
 #' @param title (Optional) The title of the components chunk.
 #' @param (...) Further parameters which are compatible with wilsons create_scatterplot() method. See \code{\link[wilson::create_scatterplot()]{wilson}}.
 #'
 #' @return A string containing markdown code for the rendered textbox
 #' @export
-scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = NULL, title = NULL, ...) {
+scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = NULL, compId = NULL, title = NULL, ...) {
   if (!requireNamespace("i2dash", quietly = TRUE)) {
     stop("Package i2dash is needed to use this function. Please install it.")
   }
 
-  # Create random env id
-  env_id <- paste0("env_", stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]"))
+  # Create env id
+  if (is.null(compId)) {
+    compId <- stringi::stri_rand_strings(1, 6, pattern = "[A-Za-z0-9]") # this compId is for the check in the Rmd file and is not saved in object@compIds
+    env_id <- paste0("env_", compId)
+  } else {
+    env_id <- paste0("env_", compId)
+  }
 
   # Create list if element is not a list already
   if (!is.list(x)) x <- list(x)
@@ -162,6 +185,11 @@ scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = N
 
   # Create component environment
   env <- new.env()
+
+  env$x_selection <- F
+  env$y_selection <- F
+  env$colour_by_selection <- F
+
   env$x <- x
   env$x_selection <- length(env$x) > 1
 
@@ -171,11 +199,11 @@ scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = N
   env$colour_by <- colour_by
   env$colour_by_selection <- length(env$colour_by) > 1
 
-  #env$labels <- labels
-
   env$expression <- expression
 
   env$additional_arguments <- additional_arguments
+
+  env$compId <- compId
 
   # Save environment object
   saveRDS(env, file = file.path(object@workdir, "envs", paste0(env_id, ".rds")))
