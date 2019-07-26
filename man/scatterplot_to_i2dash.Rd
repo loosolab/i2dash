@@ -5,7 +5,7 @@
 \title{Prepare a scatterplot to be rendered with the i2dash package.}
 \usage{
 scatterplot_to_i2dash(object, x, y, colour_by = NULL,
-  expression = NULL, compId = NULL, title = NULL, ...)
+  expression = NULL, title = NULL, ...)
 }
 \arguments{
 \item{object}{A \linkS4class{i2dash::i2dashboard} object.}
@@ -17,8 +17,6 @@ scatterplot_to_i2dash(object, x, y, colour_by = NULL,
 \item{colour_by}{(Optional) A vector with factorial (= categorical coloring), numerical (= sequential colouring; can be forced to use categorical colouring by providing the parameter '"categorized" = TRUE') or character (= categorical colouring) values or a named list that will be used for colouring. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of the vector should be of the same length as x and y as well as the length of all vectors in case of a named list.}
 
 \item{expression}{(Optional) A matrix or dataframe with the same length of columns as 'x'. The sequence and number of the columns should be equal to the sequence and length of 'x'. The rownames represent the feature i.e. gene names and the values represent the expression level. Note: This feature is not compatible with the statical mode (parameter '"interactive" = TRUE'). Alternatively you can provide a vector as colour_by.}
-
-\item{compId}{(Optional) The component ID provided through add_component and used for linking components together.}
 
 \item{title}{(Optional) The title of the components chunk.}
 
