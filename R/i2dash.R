@@ -5,13 +5,16 @@
 #' @param group_by A vector with numerical values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
 #' @param compId (Optional) The component ID provided through add_component and used for linking components together.
 #' @param title (Optional) The title of the components chunk.
-#' @param (...) Further parameters which are compatible with wilsons create_scatterplot() method. See \code{\link[wilson::create_scatterplot()]{wilson}}.
+#' @param ... Further parameters which are compatible with wilsons create_heatmap() method. See \code{\link{create_heatmap}}.
 #'
 #' @return A string containing markdown code for the rendered textbox
+#' @importFrom magrittr %<>%
 #' @export
 heatmap_to_i2dash <- function(object, countTable, group_by, compId = NULL, title = NULL, ...) {
-  if (!requireNamespace("i2dash", quietly = TRUE) || !requireNamespace("i2dash.scrnaseq", quietly = TRUE)) {
-    stop("Packages i2dash and i2dash.scrnaseq are needed to use this function. Please install those.")
+  if (!requireNamespace("i2dash", quietly = TRUE) ||
+      !requireNamespace("stringi", quietly = TRUE) ||
+      !requireNamespace("magrittr", quietly = TRUE)) {
+    stop("Packages i2dash, stringi & magrittr are needed to use this function. Please install those.")
   }
 
   # Create env id
@@ -38,7 +41,7 @@ heatmap_to_i2dash <- function(object, countTable, group_by, compId = NULL, title
 
   additional_arguments <- list(...)
   if ("data" %in% names(additional_arguments)) warning("The parameters 'countTable' and 'group_by' will be used instead of 'data.table'")
-  valid_arguments <- names(as.list(args(wilson::create_scatterplot)))
+  valid_arguments <- names(as.list(args(create_scatterplot)))
   invalid_args <- setdiff(names(additional_arguments), valid_arguments)
   if (length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_heatmap': ", invalid_args))
 
@@ -59,7 +62,7 @@ heatmap_to_i2dash <- function(object, countTable, group_by, compId = NULL, title
 
   # Expand component
   timestamp <- Sys.time()
-  expanded_component <- knitr::knit_expand(file = system.file("templates", "heatmap_wilson.Rmd", package = "i2dash.scrnaseq"), title = title, env_id = env_id, date = timestamp)
+  expanded_component <- knitr::knit_expand(file = system.file("templates", "heatmap_wilson.Rmd", package = "wilson"), title = title, env_id = env_id, date = timestamp)
   return(expanded_component)
 }
 
@@ -70,13 +73,16 @@ heatmap_to_i2dash <- function(object, countTable, group_by, compId = NULL, title
 #' @param group_by A vector with values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
 #' @param compId (Optional) The component ID provided through add_component and used for linking components together.
 #' @param title (Optional) The title of the components chunk.
-#' @param (...) Further parameters which are compatible with wilsons create_scatterplot() method. See \code{\link[wilson::create_scatterplot()]{wilson}}.
+#' @param ... Further parameters which are compatible with wilsons create_geneview() method. See \code{\link{create_geneview}}.
 #'
 #' @return A string containing markdown code for the rendered textbox
+#' @importFrom magrittr %<>%
 #' @export
 geneview_to_i2dash <- function(object, countTable, group_by, compId = NULL, title = NULL, ...) {
-  if (!requireNamespace("i2dash", quietly = TRUE) || !requireNamespace("i2dash.scrnaseq", quietly = TRUE)) {
-    stop("Packages i2dash and i2dash.scrnaseq are needed to use this function. Please install those.")
+  if (!requireNamespace("i2dash", quietly = TRUE) ||
+      !requireNamespace("stringi", quietly = TRUE) ||
+      !requireNamespace("magrittr", quietly = TRUE)) {
+    stop("Packages i2dash, stringi & magrittr are needed to use this function. Please install those.")
   }
 
   # Create env id
@@ -100,7 +106,7 @@ geneview_to_i2dash <- function(object, countTable, group_by, compId = NULL, titl
   additional_arguments <- list(...)
   if ("data" %in% names(additional_arguments)) warning("The parameter 'countTable' will be used instead of 'data'")
   if ("grouping" %in% names(additional_arguments)) warning("The parameter 'group_by' will be used instead of 'grouping'")
-  valid_arguments <- names(as.list(args(wilson::create_scatterplot)))
+  valid_arguments <- names(as.list(args(create_scatterplot)))
   invalid_args <- setdiff(names(additional_arguments), valid_arguments)
   if (length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_scatterplot': ", invalid_args))
 
@@ -121,7 +127,7 @@ geneview_to_i2dash <- function(object, countTable, group_by, compId = NULL, titl
 
   # Expand component
   timestamp <- Sys.time()
-  expanded_component <- knitr::knit_expand(file = system.file("templates", "geneView_wilson.Rmd", package = "i2dash.scrnaseq"), title = title, env_id = env_id, date = timestamp)
+  expanded_component <- knitr::knit_expand(file = system.file("templates", "geneView_wilson.Rmd", package = "wilson"), title = title, env_id = env_id, date = timestamp)
   return(expanded_component)
 }
 
@@ -134,13 +140,16 @@ geneview_to_i2dash <- function(object, countTable, group_by, compId = NULL, titl
 #' @param expression (Optional) A matrix or dataframe with the same length of columns as 'x'. The sequence and number of the columns should be equal to the sequence and length of 'x'. The rownames represent the feature i.e. gene names and the values represent the expression level. Note: This feature is not compatible with the statical mode (parameter '"interactive" = TRUE'). Alternatively you can provide a vector as colour_by.
 #' @param compId (Optional) The component ID provided through add_component and used for linking components together.
 #' @param title (Optional) The title of the components chunk.
-#' @param (...) Further parameters which are compatible with wilsons create_scatterplot() method. See \code{\link[wilson::create_scatterplot()]{wilson}}.
+#' @param ... Further parameters which are compatible with wilsons create_scatterplot() method. See \code{\link{create_scatterplot}}.
 #'
 #' @return A string containing markdown code for the rendered textbox
+#' @importFrom magrittr %<>%
 #' @export
 scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = NULL, compId = NULL, title = NULL, ...) {
-  if (!requireNamespace("i2dash", quietly = TRUE) || !requireNamespace("i2dash.scrnaseq", quietly = TRUE)) {
-    stop("Packages i2dash and i2dash.scrnaseq are needed to use this function. Please install those.")
+  if (!requireNamespace("i2dash", quietly = TRUE) ||
+      !requireNamespace("stringi", quietly = TRUE) ||
+      !requireNamespace("magrittr", quietly = TRUE)) {
+    stop("Packages i2dash, stringi & magrittr are needed to use this function. Please install those.")
   }
 
   # Create env id
@@ -178,7 +187,7 @@ scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = N
   additional_arguments <- list(...)
   if ("data" %in% names(additional_arguments)) warning("The parameters 'x' and 'y' will be used instead of 'data.table'")
   if ("plot.method" %in% names(additional_arguments)) warning("This parameter will be ignored and 'plot.method' = 'interactive' will be used.")
-  valid_arguments <- names(as.list(args(wilson::create_scatterplot)))
+  valid_arguments <- names(as.list(args(create_scatterplot)))
   invalid_args <- setdiff(names(additional_arguments), valid_arguments)
   if (length(invalid_args) != 0) stop(paste0(" The following parameter is not a valid parameter of 'Wilson::create_scatterplot': ", invalid_args))
 
@@ -209,6 +218,6 @@ scatterplot_to_i2dash <- function(object, x, y, colour_by = NULL, expression = N
 
   # Expand component
   timestamp <- Sys.time()
-  expanded_component <- knitr::knit_expand(file = system.file("templates", "scatterplot_wilson.Rmd", package = "i2dash.scrnaseq"), title = title, env_id = env_id, date = timestamp)
+  expanded_component <- knitr::knit_expand(file = system.file("templates", "scatterplot_wilson.Rmd", package = "wilson"), title = title, env_id = env_id, date = timestamp)
   return(expanded_component)
 }

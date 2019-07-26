@@ -18,7 +18,7 @@ geneview_to_i2dash(object, countTable, group_by, compId = NULL,
 
 \item{title}{(Optional) The title of the components chunk.}
 
-\item{(...)}{Further parameters which are compatible with wilsons create_scatterplot() method. See \code{\link[wilson::create_scatterplot()]{wilson}}.}
+\item{...}{Further parameters which are compatible with wilsons create_geneview() method. See \code{\link{create_geneview}}.}
 }
 \value{
 A string containing markdown code for the rendered textbox
