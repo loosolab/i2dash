@@ -45,7 +45,8 @@ Imports: shiny,
     log4r,
     openssl,
     methods,
-    R6
+    R6,
+    magrittr
 RoxygenNote: 6.1.1
 biocViews: 
 Suggests: knitr,
@@ -53,5 +54,5 @@ Suggests: knitr,
     testthat,
     vdiffr,
     i2dash,
-    i2dash.scrnaseq
+    stringi
 VignetteBuilder: knitr
