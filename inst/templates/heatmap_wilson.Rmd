@@ -12,6 +12,7 @@ is_shiny <- identical(knitr::opts_knit$get("rmarkdown.runtime"), "shiny")
 ```{r}
 ######
 library(magrittr)
+library(shinyWidgets)
 #####
 #
 # Method for creating a data.table required by create_heatmap() method from wilson.
@@ -77,8 +78,8 @@ heatmap
 ```
 
 ```{r, eval=is_shiny}
-################ UI ####################
 ui_list <- list()
+
 # selection field for group_by
 if ({{ env_id }}$group_by_selection){
   ui_list <- rlist::list.append(ui_list,
@@ -150,165 +151,106 @@ output$select_columns_{{ env_id }} <- renderUI({
   
 })
 
-################# Server ####################
-# if component is a reciever
-if({{ env_id }}$compId %in% edgeTable$reciever){
+
+
+#
+# Create reactive data table
+#
+df_{{ env_id }} <- shiny::reactive({
+  #print(unique({{ env_id }}$group_by[[input$select_group_by_{{ env_id }}]]))
+  # Parameters for wilson::create_scatterplot
+  # params <- list()
+  "%ni%" <- Negate("%in%")
+  additional_arguments <- {{ env_id }}$additional_arguments
   
-  # set variables
-  reciever_{{ env_id }} <- {{ env_id }}$compId
-  transmitter_to_{{ env_id }} <- edgeTable[reciever=={{ env_id }}$compId]$transmitter
-
-  # Create reactive data table
-  df_{{ env_id }} <- shiny::reactive({
-    # set parameters for wilson::create_scatterplot()
-    "%ni%" <- Negate("%in%")
-    additional_arguments <- {{ env_id }}$additional_arguments
-    
-    # "static" not possible yet
-    additional_arguments$plot.method <- "interactive"
-    
-    # add clustering parameters
-    additional_arguments$clustering <- input$select_clustering_{{ env_id }}
-    additional_arguments$clustdist <- input$select_clustdist_{{ env_id }}
-    additional_arguments$clustmethod <- input$select_clustmethod_{{ env_id }}
-    
-    # sequential (one-sided) color palette
-    if("color" %ni% names({{ env_id }}$additional_arguments)){
-      color <- RColorBrewer::brewer.pal(9, "YlOrRd")
-      additional_arguments$color <- color
-    }
-    
-    # Set values for 'countTable'
-    countTable <- {{ env_id }}$countTable
-    
-    # Set values for 'group_by'
-    if( !{{ env_id }}$group_by_selection ) {
-      group_by <- {{ env_id }}$group_by[1]
-    } else {
-      group_by <- {{ env_id }}$group_by[input$select_group_by_{{ env_id }}]
-    }
-    # subset countTable according to transmitted sample keys
-    plot_transmitter_string <- paste0("plot_env_", transmitter_to_{{ env_id }})
-    keys_transmitter_string <- paste0("df_env_", transmitter_to_{{ env_id }}, "()$key")
-    selection_transmitter <- plotly::event_data("plotly_selected", source = plot_transmitter_string)$key
-    if(!is.null(selection_transmitter)){
-      if(all(selection_transmitter %in% colnames(countTable))){
-        countTable <- subset(countTable, select = selection_transmitter)
-        # subset group_by according to countTable
-        group_by <- group_by[[1]][which(colnames(countTable) == selection_transmitter)]
-        group_by <- list("group_by" = group_by)
-      } else {
-        false_keys <- which(!(selection_transmitter %in% colnames(countTable)))
-        print("The following keys are not in the countTable:")
-        print(selection_transmitter[false_keys])
-        if(!is.null(ncol(selection_transmitter[-false_keys]))){
-          selection_transmitter <- selection_transmitter[-false_keys]
-          countTable <- subset(countTable, select = selection_transmitter)
-          # subset group_by according to countTable
-          group_by <- group_by[[1]][which(colnames(countTable) == selection_transmitter)]
-          group_by <- list("group_by" = group_by)
-        }
-      }
-    }
-    
-    # subset countTable by chosen features
-    if(!is.null(input$select_subset_{{ env_id }})){
-      subset_features <- input$select_subset_{{ env_id }}
-      if(length(subset_features) > 1){
-        countTable <- countTable[subset_features,]
-      } else if(length(subset_features) == 1){
-        countTable <- countTable[subset_features,,drop = FALSE]
-      }
-    }
-    
-    # create data.table
-    dt <- create_data.table('matrix' = countTable, 'group_by' = group_by[[1]])
-    
-    # subset group_by by chosen grouping
-    if(!is.null(input$select_col_dyn_{{ env_id }})){
-      column_vector <- c(c("gene"), input$select_col_dyn_{{ env_id }})
-      dt <- dt[,..column_vector,]
-    }
-    key <- NULL
-    additional_arguments$data <- dt
-    return(list("params" = additional_arguments, "data" = dt, "key" = key))
-  })
+  # "static" not possible yet
+  additional_arguments$plot.method <- "interactive"
   
-  # if compId is not a reciever
-} else {
+  # Set values for 'countTable'
+  countTable <- {{ env_id }}$countTable
+  
+  # Set values for 'group_by'
+  if( !{{ env_id }}$group_by_selection ) {
+    group_by <- {{ env_id }}$group_by[1]
+  } else {
+    group_by <- {{ env_id }}$group_by[input$select_group_by_{{ env_id }}]
+  }
+  
+  # subset countTable by chosen features
+  if(!is.null(input$select_subset_{{ env_id }})){
+    subset_features <- input$select_subset_{{ env_id }}
+    if(length(subset_features) > 1){
+      countTable <- countTable[subset_features,]
+    } else if(length(subset_features) == 1){
+      countTable <- countTable[subset_features,,drop = FALSE]
+    }
+  }
+  # subset group_by by chosen grouping
+  if(!is.null(input$select_subset_{{ env_id }})){
+    subset_features <- input$select_subset_{{ env_id }}
+    if(length(subset_features) > 1){
+      countTable <- countTable[subset_features,]
+    } else if(length(subset_features) == 1){
+      countTable <- countTable[subset_features,,drop = FALSE]
+    }
+  }
+  
+  # create data.table
+  dt <- create_data.table('matrix' = countTable, 'group_by' = group_by[[1]])
+  #print(dt)
+  
+  # subset group_by by chosen grouping
+  if(!is.null(input$select_col_dyn_{{ env_id }})){
+    column_vector <- c(c("gene"), input$select_col_dyn_{{ env_id }})
+    dt <- dt[,..column_vector,]
+  }
+  
+  
+  # sequential (one-sided) color palette
+  if("color" %ni% names({{ env_id }}$additional_arguments)){
+    color <- RColorBrewer::brewer.pal(9, "YlOrRd")
+    additional_arguments$color <- color
+  }
+  additional_arguments$plot.method <- "interactive"
+  additional_arguments$data <- dt
+  
+  # add clustering parameters
+  additional_arguments$clustering <- input$select_clustering_{{ env_id }}
+  additional_arguments$clustdist <- input$select_clustdist_{{ env_id }}
+  additional_arguments$clustmethod <- input$select_clustmethod_{{ env_id }}
+  
+  return(list("params" = additional_arguments, "data" = dt))
+})
 
-  # Create reactive data table
-  df_{{ env_id }} <- shiny::reactive({
-    # set parameters for wilson::create_scatterplot()
-    "%ni%" <- Negate("%in%")
-    additional_arguments <- {{ env_id }}$additional_arguments
-    
-    # "static" not possible yet
-    additional_arguments$plot.method <- "interactive"
-    
-    # add clustering parameters
-    additional_arguments$clustering <- input$select_clustering_{{ env_id }}
-    additional_arguments$clustdist <- input$select_clustdist_{{ env_id }}
-    additional_arguments$clustmethod <- input$select_clustmethod_{{ env_id }}
-    
-    # sequential (one-sided) color palette
-    if("color" %ni% names({{ env_id }}$additional_arguments)){
-      color <- RColorBrewer::brewer.pal(9, "YlOrRd")
-      additional_arguments$color <- color
-    }
-    
-    # Set values for 'countTable'
-    countTable <- {{ env_id }}$countTable
-    
-    # Set values for 'group_by'
-    if( !{{ env_id }}$group_by_selection ) {
-      group_by <- {{ env_id }}$group_by[1]
-    } else {
-      group_by <- {{ env_id }}$group_by[input$select_group_by_{{ env_id }}]
-    }
-    
-    # subset countTable by chosen features
-    if(!is.null(input$select_subset_{{ env_id }})){
-      subset_features <- input$select_subset_{{ env_id }}
-      if(length(subset_features) > 1){
-        countTable <- countTable[subset_features,]
-      } else if(length(subset_features) == 1){
-        countTable <- countTable[subset_features,,drop = FALSE]
-      }
-    }
-    
-    # create data.table
-    dt <- create_data.table('matrix' = countTable, 'group_by' = group_by[[1]])
-    
-    # subset group_by by chosen grouping
-    if(!is.null(input$select_col_dyn_{{ env_id }})){
-      column_vector <- c(c("gene"), input$select_col_dyn_{{ env_id }})
-      dt <- dt[,..column_vector,]
-    }
-    key <- NULL
-    additional_arguments$data <- dt
-    return(list("params" = additional_arguments, "data" = dt, "key" = key))
-  })
-}
+#
+# Download
+#
+output$downloadData_{{ env_id }} <- downloadHandler(
+  filename =  paste('data-', Sys.Date(), '.csv', sep=''),
+  content = function(file) {
+    write.csv(df_{{ env_id }}()$data, file)
+  }
+)
 
-# create plot with wilson
+#
+# Output
+#
 output$plot_{{ env_id }} <- plotly::renderPlotly({
   output_list <- do.call(wilson::create_heatmap, df_{{ env_id }}()$params)
   heatmap <- output_list$plot
   # reset the width and hight of the plotly object for automatic scaling
   heatmap$x$layout$height <- 0
   heatmap$x$layout$width <- 0
-  #heatmap$x$source <- "plot_{{ env_id }}"
-  #heatmap %>% plotly::event_register("plotly_selected")
-  # no output as transmitter implemented
   heatmap
 })
 
+#
 # Layout of component
+#
 shiny::fillRow(flex = c(NA, 1),
-        shinyWidgets::dropdownButton(div(style='max-height: 350px; overflow-x: auto;',do.call(shiny::inputPanel, ui_list)),
+        dropdownButton(div(style='max-height: 350px; overflow-x: auto;',do.call(shiny::inputPanel, ui_list)),
                        circle = TRUE, status = "danger", icon = icon("gear"), width = "300px",
-                       tooltip = shinyWidgets::tooltipOptions(title = "Click, to change plot settings:")),
+                       tooltip = tooltipOptions(title = "Click, to change plot settings:")),
         plotly::plotlyOutput("plot_{{ env_id }}", width = "100%", height = "400px")
 )
 ```
