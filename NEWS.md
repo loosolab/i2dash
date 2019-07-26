@@ -1,3 +1,8 @@
+# wilson 2.3.0
+- implemented:
+  - heatmap_to_i2dash
+  - geneView_to_i2dash
+  - scatterplot_to_i2dash
 # wilson 2.2.1
 - fixed orTextual selection bug
 # wilson 2.2.0
