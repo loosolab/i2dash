@@ -1,0 +1,272 @@
+
+### {{ title }}
+
+<!-- Component created on {{ date }} -->
+
+```{r}
+{{ env_id }} <- readRDS("envs/{{ env_id }}.rds")
+
+is_shiny <- identical(knitr::opts_knit$get("rmarkdown.runtime"), "shiny")
+```
+
+```{r, eval=!is_shiny}
+# Parameters for wilson::create_geneview()
+# params <- list()
+"%ni%" <- Negate("%in%")
+additional_arguments <- {{ env_id }}$additional_arguments
+
+if("plot.type" %ni% names({{ env_id }}$additional_arguments)){
+  additional_arguments$plot.type <- "line"
+}
+if("facet.target" %ni% names({{ env_id }}$additional_arguments)){
+  additional_arguments$facet.target <- "gene"
+}
+if("facet.cols" %ni% names({{ env_id }}$additional_arguments)){
+  additional_arguments$facet.cols <- 3
+}
+if("color" %ni% names({{ env_id }}$additional_arguments)){
+  color <- RColorBrewer::brewer.pal(8, "Accent")
+  additional_arguments$color <- color
+}
+
+# force static
+additional_arguments$plot.method <- "static"
+
+# set variables
+countTable <- {{ env_id }}$countTable
+group_by <- {{ env_id }}$group_by[1]
+
+# create data.tables "data" and "grouping" from provided data
+data <- data.table::data.table("features" = rownames(countTable), countTable)
+grouping <- data.table::data.table("keys" = colnames(countTable), "factor" = group_by[[1]])
+
+additional_arguments$data <- data
+additional_arguments$grouping <- grouping
+
+# Provide data for download
+#i2dash::embed_var(data)
+
+# Render plot
+output_list <- do.call(wilson::create_geneview, additional_arguments)
+plot <- output_list$plot
+plot
+```
+
+```{r, eval=is_shiny}
+################ UI ####################
+ui_list <- list()
+
+# select type of plot
+ui_list <- rlist::list.append(ui_list,
+                                selectInput("select_type_{{ env_id }}", label = "Type of Plot:",
+                                            choices = c("line", "box", "violin", "bar"), selected = "line"))
+
+# subset features
+ui_list <- rlist::list.append(ui_list,
+                                selectInput("select_subset_{{ env_id }}",
+                                  label = "Select features:",
+                                  choices = rownames({{ env_id }}$countTable),
+                                  multiple = TRUE)
+                              )
+
+# selection field for group_by
+if ({{ env_id }}$group_by_selection){
+  ui_list <- rlist::list.append(ui_list,
+                                selectInput("select_group_by_{{ env_id }}", label = "Select grouping:",
+                                            choices = names({{ env_id }}$group_by)))
+}
+# selection grouping by
+ui_list <- rlist::list.append(ui_list,
+                                selectInput("select_by_{{ env_id }}",
+                                  label = "Grouping by:",
+                                  choices = c("gene", "condition"),
+                                  selected = "gene",
+                                  multiple = FALSE)
+                              )
+# selection column number of plot
+ui_list <- rlist::list.append(ui_list,
+                                sliderInput("colnumber_{{ env_id }}", label = "Number of plot columns:", min = 1, max = 7, value = 3)
+                              )
+
+# Download link
+ui_list <- rlist::list.append(ui_list, tags$div(tags$br(), downloadButton('downloadData_{{ env_id }}', 'Download data')))
+
+################# Server ####################
+# if component is a reciever
+if({{ env_id }}$compId %in% edgeTable$reciever){
+  
+  # set variables
+  reciever_{{ env_id }} <- {{ env_id }}$compId
+  transmitter_to_{{ env_id }} <- edgeTable[reciever=={{ env_id }}$compId]$transmitter
+
+  df_{{ env_id }} <- shiny::reactive({
+    
+    # Parameters for wilson::create_geneview()
+    # params <- list()
+    "%ni%" <- Negate("%in%")
+    additional_arguments <- {{ env_id }}$additional_arguments
+    
+      # type of plot
+    additional_arguments$plot.type <- input$select_type_{{ env_id }}
+    
+    # type of grouping by
+    additional_arguments$facet.target <- input$select_by_{{ env_id }}
+    
+    # number of columns in plot
+    additional_arguments$facet.cols <- input$colnumber_{{ env_id }}
+    
+    if("color" %ni% names({{ env_id }}$additional_arguments)){
+      color <- RColorBrewer::brewer.pal(8, "Accent")
+      additional_arguments$color <- color
+    }
+    
+    additional_arguments$plot.method <- "static"
+    
+    # Set values for 'group_by' and 'countTable'
+    if( !{{ env_id }}$group_by_selection ) {
+      group_by <- {{ env_id }}$group_by[1]
+    } else {
+      group_by <- {{ env_id }}$group_by[input$select_group_by_{{ env_id }}]
+    }
+    countTable <- {{ env_id }}$countTable
+    
+    # subset countTable according to transmitted sample keys
+    plot_transmitter_string <- paste0("plot_env_", transmitter_to_{{ env_id }})
+    keys_transmitter_string <- paste0("df_env_", transmitter_to_{{ env_id }}, "()$key")
+    selection_transmitter <- plotly::event_data("plotly_selected", source = plot_transmitter_string)$key
+    if(!is.null(selection_transmitter)){
+      if(all(selection_transmitter %in% colnames(countTable))){
+        countTable <- subset(countTable, select = selection_transmitter)
+        # subset group_by according to countTable
+        group_by <- group_by[[1]][which(colnames(countTable) == selection_transmitter)]
+        group_by <- list("group_by" = group_by)
+      } else {
+        false_keys <- which(!(selection_transmitter %in% colnames(countTable)))
+        print("The following keys are not in the countTable:")
+        print(selection_transmitter[false_keys])
+        if(!is.null(ncol(selection_transmitter[-false_keys]))){
+          selection_transmitter <- selection_transmitter[-false_keys]
+          countTable <- subset(countTable, select = selection_transmitter)
+          # subset group_by according to countTable
+          group_by <- group_by[[1]][which(colnames(countTable) == selection_transmitter)]
+          group_by <- list("group_by" = group_by)
+        }
+      }
+    }
+    
+    # subset countTable by chosen features
+    if(!is.null(input$select_subset_{{ env_id }})){
+      subset_features <- input$select_subset_{{ env_id }}
+      if(length(subset_features) > 1){
+        countTable <- countTable[subset_features,]
+      } else if(length(subset_features) == 1){
+        countTable <- countTable[subset_features,,drop = FALSE]
+      }
+    }
+    
+    # create data.tables "data" and "grouping" from provided data
+    data <- data.table::data.table("features" = rownames(countTable), countTable)
+    grouping <- data.table::data.table("keys" = colnames(countTable), "factor" = group_by[[1]])
+    download_dt <- data.table::data.table("features" = rownames(countTable), "factor" = group_by[[1]], countTable)
+    additional_arguments$data <- data
+    additional_arguments$grouping <- grouping
+    #additional_arguments$width <- 20
+    #additional_arguments$height <- 15 
+    
+    return(list("params" = additional_arguments, "data" = download_dt))
+  })
+} else {
+  df_{{ env_id }} <- shiny::reactive({
+    
+    # Parameters for wilson::create_geneview()
+    # params <- list()
+    "%ni%" <- Negate("%in%")
+    additional_arguments <- {{ env_id }}$additional_arguments
+    
+      # type of plot
+    additional_arguments$plot.type <- input$select_type_{{ env_id }}
+    
+    # type of grouping by
+    additional_arguments$facet.target <- input$select_by_{{ env_id }}
+    
+    # number of columns in plot
+    additional_arguments$facet.cols <- input$colnumber_{{ env_id }}
+    
+    if("color" %ni% names({{ env_id }}$additional_arguments)){
+      color <- RColorBrewer::brewer.pal(8, "Accent")
+      additional_arguments$color <- color
+    }
+    
+    additional_arguments$plot.method <- "static"
+    
+    # Set values for 'group_by' and 'countTable'
+    if( !{{ env_id }}$group_by_selection ) {
+      group_by <- {{ env_id }}$group_by[1]
+    } else {
+      group_by <- {{ env_id }}$group_by[input$select_group_by_{{ env_id }}]
+    }
+    countTable <- {{ env_id }}$countTable
+    
+    # subset countTable by chosen features
+    if(!is.null(input$select_subset_{{ env_id }})){
+      subset_features <- input$select_subset_{{ env_id }}
+      if(length(subset_features) > 1){
+        countTable <- countTable[subset_features,]
+      } else if(length(subset_features) == 1){
+        countTable <- countTable[subset_features,,drop = FALSE]
+      }
+    }
+    #
+    # create data.tables "data" and "grouping" from provided data
+    data <- data.table::data.table("features" = rownames(countTable), countTable)
+    grouping <- data.table::data.table("keys" = colnames(countTable), "factor" = group_by[[1]])
+    download_dt <- data.table::data.table("features" = rownames(countTable), "factor" = group_by[[1]], countTable)
+    additional_arguments$data <- data
+    additional_arguments$grouping <- grouping
+    #additional_arguments$width <- 20
+    #additional_arguments$height <- 15
+    return(list("params" = additional_arguments, "data" = download_dt))
+  })
+}
+
+# Download
+output$downloadData_{{ env_id }} <- downloadHandler(
+  filename =  paste('data-', Sys.Date(), '.csv', sep=''),
+  content = function(file) {
+    write.csv(df_{{ env_id }}()$data, file)
+  }
+)
+
+# works as transmitter with brushopt
+plot_{{ env_id }} <- shiny::reactive({
+    if(!is.null(input$select_subset_{{ env_id }})){
+      output_list <- do.call(wilson::create_geneview, df_{{ env_id }}()$params)
+      dt <- output_list$plot$data
+      return(dt)
+    }
+})
+
+# Output
+output$plot_{{ env_id }} <- renderPlot({
+    if(!is.null(input$select_subset_{{ env_id }})){
+      output_list <- do.call(wilson::create_geneview, df_{{ env_id }}()$params)
+      gg <- output_list$plot
+      gg
+      #p <- plotly::ggplotly(gg)
+      #p
+    }
+    # convert to plotly object for automatic resizing
+    
+})
+
+# Layout of component
+shiny::fillRow(flex = c(NA, 1),
+        shinyWidgets::dropdownButton(div(style='max-height: 350px; overflow-x: auto;',do.call(shiny::inputPanel, ui_list)),
+                       circle = TRUE, status = "danger", icon = icon("gear"), width = "300px",
+                       tooltip = shinyWidgets::tooltipOptions(title = "Click, to change plot settings:")),
+        plotOutput("plot_{{ env_id }}", width = "100%",click = "plot1_click",
+        brush = brushOpts(
+          id = "plot1_brush"
+        ))
+)
+```
