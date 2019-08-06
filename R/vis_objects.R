@@ -95,3 +95,8 @@ setMethod("add_component",
           signature = signature(object = "i2dashboard", component = "grViz"),
           definition = function(object, component, page = "default", title = NULL, ...) {
             add_vis_object(object, component, "diagrammeR", page, title, ...) })
+
+setMethod("add_component",
+          signature = signature(object = "i2dashboard", component = "gt_tbl"),
+          definition = function(object, component, page = "default", title = NULL, ...) {
+            add_vis_object(object, component, "gt", page, title, ...) })
