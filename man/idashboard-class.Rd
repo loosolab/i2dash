@@ -8,9 +8,10 @@
 \alias{idashboard-class}
 \alias{add_page,i2dashboard-method}
 \alias{remove_page,i2dashboard-method}
-\title{Method to assemble a dashboard and write it to a file}
+\title{Method to assemble a dashboard to a Rmd file.}
 \usage{
-\S4method{assemble}{i2dashboard}(object, output_file, pages, ...)
+\S4method{assemble}{i2dashboard}(object, pages = names(object@pages),
+  file = object@file)
 
 \S4method{add_component}{i2dashboard,character}(object, component,
   page = "default", ...)
@@ -23,15 +24,15 @@
 \arguments{
 \item{object}{A \linkS4class{i2dash::i2dashboard} object.}
 
-\item{output_file}{The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.}
-
 \item{pages}{A string or vector with the names of pages, which should be assemble to a report.}
 
-\item{...}{Additional parameters passed to the components render function.}
+\item{file}{The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.}
 
 \item{component}{The name of the component.}
 
 \item{page}{The name of the page to add the component to.}
+
+\item{...}{Additional parameters passed to the components render function.}
 
 \item{title}{The title of the page to be added.}
 
@@ -40,8 +41,6 @@
 \item{menu}{The name of the menu, under which the page should appear.}
 
 \item{object}{A \linkS4class{i2dash::i2dashboard} object.}
-
-\item{...}{Additional parameters passed to the components render function.}
 
 \item{object}{A \linkS4class{i2dash::i2dashboard} object.}
 
@@ -52,7 +51,7 @@
 \item{page}{The name of the page to be removed.}
 }
 \description{
-Method to assemble a dashboard and write it to a file
+Method to assemble a dashboard to a Rmd file.
 
 Method to add a component to a page of an i2dashboard object
 

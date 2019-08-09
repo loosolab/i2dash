@@ -6,5 +6,8 @@ if (any(grepl(pattern = ".switchr", x = .libPaths()))) {
 
 # Make it possible to reuse chunk labels
 options(knitr.duplicate.label = "allow")
+
+# Set datadir variable, components should fetch their env from here!
+datadir <- "<% datadir %>"
 ```
 

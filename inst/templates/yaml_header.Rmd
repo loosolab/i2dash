@@ -1,0 +1,9 @@
+---
+title: <% title %>
+author: <% author %>
+output:
+  flexdashboard::flex_dashboard:
+    theme: <% theme %>
+<% if(interactive) sprintf('runtime: shiny') %>
+---
+<!-- This dashboard was created with the R package 'i2dash'. https://gitlab.gwdg.de/loosolab/software/i2dash -->

@@ -4,6 +4,8 @@
 #' @slot author The author of the dashboard
 #' @slot interactive If a shiny-based report should be created
 #' @slot theme The theme of the dashboard
+#' @slot data.dir
+#' @slot file
 #' @slot pages A list of dashboard pages
 #'
 #' @name idashboard-class
@@ -15,13 +17,15 @@ setClass("i2dashboard",
     author = "character",
     interactive = "logical",
     theme = "character",
-    workdir = "character",
+    datadir = "character",
+    file = "character",
     pages = "list"
     ),
   prototype=list(
+    title = "i2dashboard",
     interactive = FALSE,
     theme = "yeti",
-    workdir = getwd(),
+    datadir = file.path(getwd(), "report-data"),
     pages = list(default = list(title = "Default page", layout = "default", menu = NULL, components = list(), sidebar = NULL, max_components = Inf))
     )
   )
@@ -30,9 +34,13 @@ setMethod("initialize", "i2dashboard", function(.Object, ...) {
   # Do prototyping
   .Object <- callNextMethod()
 
+  # Create nice filename from title
+  if(!is.null(.Object@title)) {
+    .Object@title %>% tolower %>% gsub(pattern = " ", replacement = "-") %>% gsub(pattern = '[^a-zA-Z-]', replacement = '') %>% paste0(".Rmd") -> .Object@file
+  }
+
   # Create working directory and directory for environments
-  dir.create(.Object@workdir, showWarnings = FALSE)
-  dir.create(file.path(.Object@workdir, "envs"), recursive = T, showWarnings = FALSE)
+  dir.create(.Object@datadir, showWarnings = FALSE, recursive = T)
 
   # Validate object - tbd
   return(.Object)

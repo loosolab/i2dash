@@ -7,6 +7,6 @@ if (!requireNamespace("<% package %>", quietly = TRUE)) {
     stop('The package <% package %> is needed to embed objects of class <% class %>.', call. = FALSE)
 }
 
-readRDS('envs/<% component_id %>.rds')
+readRDS(file.path(datadir, '<% component_id %>.rds'))
 ```
 

@@ -1,39 +1,26 @@
-#' Method to assemble a dashboard and write it to a file
+#' Method to assemble a dashboard to a Rmd file.
 #'
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
-#' @param output_file The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.
 #' @param pages A string or vector with the names of pages, which should be assemble to a report.
-#' @param ... Additional parameters passed to the components render function.
+#' @param file The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.
 #'
 #' @rdname idashboard-class
 #' @export
-setMethod("assemble", "i2dashboard", function(object, output_file, pages, ...) {
-  yaml_list <- list(title = object@title,
-                    author = object@author,
-                    output = list("flexdashboard::flex_dashboard" = list(theme = object@theme)))
-
-  if (object@interactive){
-    yaml_list[["runtime"]] <- "shiny"
-  }
-  yaml_part <- yaml::as.yaml(yaml_list)
-  header_string <- paste0("---\n", yaml_part, "---\n<!-- This dashboard was created with the R package 'i2dash'. https://gitlab.gwdg.de/loosolab/software/i2dash -->\n")
-
+setMethod("assemble", "i2dashboard", function(object, pages = names(object@pages), file = object@file) {
   tmp_document <- tempfile()
 
-  # create variable final_document
-  final_document <- file.path(object@workdir, output_file)
-
-  # write header to tempfile
-  cat(header_string,
-      file = tmp_document,
-      append = FALSE,
-      sep="")
+  # Add YAML header
+  knitr::knit_expand(file = system.file("templates", "yaml_header.Rmd", package = "i2dash"),
+                     delim = c("<%", "%>"),
+                     title = object@title,
+                     author = object@author,
+                     theme = object@theme,
+                     interactive = object@interactive) %>%
+    cat(file = tmp_document, append = FALSE, sep = "\n")
 
   # Add i2dash global setup
-  cat(readLines(system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash")),
-      file = tmp_document,
-      append = TRUE,
-      sep = "\n")
+  knitr::knit_expand(file = system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash"), delim = c("<%", "%>"), datadir = object@datadir) %>%
+    cat(file = tmp_document, append = TRUE, sep = "\n")
 
   # write page to tempfile
   for (pagename in pages){
@@ -41,21 +28,20 @@ setMethod("assemble", "i2dashboard", function(object, output_file, pages, ...) {
     if (name %in% names(object@pages)){
       # Create a content string from all components
       components <- paste0(object@pages[[name]]$components, sep = "")
-      #components <- "here are the components"
       # Create variable "title" & "menu" & "layout" for readability
       title <- object@pages[[name]]$title
       menu <- object@pages[[name]]$menu
       layout <- object@pages[[name]]$layout
       sidebar <- object@pages[[name]]$sidebar
 
-      full_content <- .render_page(title = title, components = components, layout = layout,  menu = menu, sidebar = sidebar)
-      cat(full_content, file = tmp_document, append = TRUE, sep='')
+      .render_page(title = title, components = components, layout = layout,  menu = menu, sidebar = sidebar) %>%
+        cat(file = tmp_document, append = TRUE, sep='')
     } else {
       warning(sprintf("i2dashboard object does not contain a page named '%s'", pagename))
     }
   }
   # copy tempfile to final_document
-  file.copy(from = tmp_document, to = final_document, overwrite = TRUE)
+  file.copy(from = tmp_document, to = file, overwrite = TRUE)
 
   invisible(object)
 })
