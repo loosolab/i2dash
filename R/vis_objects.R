@@ -21,7 +21,7 @@ add_vis_object <- function(report, object, package, page = "default", title = NU
   component_id <- paste0("obj_", stringi::stri_rand_strings(1, 6))
 
   # Save plot as RDS
-  saveRDS(object, file = file.path(report@workdir, "envs", paste0(component_id, ".rds")))
+  saveRDS(object, file = file.path(report@datadir, paste0(component_id, ".rds")))
 
   # Expand template
   timestamp <- Sys.time()
