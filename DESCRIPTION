@@ -30,3 +30,11 @@ Suggests:
     d3heatmap,
     metricsgraphics,
     diagrammeR
+Collate: 
+    'i2dashboard.R'
+    'AllGenerics.R'
+    'assemble.R'
+    'components.R'
+    'pages.R'
+    'reexports.R'
+    'vis_objects.R'

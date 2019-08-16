@@ -1,16 +1,18 @@
-#' The idashboard S4 class
+#' The idashboard S4 class.
+#'
+#'
 #'
 #' @slot title The dashboards title
 #' @slot author The author of the dashboard
 #' @slot interactive If a shiny-based report should be created
 #' @slot theme The theme of the dashboard
-#' @slot data.dir
-#' @slot file
+#' @slot datadir Path to the directory, where report data is stored.
+#' @slot file Filename of the resulting report Rmd file.
 #' @slot pages A list of dashboard pages
 #'
 #' @name idashboard-class
 #' @rdname idashboard-class
-#' @export
+#' @exportClass i2dashboard
 setClass("i2dashboard",
   slots = c(
     title = "character",
@@ -30,13 +32,17 @@ setClass("i2dashboard",
     )
   )
 
+#' Constructor method of the i2dashboard class.
+#'
+#' @name idashboard-class
+#' @rdname idashboard-class
 setMethod("initialize", "i2dashboard", function(.Object, ...) {
   # Do prototyping
   .Object <- callNextMethod()
 
   # Create nice filename from title
   if(!is.null(.Object@title)) {
-    .Object@title %>% tolower %>% gsub(pattern = " ", replacement = "-") %>% gsub(pattern = '[^a-zA-Z-]', replacement = '') %>% paste0(".Rmd") -> .Object@file
+    .Object@title %>% tolower %>% gsub(pattern = " ", replacement = "-") %>% gsub(pattern = '[^a-zA-Z0-9-]', replacement = '') %>% paste0(".Rmd") -> .Object@file
   }
 
   # Create working directory and directory for environments
@@ -46,17 +52,28 @@ setMethod("initialize", "i2dashboard", function(.Object, ...) {
   return(.Object)
 })
 
-setMethod("show", "i2dashboard", function(object) {
-  cat("A flexdashboard with the title: ", object@title, "\n", sep = "")
-  if(length(object@pages) > 0) {
-    cat("... containing ", length(object@pages), "pages:\n")
-    for (pagename in names(object@pages)){
-      cat(sprintf(" ... the page '%s' with the title '%s' contains %i components.\n", pagename, object@pages[[pagename]]$title, length(object@pages[[pagename]]$components)))
+#' Show method of the i2dashboard class.
+#'
+#' @name idashboard-class
+#' @rdname idashboard-class
+setMethod("show", "i2dashboard", function(.Object) {
+  cat("A flexdashboard with the title: ", .Object@title, "\n", sep = "")
+  if(length(.Object@pages) > 0) {
+    cat("... containing ", length(.Object@pages), "pages:\n")
+    for (pagename in names(.Object@pages)){
+      cat(sprintf(" ... the page '%s' with the title '%s' contains %i components.\n", pagename, .Object@pages[[pagename]]$title, length(.Object@pages[[pagename]]$components)))
     }
   } else {
     cat("... containing 0 pages.")
   }
 })
+
+#' Create a new i2dashboard object.
+#'
+#' @name idashboard-class
+#' @rdname idashboard-class
+#' @export
+i2dashboard <- function(...) new("i2dashboard", ...)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Validity.

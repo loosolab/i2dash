@@ -5,7 +5,7 @@
 #' @param component The name of the component.
 #' @param ... Additional parameters passed to the components render function.
 #'
-#' @rdname idashboard-class
+#' @rdname i2dashboard-methods
 #' @export
 setMethod("add_component",
           signature = signature(object = "i2dashboard", component = "character"),

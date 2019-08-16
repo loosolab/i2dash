@@ -3,10 +3,12 @@
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
 #' @param pages A string or vector with the names of pages, which should be assemble to a report.
 #' @param file The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.
+#' @param render A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render}.
+#' @param ... Additional arguments passed on to \code{rmarkdown::render}.
 #'
-#' @rdname idashboard-class
+#' @rdname i2dashboard-methods
 #' @export
-setMethod("assemble", "i2dashboard", function(object, pages = names(object@pages), file = object@file) {
+setMethod("assemble", "i2dashboard", function(object, pages = names(object@pages), file = object@file, render = FALSE, ...) {
   tmp_document <- tempfile()
 
   # Add YAML header
@@ -42,6 +44,11 @@ setMethod("assemble", "i2dashboard", function(object, pages = names(object@pages
   }
   # copy tempfile to final_document
   file.copy(from = tmp_document, to = file, overwrite = TRUE)
+
+  # Render, if requested
+  if(render) {
+    rmarkdown::render(file, ...)
+  }
 
   invisible(object)
 })

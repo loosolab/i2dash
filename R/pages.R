@@ -17,7 +17,7 @@
 #' @param layout The page layout (see below).
 #' @param menu The name of the menu, under which the page should appear.
 #'
-#' @rdname idashboard-class
+#' @rdname i2dashboard-methods
 #' @export
 setMethod("add_page", "i2dashboard", function(object, page, title, layout = "default", menu = NULL, sidebar = NULL, ...) {
   name <- .create_page_name(page)
@@ -49,7 +49,7 @@ setMethod("add_page", "i2dashboard", function(object, page, title, layout = "def
 #' @param object A \linkS4class{i2dash::i2dashboard} object.
 #' @param page The name of the page to be removed.
 #'
-#' @rdname idashboard-class
+#' @rdname i2dashboard-methods
 #' @export
 setMethod("remove_page", "i2dashboard", function(object, page) {
   name <- .create_page_name(page)

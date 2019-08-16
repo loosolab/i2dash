@@ -1,3 +1,4 @@
+#' @include i2dashboard.R
 #' @export
 setGeneric("assemble", function(object, ...) standardGeneric("assemble"))
 
