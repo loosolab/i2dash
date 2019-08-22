@@ -70,6 +70,7 @@ setMethod("assemble", "i2dashboard", function(object, pages = names(object@pages
   }
 
   template <- switch(layout,
+                     "empty" = system.file("templates", "layout_empty.Rmd", package = "i2dash"),
                      "default" = system.file("templates", "layout_default.Rmd", package = "i2dash"),
                      "storyboard" = system.file("templates", "layout_storyboard.Rmd", package = "i2dash"),
                      "focal_left" = system.file("templates", "layout_focal_left.Rmd", package = "i2dash"),

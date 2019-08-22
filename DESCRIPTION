@@ -35,6 +35,7 @@ Collate:
     'AllGenerics.R'
     'assemble.R'
     'components.R'
+    'get_set.R'
     'pages.R'
     'reexports.R'
     'vis_objects.R'

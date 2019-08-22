@@ -1,0 +1,4 @@
+<% title %> <% if(!is.null(menu)) sprintf('{data-navmenu="%s"}', menu) %>
+====================================================
+
+<% components %>

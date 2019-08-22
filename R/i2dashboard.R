@@ -75,6 +75,7 @@ setMethod("show", "i2dashboard", function(.Object) {
 #' @export
 i2dashboard <- function(...) new("i2dashboard", ...)
 
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Validity.
 ###

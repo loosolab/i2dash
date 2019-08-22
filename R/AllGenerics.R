@@ -10,3 +10,7 @@ setGeneric("remove_page", function(object, ...) standardGeneric("remove_page"))
 
 #' @export
 setGeneric("add_component", function(object, component, ...) standardGeneric("add_component"))
+
+#' @export
+setGeneric("interactivity", function(object) standardGeneric("interactivity"))
+setGeneric("interactivity<-", function(object, value) standardGeneric("interactivity<-"))
