@@ -29,9 +29,11 @@ Visualizations are organized hierarchically as Shiny modules, such that larger v
 The module source code is made available as an R package and can be installed locally with
 
 ```r
-library(devtools)
-install_github("loosolab/wilson", host="github.molgen.mpg.de/api/v3")
+install.packages("BiocManager")
+BiocManager::install("wilson")
 ```
+
+On Windows, make sure that `Rtools` are available.
 
 ## CLARION input format
 
