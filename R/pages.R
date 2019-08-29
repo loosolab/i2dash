@@ -9,9 +9,9 @@
   x %>% tolower %>% gsub(x = ., pattern = " ", replacement = "_") %>% make.names %>% return
 }
 
-#' Method to add a page to an i2dashboard object
+#' Method to add a page to an i2dashboard
 #'
-#' @param object A \linkS4class{i2dash::i2dashboard} object.
+#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
 #' @param page The name of the page to be added.
 #' @param title The title of the page to be added.
 #' @param layout The page layout (see below).
@@ -19,7 +19,7 @@
 #'
 #' @rdname i2dashboard-methods
 #' @export
-setMethod("add_page", "i2dashboard", function(object, page, title, layout = "default", menu = NULL, sidebar = NULL, ...) {
+setMethod("add_page", "i2dashboard", function(dashboard, page, title, layout = "default", menu = NULL, sidebar = NULL, ...) {
   name <- .create_page_name(page)
 
   max_components <- switch(layout,
@@ -29,7 +29,7 @@ setMethod("add_page", "i2dashboard", function(object, page, title, layout = "def
                            "2x2_grid" = 4
   )
 
-  if(name %in% names(object@pages)) {
+  if(name %in% names(dashboard@pages)) {
     warning(paste("The page", name, "already exists and will be overwritten."))
     if(base::interactive()) {
       overwrite_page <- menu(c("Yes, overwrite page", "Cancel"), title = "Do you want to overwrite this page?")
@@ -40,19 +40,19 @@ setMethod("add_page", "i2dashboard", function(object, page, title, layout = "def
     }
   }
 
-  object@pages[[name]] <- list(title = title, layout = layout, menu = menu, components = list(), max_components = max_components, sidebar = sidebar)
-  return(object)
+  dashboard@pages[[name]] <- list(title = title, layout = layout, menu = menu, components = list(), max_components = max_components, sidebar = sidebar)
+  return(dashboard)
 })
 
-#' Method to remove a page to an i2dashboard object
+#' Method to remove a page to an i2dashboard
 #'
-#' @param object A \linkS4class{i2dash::i2dashboard} object.
+#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
 #' @param page The name of the page to be removed.
 #'
 #' @rdname i2dashboard-methods
 #' @export
-setMethod("remove_page", "i2dashboard", function(object, page) {
+setMethod("remove_page", "i2dashboard", function(dashboard, page) {
   name <- .create_page_name(page)
-  object@pages[[name]] <- NULL
-  return(object)
+  dashboard@pages[[name]] <- NULL
+  return(dashboard)
 })

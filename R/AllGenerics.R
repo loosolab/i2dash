@@ -1,16 +1,16 @@
 #' @include i2dashboard.R
 #' @export
-setGeneric("assemble", function(object, ...) standardGeneric("assemble"))
+setGeneric("assemble", function(dashboard, ...) standardGeneric("assemble"))
 
 #' @export
-setGeneric("add_page", function(object, ...) standardGeneric("add_page"))
+setGeneric("add_page", function(dashboard, ...) standardGeneric("add_page"))
 
 #' @export
-setGeneric("remove_page", function(object, ...) standardGeneric("remove_page"))
+setGeneric("remove_page", function(dashboard, ...) standardGeneric("remove_page"))
 
 #' @export
-setGeneric("add_component", function(object, component, ...) standardGeneric("add_component"))
+setGeneric("add_component", function(dashboard, component, ...) standardGeneric("add_component"))
 
 #' @export
-setGeneric("interactivity", function(object) standardGeneric("interactivity"))
-setGeneric("interactivity<-", function(object, value) standardGeneric("interactivity<-"))
+setGeneric("interactivity", function(dashboard) standardGeneric("interactivity"))
+setGeneric("interactivity<-", function(dashboard, value) standardGeneric("interactivity<-"))

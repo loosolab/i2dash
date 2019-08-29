@@ -3,17 +3,17 @@
 \docType{methods}
 \name{i2dashboard-class}
 \alias{i2dashboard-class}
-\title{Get/set the interactivity of the i2dashboard object.}
+\title{Get/set the interactivity of the i2dashboard.}
 \usage{
-\S4method{interactivity}{i2dashboard}(object)
+\S4method{interactivity}{i2dashboard}(dashboard)
 
-\S4method{interactivity}{i2dashboard}(object) <- value
+\S4method{interactivity}{i2dashboard}(dashboard) <- value
 }
 \arguments{
-\item{value}{The value of the desired property.}
+\item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
 
-\item{.Object}{A \linkS4class{i2dash::i2dashboard} report.}
+\item{value}{The value of the desired property.}
 }
 \description{
-Get/set the interactivity of the i2dashboard object.
+Get/set the interactivity of the i2dashboard.
 }

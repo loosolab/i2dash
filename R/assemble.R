@@ -1,6 +1,6 @@
 #' Method to assemble a dashboard to a Rmd file.
 #'
-#' @param object A \linkS4class{i2dash::i2dashboard} object.
+#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
 #' @param pages A string or vector with the names of pages, which should be assemble to a report.
 #' @param file The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.
 #' @param render A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render}.
@@ -8,38 +8,38 @@
 #'
 #' @rdname i2dashboard-methods
 #' @export
-setMethod("assemble", "i2dashboard", function(object, pages = names(object@pages), file = object@file, render = FALSE, ...) {
+setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard@pages), file = dashboard@file, render = FALSE, ...) {
   tmp_document <- tempfile()
 
   # Add YAML header
   knitr::knit_expand(file = system.file("templates", "yaml_header.Rmd", package = "i2dash"),
                      delim = c("<%", "%>"),
-                     title = object@title,
-                     author = object@author,
-                     theme = object@theme,
-                     interactive = object@interactive) %>%
+                     title = dashboard@title,
+                     author = dashboard@author,
+                     theme = dashboard@theme,
+                     interactive = dashboard@interactive) %>%
     cat(file = tmp_document, append = FALSE, sep = "\n")
 
   # Add i2dash global setup
-  knitr::knit_expand(file = system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash"), delim = c("<%", "%>"), datadir = object@datadir) %>%
+  knitr::knit_expand(file = system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash"), delim = c("<%", "%>"), datadir = dashboard@datadir) %>%
     cat(file = tmp_document, append = TRUE, sep = "\n")
 
   # write page to tempfile
   for (pagename in pages){
     name <- .create_page_name(pagename)
-    if (name %in% names(object@pages)){
+    if (name %in% names(dashboard@pages)){
       # Create a content string from all components
-      components <- paste0(object@pages[[name]]$components, sep = "")
+      components <- paste0(dashboard@pages[[name]]$components, sep = "")
       # Create variable "title" & "menu" & "layout" for readability
-      title <- object@pages[[name]]$title
-      menu <- object@pages[[name]]$menu
-      layout <- object@pages[[name]]$layout
-      sidebar <- object@pages[[name]]$sidebar
+      title <- dashboard@pages[[name]]$title
+      menu <- dashboard@pages[[name]]$menu
+      layout <- dashboard@pages[[name]]$layout
+      sidebar <- dashboard@pages[[name]]$sidebar
 
       .render_page(title = title, components = components, layout = layout,  menu = menu, sidebar = sidebar) %>%
         cat(file = tmp_document, append = TRUE, sep='')
     } else {
-      warning(sprintf("i2dashboard object does not contain a page named '%s'", pagename))
+      warning(sprintf("i2dashboard dashboard does not contain a page named '%s'", pagename))
     }
   }
   # copy tempfile to final_document
@@ -50,7 +50,7 @@ setMethod("assemble", "i2dashboard", function(object, pages = names(object@pages
     rmarkdown::render(file, ...)
   }
 
-  invisible(object)
+  invisible(dashboard)
 })
 
 

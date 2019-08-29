@@ -1,6 +1,6 @@
-#' Method to add a component to a page of an i2dashboard object
+#' Method to add a component to a page of an i2dashboard
 #'
-#' @param object A \linkS4class{i2dash::i2dashboard} object.
+#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
 #' @param page The name of the page to add the component to.
 #' @param component The name of the component.
 #' @param ... Additional parameters passed to the components render function.
@@ -8,17 +8,17 @@
 #' @rdname i2dashboard-methods
 #' @export
 setMethod("add_component",
-          signature = signature(object = "i2dashboard", component = "character"),
-          function(object, component, page = "default", ...) {
+          signature = signature(dashboard = "i2dashboard", component = "character"),
+          function(dashboard, component, page = "default", ...) {
   name <- .create_page_name(page)
-  if (!(name %in% names(object@pages))) {
-    warning(sprintf("i2dashboard object does not contain a page named '%s'", name))
-    return(object)
+  if (!(name %in% names(dashboard@pages))) {
+    warning(sprintf("i2dashboard dashboard does not contain a page named '%s'", name))
+    return(dashboard)
   }
 
-  if(length(object@pages[[name]]$components) + 1 > object@pages[[name]]$max_components) {
+  if(length(dashboard@pages[[name]]$components) + 1 > dashboard@pages[[name]]$max_components) {
     warning(sprintf("Not enough space left on page '%s'", name))
-    return(object)
+    return(dashboard)
   }
 
   pn <- strsplit(component, "::")[[1]]
@@ -28,17 +28,17 @@ setMethod("add_component",
     get(pn[[2]], envir = asNamespace(pn[[1]]), mode = "function")
   }
 
-  component <- do.call(eval_function, args = list(object, ...))
+  component <- do.call(eval_function, args = list(dashboard, ...))
 
   if(is.list(component)) {
     assertive.sets::is_subset(c("appendix", "component", "sidebar"), names(component))
-    object@pages[[name]]$components <- append(object@pages[[name]]$components, component$component)
-    object@pages[[name]]$sidebar <- paste0(object@pages[[name]]$sidebar, component$sidebar)
+    dashboard@pages[[name]]$components <- append(dashboard@pages[[name]]$components, component$component)
+    dashboard@pages[[name]]$sidebar <- paste0(dashboard@pages[[name]]$sidebar, component$sidebar)
     # ToDo: Handle appendix
   } else {
-    object@pages[[name]]$components <- append(object@pages[[name]]$components, component)
+    dashboard@pages[[name]]$components <- append(dashboard@pages[[name]]$components, component)
   }
-  return(object)
+  return(dashboard)
 })
 
 #' Method to download embed files into an Rmd-file

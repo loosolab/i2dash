@@ -8,19 +8,20 @@
 \alias{remove_page,i2dashboard-method}
 \title{Method to assemble a dashboard to a Rmd file.}
 \usage{
-\S4method{assemble}{i2dashboard}(object, pages = names(object@pages),
-  file = object@file, render = FALSE, ...)
+\S4method{assemble}{i2dashboard}(dashboard,
+  pages = names(dashboard@pages), file = dashboard@file,
+  render = FALSE, ...)
 
-\S4method{add_component}{i2dashboard,character}(object, component,
+\S4method{add_component}{i2dashboard,character}(dashboard, component,
   page = "default", ...)
 
-\S4method{add_page}{i2dashboard}(object, page, title, layout = "default",
-  menu = NULL, sidebar = NULL, ...)
+\S4method{add_page}{i2dashboard}(dashboard, page, title,
+  layout = "default", menu = NULL, sidebar = NULL, ...)
 
-\S4method{remove_page}{i2dashboard}(object, page)
+\S4method{remove_page}{i2dashboard}(dashboard, page)
 }
 \arguments{
-\item{object}{A \linkS4class{i2dash::i2dashboard} object.}
+\item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
 
 \item{pages}{A string or vector with the names of pages, which should be assemble to a report.}
 
@@ -40,24 +41,24 @@
 
 \item{menu}{The name of the menu, under which the page should appear.}
 
-\item{object}{A \linkS4class{i2dash::i2dashboard} object.}
+\item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
 
 \item{...}{Additional parameters passed to the components render function.}
 
-\item{object}{A \linkS4class{i2dash::i2dashboard} object.}
+\item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
 
 \item{page}{The name of the page to be added.}
 
-\item{object}{A \linkS4class{i2dash::i2dashboard} object.}
+\item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
 
 \item{page}{The name of the page to be removed.}
 }
 \description{
 Method to assemble a dashboard to a Rmd file.
 
-Method to add a component to a page of an i2dashboard object
+Method to add a component to a page of an i2dashboard
 
-Method to add a page to an i2dashboard object
+Method to add a page to an i2dashboard
 
-Method to remove a page to an i2dashboard object
+Method to remove a page to an i2dashboard
 }
