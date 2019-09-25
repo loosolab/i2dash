@@ -10,7 +10,7 @@
 \usage{
 \S4method{assemble}{i2dashboard}(dashboard,
   pages = names(dashboard@pages), file = dashboard@file,
-  render = FALSE, ...)
+  exclude = NULL, render = FALSE, ...)
 
 \S4method{add_component}{i2dashboard,character}(dashboard, component,
   page = "default", ...)
@@ -23,9 +23,11 @@
 \arguments{
 \item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
 
-\item{pages}{A string or vector with the names of pages, which should be assemble to a report.}
+\item{pages}{A string or vector with the names of pages, which should be assembled to a report.}
 
 \item{file}{The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.}
+
+\item{exclude}{A string or vector with the names of pages, which should be excluded from report assembly.}
 
 \item{render}{A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render}.}
 

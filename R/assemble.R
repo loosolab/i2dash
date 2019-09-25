@@ -1,14 +1,15 @@
 #' Method to assemble a dashboard to a Rmd file.
 #'
 #' @param dashboard A \linkS4class{i2dash::i2dashboard}.
-#' @param pages A string or vector with the names of pages, which should be assemble to a report.
+#' @param pages A string or vector with the names of pages, which should be assembled to a report.
 #' @param file The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.
+#' @param exclude A string or vector with the names of pages, which should be excluded from report assembly.
 #' @param render A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render}.
 #' @param ... Additional arguments passed on to \code{rmarkdown::render}.
 #'
 #' @rdname i2dashboard-methods
 #' @export
-setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard@pages), file = dashboard@file, render = FALSE, ...) {
+setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard@pages), file = dashboard@file, exclude = NULL, render = FALSE, ...) {
   tmp_document <- tempfile()
 
   # Add YAML header
@@ -23,6 +24,11 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
   # Add i2dash global setup
   knitr::knit_expand(file = system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash"), delim = c("<%", "%>"), datadir = dashboard@datadir) %>%
     cat(file = tmp_document, append = TRUE, sep = "\n")
+
+  # Handle exclusion of pages
+  if(!is.null(exclude)) {
+    pages <- pages[-na.omit(match(exclude, pages))]
+  }
 
   # write page to tempfile
   for (pagename in pages){
