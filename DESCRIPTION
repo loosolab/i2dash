@@ -16,7 +16,8 @@ Imports:
     knitr,
     flexdashboard,
     yaml,
-    assertive.sets
+    assertive.sets,
+    stringr
 Suggests: 
     highcharter,
     plotly,

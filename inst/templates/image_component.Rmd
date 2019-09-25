@@ -1,0 +1,3 @@
+### <% title %>
+
+![<% image_alt_text %>](<% image %>)
