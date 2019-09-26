@@ -17,7 +17,8 @@ Imports:
     flexdashboard,
     yaml,
     assertive.sets,
-    stringr
+    stringr,
+    glue
 Suggests: 
     highcharter,
     plotly,
@@ -39,4 +40,5 @@ Collate:
     'get_set.R'
     'pages.R'
     'reexports.R'
+    'sidebar.R'
     'vis_objects.R'

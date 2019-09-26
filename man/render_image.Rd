@@ -4,7 +4,7 @@
 \alias{render_image}
 \title{Method to embed an image file in a component}
 \usage{
-render_image(image, image_alt_text = NULL, title = NULL)
+render_image(image, image_alt_text = NULL, title = NULL, raw = FALSE)
 }
 \arguments{
 \item{image}{The path to the image file.}
@@ -12,6 +12,8 @@ render_image(image, image_alt_text = NULL, title = NULL)
 \item{image_alt_text}{The alt text of the image.}
 
 \item{title}{The components title.}
+
+\item{raw}{Whether or not to emit solely the markdown image code.}
 }
 \value{
 A character string containing the evaluated component

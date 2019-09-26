@@ -15,3 +15,4 @@ Column {data-width=400}
 <% if(length(components) > 1) components[[2]] %>
 
 <% if(length(components) > 2) components[[3]] %>
+

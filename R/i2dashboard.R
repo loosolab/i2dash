@@ -1,7 +1,5 @@
 #' The idashboard S4 class.
 #'
-#'
-#'
 #' @slot title The dashboards title
 #' @slot author The author of the dashboard
 #' @slot interactive If a shiny-based report should be created
@@ -9,6 +7,7 @@
 #' @slot datadir Path to the directory, where report data is stored.
 #' @slot file Filename of the resulting report Rmd file.
 #' @slot pages A list of dashboard pages
+#' @slot sidebar Content of the global sidebar
 #'
 #' @name idashboard-class
 #' @rdname idashboard-class
@@ -21,7 +20,8 @@ setClass("i2dashboard",
     theme = "character",
     datadir = "character",
     file = "character",
-    pages = "list"
+    pages = "list",
+    sidebar = "character"
     ),
   prototype=list(
     title = "i2dashboard",

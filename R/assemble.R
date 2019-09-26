@@ -30,6 +30,15 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
     pages <- pages[-na.omit(match(exclude, pages))]
   }
 
+  # Handle global sidebar if it has content
+  if(length(dashboard@sidebar) > 0) {
+    knitr::knit_expand(file = system.file("templates", "global_sidebar.Rmd", package = "i2dash"),
+                       delim = c("<%", "%>"),
+                       content = dashboard@sidebar,
+                       datawidth = 250) %>%
+      cat(file = tmp_document, append = TRUE, sep="\n")
+  }
+
   # write page to tempfile
   for (pagename in pages){
     name <- .create_page_name(pagename)
@@ -43,7 +52,7 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
       sidebar <- dashboard@pages[[name]]$sidebar
 
       .render_page(title = title, components = components, layout = layout,  menu = menu, sidebar = sidebar) %>%
-        cat(file = tmp_document, append = TRUE, sep='')
+        cat(file = tmp_document, append = TRUE, sep="\n")
     } else {
       warning(sprintf("i2dashboard dashboard does not contain a page named '%s'", pagename))
     }
@@ -72,7 +81,8 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
 .render_page <- function(title, components, layout = c("default", "storyboard", "focal_left", "2x2_grid"), menu = NULL, sidebar = NULL) {
   if(!is.null(sidebar)) {
     sidebar <- knitr::knit_expand(file = system.file("templates", "sidebar_template.Rmd", package = "i2dash"),
-                                  content = sidebar)
+                                  delim = c("<%", "%>"),
+                                  content = sidebar, datawidth = 250)
   }
 
   template <- switch(layout,

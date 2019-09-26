@@ -86,15 +86,19 @@ embed_var <- function(x, ...) {
   xfun::embed_file(f, text = 'Download full data as .csv', ...)
 }
 
-#' Method to embed content from a text file in a component
+#' Method to embed content from a text file in a component/sidebar
 #'
 #' @param file The file containing the text content.
 #' @param title The components title.
+#' @param raw Whether or not to emit raw file content
 #'
 #' @return A character string containing the evaluated component
-render_text <- function(file, title = NULL) {
-  content <- readLines(con = file)
-  knitr::knit_expand(file = system.file("templates", "text_component.Rmd", package = "i2dash"),
+render_text <- function(file, title = NULL, raw = FALSE) {
+  readLines(con = file) %>%
+    paste(collapse = "\n") -> content
+
+  if(raw) return(content)
+  knitr::knit_expand(file = system.file("templates", "component.Rmd", package = "i2dash"),
                      delim = c("<%", "%>"),
                      content = content,
                      title = title)
@@ -105,15 +109,18 @@ render_text <- function(file, title = NULL) {
 #' @param image The path to the image file.
 #' @param image_alt_text The alt text of the image.
 #' @param title The components title.
+#' @param raw Whether or not to emit solely the markdown image code.
 #'
 #' @return A character string containing the evaluated component
-render_image <- function(image, image_alt_text = NULL, title = NULL) {
+render_image <- function(image, image_alt_text = NULL, title = NULL, raw = FALSE) {
   if(is.null(image_alt_text)) {
     image_alt_text <- image
   }
-  knitr::knit_expand(file = system.file("templates", "image_component.Rmd", package = "i2dash"),
+  content <- glue::glue("![{image_alt_text}]({image})\n", image_alt_text = image_alt_text, image = image)
+
+  if(raw) return(content)
+  knitr::knit_expand(file = system.file("templates", "component.Rmd", package = "i2dash"),
                      delim = c("<%", "%>"),
-                     image = image,
-                     image_alt_text = image_alt_text,
+                     content = content,
                      title = title)
 }

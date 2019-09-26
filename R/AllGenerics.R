@@ -12,5 +12,8 @@ setGeneric("remove_page", function(dashboard, ...) standardGeneric("remove_page"
 setGeneric("add_component", function(dashboard, component, ...) standardGeneric("add_component"))
 
 #' @export
+setGeneric("add_to_sidebar", function(dashboard, component, ...) standardGeneric("add_to_sidebar"))
+
+#' @export
 setGeneric("interactivity", function(dashboard) standardGeneric("interactivity"))
 setGeneric("interactivity<-", function(dashboard, value) standardGeneric("interactivity<-"))

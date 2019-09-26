@@ -2,18 +2,20 @@
 % Please edit documentation in R/components.R
 \name{render_text}
 \alias{render_text}
-\title{Method to embed content from a text file in a component}
+\title{Method to embed content from a text file in a component/sidebar}
 \usage{
-render_text(file, title = NULL)
+render_text(file, title = NULL, raw = FALSE)
 }
 \arguments{
 \item{file}{The file containing the text content.}
 
 \item{title}{The components title.}
+
+\item{raw}{Whether or not to emit raw file content}
 }
 \value{
 A character string containing the evaluated component
 }
 \description{
-Method to embed content from a text file in a component
+Method to embed content from a text file in a component/sidebar
 }

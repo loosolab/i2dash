@@ -37,5 +37,7 @@ Create a new i2dashboard object.
 \item{\code{file}}{Filename of the resulting report Rmd file.}
 
 \item{\code{pages}}{A list of dashboard pages}
+
+\item{\code{sidebar}}{Content of the global sidebar}
 }}
 
