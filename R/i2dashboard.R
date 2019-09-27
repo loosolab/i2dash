@@ -8,6 +8,7 @@
 #' @slot file Filename of the resulting report Rmd file.
 #' @slot pages A list of dashboard pages
 #' @slot sidebar Content of the global sidebar
+#' @slot colormaps A named list with color mappings.
 #'
 #' @name idashboard-class
 #' @rdname idashboard-class
@@ -21,7 +22,8 @@ setClass("i2dashboard",
     datadir = "character",
     file = "character",
     pages = "list",
-    sidebar = "character"
+    sidebar = "character",
+    colormaps = "list"
     ),
   prototype=list(
     title = "i2dashboard",

@@ -36,6 +36,7 @@ Collate:
     'i2dashboard.R'
     'AllGenerics.R'
     'assemble.R'
+    'colormap.R'
     'components.R'
     'get_set.R'
     'pages.R'

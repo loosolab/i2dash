@@ -9,5 +9,8 @@ options(knitr.duplicate.label = "allow")
 
 # Set datadir variable, components should fetch their env from here!
 datadir <- "<% datadir %>"
+
+# Set up color mappings
+colormap <- <% if(!is.null(colormap)) sprintf('readRDS(file.path(datadir, "%s"))', colormap) else sprintf("list()") %>
 ```
 

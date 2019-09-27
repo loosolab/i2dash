@@ -39,5 +39,7 @@ Create a new i2dashboard object.
 \item{\code{pages}}{A list of dashboard pages}
 
 \item{\code{sidebar}}{Content of the global sidebar}
+
+\item{\code{colormaps}}{A named list with color mappings.}
 }}
 

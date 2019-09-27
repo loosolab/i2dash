@@ -12,6 +12,13 @@
 setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard@pages), file = dashboard@file, exclude = NULL, render = FALSE, ...) {
   tmp_document <- tempfile()
 
+  # Handle colormap
+  colormap_id <- NULL
+  if(length(dashboard@colormaps) > 0) {
+    file %>% tolower() %>% gsub(".rmd", "", x = .) %>% paste0("colormap_", ., ".rds") -> colormap_id
+    saveRDS(dashboard@colormaps, file = file.path(dashboard@datadir, colormap_id))
+  }
+
   # Add YAML header
   knitr::knit_expand(file = system.file("templates", "yaml_header.Rmd", package = "i2dash"),
                      delim = c("<%", "%>"),
@@ -22,7 +29,10 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
     cat(file = tmp_document, append = FALSE, sep = "\n")
 
   # Add i2dash global setup
-  knitr::knit_expand(file = system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash"), delim = c("<%", "%>"), datadir = dashboard@datadir) %>%
+  knitr::knit_expand(file = system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash"),
+                     delim = c("<%", "%>"),
+                     datadir = dashboard@datadir,
+                     colormap = colormap_id) %>%
     cat(file = tmp_document, append = TRUE, sep = "\n")
 
   # Handle exclusion of pages

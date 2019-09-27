@@ -15,5 +15,8 @@ setGeneric("add_component", function(dashboard, component, ...) standardGeneric(
 setGeneric("add_to_sidebar", function(dashboard, component, ...) standardGeneric("add_to_sidebar"))
 
 #' @export
+setGeneric("add_colormap", function(dashboard, ...) standardGeneric("add_colormap"))
+
+#' @export
 setGeneric("interactivity", function(dashboard) standardGeneric("interactivity"))
 setGeneric("interactivity<-", function(dashboard, value) standardGeneric("interactivity<-"))
