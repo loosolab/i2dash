@@ -16,7 +16,7 @@ LazyData: true
 Imports: shiny,
     data.table,
     ggplot2,
-    plotly,
+    plotly (> 4.8.0),
     scales,
     shinydashboard,
     DT (>= 0.3),
