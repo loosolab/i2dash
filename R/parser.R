@@ -365,7 +365,13 @@ parser <- function(file, dec = ".") {
   names(metadata) <- as.character(metadata[1])
 
   # remove empty columns
-  metadata <- metadata[, which(unlist(lapply(metadata, function(x) !all(is.na(x) || x == "")))), with = FALSE]
+  empty_cols <- union(
+    which(colSums(is.na(metadata)) == nrow(metadata)), # indices of full na columns
+    which(colSums(metadata == "") == nrow(metadata)) # indices of full "" columns
+  )
+  if (length(empty_cols) > 0) {
+    metadata[, (empty_cols) := NULL]
+  }
 
   # delete first line
   metadata <- metadata[-1]
