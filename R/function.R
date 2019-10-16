@@ -1246,8 +1246,9 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
     wd <- getwd()
     on.exit(setwd(wd)) # make sure working directory will be restored
     setwd(tempdir())
-    plotly::orca(p = plot, file = plot_file_pdf)
-    plotly::orca(p = plot, file = plot_file_png)
+    # Omit file path because orca adds it regardles of it already being there.
+    plotly::orca(p = plot, file = basename(plot_file_pdf))
+    plotly::orca(p = plot, file = basename(plot_file_png))
     setwd(wd)
   } else if (class(plot) == "Heatmap") { # TODO: find better way to check for complexHeatmap object
     # complexHeatmap
