@@ -1207,7 +1207,7 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
 #' @param save_plot Logical if plot object should be saved as .RData.
 #' @param ui List of user inputs. Will be converted to JavaScript Object Notation. See \code{\link[RJSONIO]{toJSON}}
 #'
-#' @return See \code{\link[utils]{zip}}.
+#' @return Path to zip archive. See \code{\link[zip]{zipr}}.
 download <- function(file, filename, plot, width, height, ppi = 72, save_plot = TRUE, ui = NULL) {
   session <- shiny::getDefaultReactiveDomain()
 
@@ -1289,7 +1289,7 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   }
 
   # create zip file
-  out <- utils::zip(zipfile = file, files = files, flags = "-j") # discard file path
+  out <- zip::zipr(zipfile = file, files = files, include_directories = FALSE)
 
   # remove tmp files
   file.remove(files)
