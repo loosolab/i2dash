@@ -1207,7 +1207,7 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
 #' @param save_plot Logical if plot object should be saved as .RData.
 #' @param ui List of user inputs. Will be converted to JavaScript Object Notation. See \code{\link[RJSONIO]{toJSON}}
 #'
-#' @return See \code{\link[utils]{zip}}.
+#' @return Path to zip archive invisibly. See \code{\link[zip]{zipr}}.
 download <- function(file, filename, plot, width, height, ppi = 72, save_plot = TRUE, ui = NULL) {
   session <- shiny::getDefaultReactiveDomain()
 
@@ -1246,8 +1246,9 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
     wd <- getwd()
     on.exit(setwd(wd)) # make sure working directory will be restored
     setwd(tempdir())
-    plotly::export(p = plot, file = plot_file_pdf)
-    plotly::export(p = plot, file = plot_file_png)
+    # Omit file path because orca adds it regardles of it already being there.
+    plotly::orca(p = plot, file = basename(plot_file_pdf))
+    plotly::orca(p = plot, file = basename(plot_file_png))
     setwd(wd)
   } else if (class(plot) == "Heatmap") { # TODO: find better way to check for complexHeatmap object
     # complexHeatmap
@@ -1288,7 +1289,7 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   }
 
   # create zip file
-  out <- utils::zip(zipfile = file, files = files, flags = "-j") # discard file path
+  out <- zip::zipr(zipfile = file, files = files, include_directories = FALSE)
 
   # remove tmp files
   file.remove(files)

@@ -27,7 +27,7 @@ download(file, filename, plot, width, height, ppi = 72,
 \item{ui}{List of user inputs. Will be converted to JavaScript Object Notation. See \code{\link[RJSONIO]{toJSON}}}
 }
 \value{
-See \code{\link[utils]{zip}}.
+Path to zip archive invisibly. See \code{\link[zip]{zipr}}.
 }
 \description{
 Function used for downloading.
