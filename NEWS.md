@@ -1,3 +1,18 @@
+# wilson 2.3.0
+- implemented:
+  - heatmap_to_i2dash
+  - geneView_to_i2dash
+  - scatterplot_to_i2dash
+# wilson 2.2.1
+- fixed orTextual selection bug
+# wilson 2.2.0
+- export plotting functions
+# wilson 2.1.1
+- fixed multiple unique_id bug in tobias_parser
+# wilson 2.1.0
+- implemented tobias_parser
+# wilson 2.0.3
+- reactive transformation parameter
 # wilson 2.0.2
 - fixed CRAN check Note/ Error
 # wilson 2.0.1

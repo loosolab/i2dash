@@ -33,6 +33,8 @@
 #' @import data.table
 #'
 #' @return Returns list(plot = ggplotly/ ggplot, width, height, ppi, exceed_size).
+#'
+#' @export
 create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, transparency = 1, pointsize = 1, labelsize = 3, color = NULL, x_label = "", y_label = "", z_label = "", density = TRUE, line = TRUE, categorized = FALSE, highlight.data = NULL, highlight.labels = NULL, highlight.hovertext = NULL, highlight.color = "#FF0000", xlim = NULL, ylim = NULL, colorbar.limits = NULL, width = "auto", height = "auto", ppi = 72, plot.method = "static", scale = 1){
   # force evaluation of all arguments
   # no promises in plot object
@@ -322,6 +324,8 @@ create_scatterplot <- function(data, data.labels = NULL, data.hovertext = NULL, 
 #' @import data.table
 #'
 #' @return A named list(plot = ggplot object, data = pca.data, width = width of plot (cm), height = height of plot (cm), ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max).
+#'
+#' @export
 create_pca <- function(data, color.group = NULL, color.title = NULL, palette = NULL, shape.group = NULL, shape.title = NULL, shapes = c(15:25), dimension.a = 1, dimension.b = 2, dimensions = 6, on.columns = TRUE, labels = FALSE, custom.labels = NULL, pointsize = 2, labelsize = 3, width = 28, height = 28, ppi = 72, scale = 1) {
   # force evaluation of all arguments
   # no promises in plot object
@@ -500,6 +504,8 @@ create_pca <- function(data, color.group = NULL, color.title = NULL, palette = N
 #' @details Width/ height limit = 500. If exceeded default to 500 and issue exceed_size = TRUE.
 #'
 #' @return Returns list(plot = complexHeatmap/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean whether width/ height exceeded max) depending on plot.method.
+#'
+#' @export
 create_heatmap <- function(data, unitlabel = "auto", row.label = TRUE, row.custom.label = NULL, column.label = TRUE, column.custom.label = NULL, clustering = "none", clustdist = "auto", clustmethod = "auto", colors = NULL, winsorize.colors = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1) {
   # force evaluation of all arguments
   # no promises in plot object
@@ -771,6 +777,8 @@ create_heatmap <- function(data, unitlabel = "auto", row.label = TRUE, row.custo
 #' @import data.table
 #'
 #' @return Returns depending on plot.method list(plot = ggplot/ plotly object, width = width in cm, height = height in cm, ppi = pixel per inch, exceed_size = Boolean).
+#'
+#' @export
 create_geneview <- function(data, grouping, plot.type = "line", facet.target = "gene", facet.cols = 2, colors = NULL, ylabel = NULL, ylimits = NULL, gene.label = NULL, plot.method = "static", width = "auto", height = "auto", ppi = 72, scale = 1){
   # force evaluation of all arguments
   # no promises in plot object
@@ -1199,7 +1207,7 @@ searchData <- function(input, choices, options = c("=", "<", ">"), min. = min(ch
 #' @param save_plot Logical if plot object should be saved as .RData.
 #' @param ui List of user inputs. Will be converted to JavaScript Object Notation. See \code{\link[RJSONIO]{toJSON}}
 #'
-#' @return See \code{\link[utils]{zip}}.
+#' @return Path to zip archive invisibly. See \code{\link[zip]{zipr}}.
 download <- function(file, filename, plot, width, height, ppi = 72, save_plot = TRUE, ui = NULL) {
   session <- shiny::getDefaultReactiveDomain()
 
@@ -1238,8 +1246,9 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
     wd <- getwd()
     on.exit(setwd(wd)) # make sure working directory will be restored
     setwd(tempdir())
-    plotly::export(p = plot, file = plot_file_pdf)
-    plotly::export(p = plot, file = plot_file_png)
+    # Omit file path because orca adds it regardles of it already being there.
+    plotly::orca(p = plot, file = basename(plot_file_pdf))
+    plotly::orca(p = plot, file = basename(plot_file_png))
     setwd(wd)
   } else if (class(plot) == "Heatmap") { # TODO: find better way to check for complexHeatmap object
     # complexHeatmap
@@ -1280,7 +1289,7 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   }
 
   # create zip file
-  out <- utils::zip(zipfile = file, files = files, flags = "-j") # discard file path
+  out <- zip::zipr(zipfile = file, files = files, include_directories = FALSE)
 
   # remove tmp files
   file.remove(files)

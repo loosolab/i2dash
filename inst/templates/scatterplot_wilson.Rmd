@@ -1,0 +1,271 @@
+
+### {{ title }}
+
+<!-- Component created on {{ date }} -->
+
+```{r}
+{{ env_id }} = readRDS("envs/{{ env_id }}.rds")
+
+is_shiny <- identical(knitr::opts_knit$get("rmarkdown.runtime"), "shiny")
+```
+
+```{r, eval=!is_shiny}
+# Parameters for wilson::create_scatterplot
+"%ni%" <- Negate("%in%")
+additional_arguments <- {{ env_id }}$additional_arguments
+
+# force interctive parameter
+additional_arguments$plot.method <- "interactive"
+
+if("density" %ni% names(additional_arguments)){
+  additional_arguments$density <- F
+}
+if("line" %ni% names(additional_arguments)){
+  additional_arguments$line <- F
+}
+if("categorized" %ni% names(additional_arguments)){
+  additional_arguments$categorized <- F
+}
+# Set values for 'x'
+x <- {{ env_id }}$x[1]
+
+# Set values for 'y'
+y <- {{ env_id }}$y[1]
+
+# Set values for 'colour_by'
+if (!is.null({{ env_id }}$colour_by)){
+  colour_by <- {{ env_id }}$colour_by[1]
+}
+
+# Set values for id'
+id <- c(1:length(x[[1]]))
+  
+# Create a data.frame
+df <- data.frame(id, x, y)
+  
+# if colour_by provided
+if(!is.null({{ env_id }}$colour_by)){
+  df["colour_by"] <- colour_by
+  # if colour_by is character
+  if(is.character(df[["colour_by"]])){
+    additional_arguments$categorized <- T
+  # if colour_by is factor
+  } else if (is.factor(df[["colour_by"]])){
+    additional_arguments$categorized <- T
+    df["colour_by"] <- droplevels(df["colour_by"])
+  # if colour_by is numeric
+  } else if (is.numeric(df[["colour_by"]])){
+    if("categorized" %in% names({{ env_id }}$additional_arguments)){
+      additional_arguments$categorized <- {{ env_id }}$additional_arguments$categorized
+    }
+  }
+}
+
+# color
+if(additional_arguments$categorized){
+  # categorical (qualitative) color palettes
+  if("color" %ni% names({{ env_id }}$additional_arguments)){
+    color <- RColorBrewer::brewer.pal(8, "Accent")
+    additional_arguments$color <- color
+  }
+} else {
+  # sequential (one-sided) color palettes
+  if("color" %ni% names({{ env_id }}$additional_arguments)){
+    color <- RColorBrewer::brewer.pal(9, "YlOrRd")
+    additional_arguments$color <- color
+  }
+}
+
+# Create data.table from data.frame
+dt <- data.table::setDT(df)
+additional_arguments$data <- dt
+
+# Provide data for download
+i2dash::embed_var(dt)
+
+# Render plot
+output_list <- do.call(wilson::create_scatterplot, additional_arguments)
+gg <- output_list$plot
+gg$x$layout$height <- 0
+gg$x$layout$width <- 0
+
+gg
+# convert to plotly object for automatic resizing
+#plotly::ggplotly(gg)
+```
+
+```{r, eval=is_shiny}
+ui_list <- list()
+# selection field for x
+if ({{ env_id }}$x_selection){
+  ui_list <- rlist::list.append(ui_list,
+                                selectInput("select_x_{{ env_id }}", label = "Select data for x axis:",
+                                            choices = names({{ env_id }}$x)))
+}
+
+# selection field for y
+if ({{ env_id }}$y_selection){
+  ui_list <- rlist::list.append(ui_list,
+                                selectInput("select_y_{{ env_id }}", label = "Select data for y axis:",
+                                            choices = names({{ env_id }}$y)))
+}
+
+# selection field for colour_by
+if ({{ env_id }}$colour_by_selection){
+  ui_list <- rlist::list.append(ui_list,
+                                selectInput("select_colour_{{ env_id }}", label = "Select colouring:",
+                                            choices = names({{ env_id }}$colour_by)))
+}
+
+# Checkbox and selection field for colour by feature
+if (!is.null({{ env_id }}$expression)) {
+  ui_list <- rlist::list.append(ui_list,
+                                tags$div(checkboxInput("expr_checkbox_{{ env_id }}", label = "Colour by feature", value = FALSE),
+                                         selectInput("select_feature_{{ env_id }}", label = NULL, choices = rownames({{ env_id }}$expression))
+  ))
+}
+
+# Download link
+ui_list <- rlist::list.append(ui_list, tags$div(tags$br(), downloadButton('downloadData_{{ env_id }}', 'Download data')))
+
+#
+# Create reactive data table
+#
+df_{{ env_id }} <- shiny::reactive({
+  
+  # Parameters for wilson::create_scatterplot
+  "%ni%" <- Negate("%in%")
+  additional_arguments <- {{ env_id }}$additional_arguments
+  
+  # force to use interactive parameter
+  additional_arguments$plot.method <- "interactive"
+  
+  if("density" %ni% names(additional_arguments)){
+    additional_arguments$density <- F
+  }
+  if("line" %ni% names(additional_arguments)){
+    additional_arguments$line <- F
+  }
+  if("categorized" %ni% names(additional_arguments)){
+    additional_arguments$categorized <- F
+  }
+  # Set values for 'x'
+  if( !{{ env_id }}$x_selection ) {
+    x <- {{ env_id }}$x[1]
+  } else {
+    x <- {{ env_id }}$x[input$select_x_{{ env_id }}]
+  }
+  # Set values for 'y'
+  if( !{{ env_id }}$y_selection ) {
+    y <- {{ env_id }}$y[1]
+  } else {
+    y <- {{ env_id }}$y[input$select_y_{{ env_id }}]
+  }
+  # Set values for 'colour_by'
+  if (!{{ env_id }}$colour_by_selection){
+    colour_by <- {{ env_id }}$colour_by[1]
+  } else {
+    colour_by <- {{ env_id }}$colour_by[input$select_colour_{{ env_id }}]
+  }
+  # Set values for id'
+  id <- c(1:length(x[[1]]))
+  
+  # Create a data.frame
+  df <- data.frame(id, x, y)
+  
+  # if checkbox for expression exists
+  if(!is.null(input$expr_checkbox_{{ env_id }})){
+    if(input$expr_checkbox_{{ env_id }}){
+      df["colour_by"] <- {{ env_id }}$expression[input$select_feature_{{ env_id }},]
+    } else {
+      if(!is.null({{ env_id }}$colour_by)){
+        df["colour_by"] <- colour_by
+        # if colour_by is character
+        if(is.character(df[["colour_by"]])){
+          additional_arguments$categorized <- T
+        # if colour_by is factor
+        } else if (is.factor(df[["colour_by"]])){
+          additional_arguments$categorized <- T
+          df["colour_by"] <- droplevels(df["colour_by"])
+        # if colour_by is numeric
+        } else if (is.numeric(df[["colour_by"]])){
+          if("categorized" %in% names({{ env_id }}$additional_arguments)){
+            additional_arguments$categorized <- {{ env_id }}$additional_arguments$categorized
+          }
+        }
+      }
+    }
+  } else {
+    # if colour_by provided
+    if(!is.null({{ env_id }}$colour_by)){
+      df["colour_by"] <- colour_by
+      # if colour_by is character
+      if(is.character(df[["colour_by"]])){
+        additional_arguments$categorized <- T
+      # if colour_by is factor
+      } else if (is.factor(df[["colour_by"]])){
+        additional_arguments$categorized <- T
+        df["colour_by"] <- droplevels(df["colour_by"])
+      # if colour_by is numeric
+      } else if (is.numeric(df[["colour_by"]])){
+        if("categorized" %in% names({{ env_id }}$additional_arguments)){
+          additional_arguments$categorized <- {{ env_id }}$additional_arguments$categorized
+        }
+      }
+    }
+  }
+  # color
+  if(additional_arguments$categorized){
+    # categorical (qualitative) color palettes
+    if("color" %ni% names({{ env_id }}$additional_arguments)){
+      color <- RColorBrewer::brewer.pal(8, "Accent")
+      additional_arguments$color <- color
+    }
+  } else {
+    # sequential (one-sided) color palettes
+    if("color" %ni% names({{ env_id }}$additional_arguments)){
+      color <- RColorBrewer::brewer.pal(9, "YlOrRd")
+      additional_arguments$color <- color
+    }
+  }
+
+  # Create data.table from data.frame
+  dt <- data.table::setDT(df)
+  additional_arguments$data <- dt
+  
+  return(list("params" = additional_arguments, "data" = dt))
+})
+
+#
+# Download
+#
+output$downloadData_{{ env_id }} <- downloadHandler(
+  filename =  paste('data-', Sys.Date(), '.csv', sep=''),
+  content = function(file) {
+    write.csv(df_{{ env_id }}()$data, file)
+  }
+)
+
+#
+# Output
+#
+output$plot_{{ env_id }} <- plotly::renderPlotly({
+    output_list <- do.call(wilson::create_scatterplot, df_{{ env_id }}()$params)
+    gg <- output_list$plot
+    
+    # convert to plotly object for automatic resizing
+    gg$x$layout$height <- 0
+    gg$x$layout$width <- 0
+
+    gg
+})
+
+#
+# Layout of component
+#
+shiny::fillCol(flex = c(NA, 1),
+        do.call(shiny::inputPanel, ui_list),
+        plotly::plotlyOutput("plot_{{ env_id }}", height = "100%")
+)
+```
+

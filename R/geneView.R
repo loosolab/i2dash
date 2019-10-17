@@ -143,7 +143,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
 
   # modules/ ui #####
   color <- shiny::callModule(colorPicker, "color", distribution = "all", selected = "Dark2")
-  transform <- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selected_columns(), with = FALSE])))
+  transform <- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selected_columns(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == selector$selected_columns()[1]][["level"]] == "contrast", 0, 1)))
   selector <- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), column.type.label = "Select Columns")
   custom_label <- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes)]), sep = label.sep)
   factor_data <- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$get_factors()[key %in% selector$selected_columns(), !"key"]), sep = label.sep, unique = FALSE)
@@ -182,7 +182,7 @@ geneView <- function(input, output, session, clarion, plot.method = "static", la
     shinyjs::reset("groupby")
     shinyjs::reset("plot_columns")
     color <<- shiny::callModule(colorPicker, "color", distribution = "all", selected = "Dark2")
-    transform <<- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selected_columns(), with = FALSE])))
+    transform <<- shiny::callModule(transformation, "transform", shiny::reactive(as.matrix(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes), selector$selected_columns(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == selector$selected_columns()[1]][["level"]] == "contrast", 0, 1)))
     selector <<- shiny::callModule(columnSelector, "selector", type.columns = shiny::reactive(object()$metadata[level != "feature", c("key", "level")]), column.type.label = "Select Columns")
     custom_label <<- shiny::callModule(label, "labeller", data = shiny::reactive(object()$data[which(object()$data[[object()$get_name()]] %in% input$genes)]), sep = label.sep)
     factor_data <<- shiny::callModule(label, "group", label = "Select grouping factors", data = shiny::reactive(object()$get_factors()[key %in% selector$selected_columns(), !"key"]), sep = label.sep, unique = FALSE)

@@ -1,0 +1,159 @@
+{
+  "meta": [
+    {
+      "col_name": "TFBS_chr",
+      "level": "feature",
+      "type": "category",
+      "label": "chr",
+      "sublabel": "TBFS"
+    },
+    {
+      "col_name": "TFBS_start",
+      "level": "feature",
+      "type": "category",
+      "label": "start",
+      "sublabel": "TFBS"
+    },
+    {
+      "col_name": "TFBS_end",
+      "level": "feature",
+      "type": "category",
+      "label": "end",
+      "sublabel": "TFBS"
+    },
+    {
+      "col_name": "TFBS_name",
+      "level": "feature",
+      "type": "category",
+      "label": "name",
+      "sublabel": "TFBS"
+    },
+    {
+      "col_name": "TFBS_score",
+      "level": "feature",
+      "type": "category",
+      "label": "score",
+      "sublabel": "TFBS"
+    },
+    {
+      "col_name": "TFBS_strand",
+      "level": "feature",
+      "type": "category",
+      "label": "strand",
+      "sublabel": "TFBS"
+    },
+    {
+      "col_name": "peak_chr",
+      "level": "feature",
+      "type": "category",
+      "label": "chr",
+      "sublabel": "peak"
+    },
+    {
+      "col_name": "peak_start",
+      "level": "feature",
+      "type": "category",
+      "label": "start",
+      "sublabel": "peak"
+    },
+    {
+      "col_name": "peak_end",
+      "level": "feature",
+      "type": "category",
+      "label": "end",
+      "sublabel": "peak"
+    },
+    {
+      "col_name": "peak_id",
+      "level": "feature",
+      "type": "array",
+      "label": "id",
+      "sublabel": "peak"
+    },
+    {
+      "col_name": "feature",
+      "level": "feature",
+      "type": "category",
+      "label": "feature",
+      "sublabel": ""
+    },
+    {
+      "col_name": "feat_start",
+      "level": "feature",
+      "type": "category",
+      "label": "start",
+      "sublabel": "feature"
+    },
+    {
+      "col_name": "feat_end",
+      "level": "feature",
+      "type": "category",
+      "label": "end",
+      "sublabel": "feature"
+    },
+    {
+      "col_name": "feat_strand",
+      "level": "feature",
+      "type": "category",
+      "label": "strand",
+      "sublabel": "feature"
+    },
+    {
+      "col_name": "feat_anchor",
+      "level": "feature",
+      "type": "category",
+      "label": "anchor",
+      "sublabel": "feature"
+    },
+    {
+      "col_name": "distance",
+      "level": "feature",
+      "type": "category",
+      "label": "distance",
+      "sublabel": ""
+    },
+    {
+      "col_name": "gene_biotype",
+      "level": "feature",
+      "type": "category",
+      "label": "biotype",
+      "sublabel": "gene"
+    },
+    {
+      "col_name": "gene_id",
+      "level": "feature",
+      "type": "category",
+      "label": "id",
+      "sublabel": "gene"
+    },
+    {
+      "col_name": "gene_name",
+      "level": "feature",
+      "type": "category",
+      "label": "name",
+      "sublabel": "gene"
+    },
+    // overview columns
+    {
+      "col_name": "TF_name",
+      "level": "feature",
+      "type": "unique_id",
+      "label": "TF name",
+      "sublabel": ""
+    },
+    {
+      "col_name": "cluster",
+      "level": "feature",
+      "type": "category",
+      "label": "cluster",
+      "sublabel": ""
+    },
+    {
+      "col_name": "total_tfbs",
+      "level": "feature",
+      "type": "category",
+      "label": "total TFBS",
+      "sublabel": ""
+    }
+  ]
+}

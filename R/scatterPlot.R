@@ -187,8 +187,8 @@ scatterPlot <- function(input, output, session, clarion, marker.output = NULL, p
   yaxis <- shiny::callModule(columnSelector, "yaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
   zaxis <- shiny::callModule(columnSelector, "zaxis", type.columns = shiny::reactive(object()$metadata[, intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Color label", multiple = FALSE, none = TRUE)
   color <- shiny::callModule(colorPicker, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selected_column()) + 1, NULL, equalize(object()$data[, zaxis$selected_column(), with = FALSE]))))
-  transform_x <- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selected_column(), with = FALSE])))
-  transform_y <- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selected_column(), with = FALSE])))
+  transform_x <- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selected_column(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == xaxis$selected_column()][["level"]] == "contrast", 0, 1)))
+  transform_y <- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selected_column(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == yaxis$selected_column()][["level"]] == "contrast", 0, 1)))
   # transform highlight data
   if (!is.null(marker.output)) {
     # note: same id as transform_x/y so it depends on same ui
@@ -223,8 +223,8 @@ scatterPlot <- function(input, output, session, clarion, marker.output = NULL, p
     yaxis <<- shiny::callModule(columnSelector, "yaxis", type.columns = shiny::reactive(object()$metadata[level != "feature", intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Axis label", multiple = FALSE, suffix = shiny::reactive(transform_y$method()))
     zaxis <<- shiny::callModule(columnSelector, "zaxis", type.columns = shiny::reactive(object()$metadata[, intersect(names(object()$metadata), c("key", "level", "label", "sub_label")), with = FALSE]), column.type.label = "Column type to choose from", label.label = "Color label", multiple = FALSE, none = TRUE)
     color <<- shiny::callModule(colorPicker, "color", distribution = "all", winsorize = shiny::reactive(switch(shiny::isTruthy(zaxis$selected_column()) + 1, NULL, equalize(object()$data[, zaxis$selected_column(), with = FALSE]))))
-    transform_x <<- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selected_column(), with = FALSE])))
-    transform_y <<- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selected_column(), with = FALSE])))
+    transform_x <<- shiny::callModule(transformation, "transform_x", data = shiny::reactive(as.matrix(object()$data[, xaxis$selected_column(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == xaxis$selected_column()][["level"]] == "contrast", 0, 1)))
+    transform_y <<- shiny::callModule(transformation, "transform_y", data = shiny::reactive(as.matrix(object()$data[, yaxis$selected_column(), with = FALSE])), pseudocount = shiny::reactive(ifelse(object()$metadata[key == yaxis$selected_column()][["level"]] == "contrast", 0, 1)))
     # transform highlight data
     if (!is.null(marker.output)) {
       # note: same id as transform_x/y so it depends on same ui
