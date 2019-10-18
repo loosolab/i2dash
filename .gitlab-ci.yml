@@ -25,6 +25,7 @@ check:
   variables:
     http_proxy: http://www-proxy.t-online.de:80
     R_ZIPCMD: /opt/conda/bin/zip
+    _R_CHECK_FORCE_SUGGESTS_: 0
   script:
     - R CMD check *tar.gz --as-cran --no-manual
   artifacts:
