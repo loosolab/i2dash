@@ -1,7 +1,7 @@
 # WIlsON: Webbased Interactive Omics visualizatioN -  The R Package
 [![CRAN](https://www.r-pkg.org/badges/version/wilson)](https://cran.r-project.org/package=wilson)
 
-*Buildkite:* ![Build status](https://badge.buildkite.com/d79f55bb3e3cf0d70d6784feb8c6e26182d602f534e74fac4e.svg?branch=master)
+[![pipeline status](https://gitlab.gwdg.de/loosolab/software/wilson/badges/master/pipeline.svg)](https://gitlab.gwdg.de/loosolab/software/wilson/commits/master)
 
 ## Abstract
 #### Objective
@@ -33,7 +33,9 @@ install.packages("BiocManager")
 BiocManager::install("wilson")
 ```
 
-On Windows, make sure that `Rtools` are available.
+On Windows, make sure that `Rtools` are available. Only versions < 2.3.1.
+
+To enable interactive plot downloads install [Orca](https://github.com/plotly/orca).
 
 ## CLARION input format
 
