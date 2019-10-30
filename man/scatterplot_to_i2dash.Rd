@@ -8,7 +8,7 @@ scatterplot_to_i2dash(object, x, y, colour_by = NULL,
   expression = NULL, title = NULL, ...)
 }
 \arguments{
-\item{object}{A \linkS4class{i2dash::i2dashboard} object.}
+\item{object}{A \code{\link[i2dash]{i2dashboard}} object.}
 
 \item{x}{A vector with numerical values or a named list will be mapped to the x-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.}
 

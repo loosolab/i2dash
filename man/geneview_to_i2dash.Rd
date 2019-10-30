@@ -7,7 +7,7 @@
 geneview_to_i2dash(object, countTable, group_by, title = NULL, ...)
 }
 \arguments{
-\item{object}{A \linkS4class{i2dash::i2dashboard} object.}
+\item{object}{A \code{\link[i2dash]{i2dashboard}} object.}
 
 \item{countTable}{A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in buiding the heatmap.}
 

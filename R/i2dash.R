@@ -1,6 +1,6 @@
 #' Prepare a heatmap to be rendered with the i2dash package.
 #'
-#' @param object A \linkS4class{i2dash::i2dashboard} object.
+#' @param object A \code{\link[i2dash]{i2dashboard}} object.
 #' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in building the heatmap.
 #' @param group_by A vector with numerical values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
 #' @param title (Optional) The title of the components chunk.
@@ -61,7 +61,7 @@ heatmap_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) {
 
 #' Prepare a geneview to be rendered with the i2dash package.
 #'
-#' @param object A \linkS4class{i2dash::i2dashboard} object.
+#' @param object A \code{\link[i2dash]{i2dashboard}} object.
 #' @param countTable A matrix with features as rows and observations as columns. The rownames and columnnames should be provided and are used in buiding the heatmap.
 #' @param group_by A vector with values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
 #' @param title (Optional) The title of the components chunk.
@@ -119,7 +119,7 @@ geneview_to_i2dash <- function(object, countTable, group_by, title = NULL, ...) 
 
 #' Prepare a scatterplot to be rendered with the i2dash package.
 #'
-#' @param object A \linkS4class{i2dash::i2dashboard} object.
+#' @param object A \code{\link[i2dash]{i2dashboard}} object.
 #' @param x A vector with numerical values or a named list will be mapped to the x-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
 #' @param y A vector with numerical values or a named list will be mapped to the y-axis. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of vectors x and y should be the same as well as the length of all vectors in case of a named list.
 #' @param colour_by (Optional) A vector with factorial (= categorical coloring), numerical (= sequential colouring; can be forced to use categorical colouring by providing the parameter '"categorized" = TRUE') or character (= categorical colouring) values or a named list that will be used for colouring. In case of a named list, a dropdown menu will be provided in the interactive mode. Note: The length of the vector should be of the same length as x and y as well as the length of all vectors in case of a named list.
