@@ -54,6 +54,5 @@ Suggests: knitr,
     rmarkdown,
     testthat,
     vdiffr,
-    i2dash,
     stringi
 VignetteBuilder: knitr
