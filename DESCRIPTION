@@ -8,8 +8,8 @@ Authors@R: c(
     person("Looso", "Mario", email = "mario.looso@mpi-bn.mpg.de", role = "aut"))
 Description: Tool-set of modules for creating web-based applications that use plot based strategies to visualize and analyze multi-omics data.
     This package utilizes the 'shiny' and 'plotly' frameworks to provide a user friendly dashboard for interactive plotting.
-URL: https://github.molgen.mpg.de/loosolab/wilson/
-BugReports: https://github.molgen.mpg.de/loosolab/wilson/issues/
+URL: https://github.com/loosolab/wilson/
+BugReports:https://github.com/loosolab/wilson/issues/
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
