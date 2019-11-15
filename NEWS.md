@@ -1,6 +1,7 @@
 # wilson 2.3.1
 - Rtools no longer required for windows users
 - Interactive plot download now uses [Orca](https://github.com/plotly/orca)
+- removed i2dash until the package is published
 # wilson 2.3.0
 - implemented:
   - heatmap_to_i2dash
