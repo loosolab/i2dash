@@ -1,4 +1,4 @@
-r-base
+r-base>=3.6.1
 r-shiny
 r-data.table
 r-ggplot2
