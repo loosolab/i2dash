@@ -9,5 +9,5 @@ There were no NOTEs, ERRORs or WARNINGs.
 
 ## Downstream dependencies
 I have also run R CMD check on downstream dependencies of wilson 
-(https://github.molgen.mpg.de/loosolab/wilson/tree/master/revdep). 
+(https://gitlab.gwdg.de/loosolab/software/wilson/tree/master/revdep). 
 All packages that I could install passed.
