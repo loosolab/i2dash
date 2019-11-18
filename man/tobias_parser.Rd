@@ -25,7 +25,7 @@ tobias_parser(input, output, filter_columns = NULL,
 
 \item{condition_names}{Vector of condition names. Default = NULL. Used to classify columns not provided in config.}
 
-\item{condition_pattern}{Used to identify condition names by matching und removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.}
+\item{condition_pattern}{Used to identify condition names by matching and removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.}
 
 \item{in_field_delimiter}{Delimiter for multi value fields. Default = ','.}
 
@@ -39,7 +39,7 @@ Click \href{https://github.molgen.mpg.de/loosolab/TOBIAS}{here} for more informa
 \details{
 During conversion the parser will try to use the given config (if provided) to create the \href{https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format}{Clarion} metadata. In the case of insufficient config information it will try to approximate by referencing condition names issuing warnings in the process.
 
-As the format requires an unqiue id the parser will create one if necessary.
+As the format requires an unique id the parser will create one if necessary.
 
 Factor grouping (metadata factor columns) is currently not implemented!
 }

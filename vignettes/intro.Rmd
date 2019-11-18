@@ -23,7 +23,7 @@ This vignette describes the intended workflow and usage of the wilson package fo
 * be familiar with the basic structure of a [shiny-app](https://shiny.rstudio.com/articles/basics.html) and [shinydashboard](https://rstudio.github.io/shinydashboard/get_started.html)
 * know how to use [shiny-modules](https://shiny.rstudio.com/articles/modules.html#using-modules)
 * have a sufficient dataset in clarion-format
-  * either by [converting](https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format/) your own data
+  * either by [converting](https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/Local-usage%3AInput-format/) your own data
   * or downloading from [here](https://github.molgen.mpg.de/loosolab/wilson-apps/tree/master/wilson-basic/data/)
 
 ## Workflow
@@ -82,6 +82,6 @@ server <- function(input, output, session) {
 # Run the application 
 shinyApp(ui = ui, server = server)
 ```
-The server reacts to user interactions whith the interface. Once started it will first parse the given [clarion](https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format/) file into a clarion object, performing validation steps in the process. Next the server functions of the necessary [modules](https://shiny.rstudio.com/articles/modules.html) defined in the UI (notice the matching ids) are loaded. Whereas the filter module bluntly accepts the data object with `clarion = data` the plot module receives its data via `clarion = reactive(filtered_data()$object)`. Wrapping in `reactive()` is due to the fact, that the filtered data object returned from the filter module is in a reactive context which essentially means shiny 'knows' when this variable changes. Read more about shiny's reactivity system [here](https://shiny.rstudio.com/articles/reactivity-overview.html).
+The server reacts to user interactions with the interface. Once started it will first parse the given [clarion](https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format/) file into a clarion object, performing validation steps in the process. Next the server functions of the necessary [modules](https://shiny.rstudio.com/articles/modules.html) defined in the UI (notice the matching ids) are loaded. Whereas the filter module bluntly accepts the data object with `clarion = data` the plot module receives its data via `clarion = reactive(filtered_data()$object)`. Wrapping in `reactive()` is due to the fact, that the filtered data object returned from the filter module is in a reactive context which essentially means shiny 'knows' when this variable changes. Read more about shiny's reactivity system [here](https://shiny.rstudio.com/articles/reactivity-overview.html).
 
 For a more advanced example of a wilson-application see the [wilson-basic app](https://github.molgen.mpg.de/loosolab/wilson-apps/blob/master/wilson-basic/app.R) in our [wilson-apps](https://github.molgen.mpg.de/loosolab/wilson-apps/) repository.

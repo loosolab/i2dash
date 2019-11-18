@@ -396,13 +396,13 @@ parser <- function(file, dec = ".") {
 #' @param config Json file containing metadata information for all columns. Will use first occurence for duplicate column names.
 #' @param omit_NA Logical whether all rows containing NA should be removed.
 #' @param condition_names Vector of condition names. Default = NULL. Used to classify columns not provided in config.
-#' @param condition_pattern Used to identify condition names by matching und removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.
+#' @param condition_pattern Used to identify condition names by matching and removing given pattern with \code{\link[base]{grep}}. Ignored when condition_names is set.
 #' @param in_field_delimiter Delimiter for multi value fields. Default = ','.
 #' @param dec Decimal separator. Used in file reading and writing.
 #' @param ... Used as header information.
 #'
 #' @details During conversion the parser will try to use the given config (if provided) to create the \href{https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/CLARION-Format}{Clarion} metadata. In the case of insufficient config information it will try to approximate by referencing condition names issuing warnings in the process.
-#' @details As the format requires an unqiue id the parser will create one if necessary.
+#' @details As the format requires an unique id the parser will create one if necessary.
 #' @details Factor grouping (metadata factor columns) is currently not implemented!
 #'
 #' @export
