@@ -33,7 +33,7 @@
 
 \item{exclude}{A string or vector with the names of pages, which should be excluded from report assembly.}
 
-\item{render}{A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render}.}
+\item{render}{A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render} or run with \code{rmarkdown::run}.}
 
 \item{...}{Additional arguments passed on to \code{rmarkdown::render}.}
 

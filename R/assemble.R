@@ -4,7 +4,7 @@
 #' @param pages A string or vector with the names of pages, which should be assembled to a report.
 #' @param file The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.
 #' @param exclude A string or vector with the names of pages, which should be excluded from report assembly.
-#' @param render A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render}.
+#' @param render A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render} or run with \code{rmarkdown::run}.
 #' @param ... Additional arguments passed on to \code{rmarkdown::render}.
 #'
 #' @rdname i2dashboard-methods
@@ -70,9 +70,13 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
   # copy tempfile to final_document
   file.copy(from = tmp_document, to = file, overwrite = TRUE)
 
-  # Render, if requested
-  if(render) {
+  # Render or run app, if requested
+  if(render & !dashboard@interactive) {
     rmarkdown::render(file, ...)
+  }
+
+  if(render & dashboard@interactive) {
+    rmarkdown::run(file, ...)
   }
 
   invisible(dashboard)
