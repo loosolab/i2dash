@@ -59,9 +59,9 @@ setMethod("add_component",
             }
 
             component <- switch(mode,
-              "function" = do.call(eval_function, args = list(dashboard, ...)),
-              "text" = do.call("render_text", args = list(component, ...)),
-              "image" = do.call("render_image", args = list(component, ...)))
+              "function" = eval_function(dashboard, ...),
+              "text" = render_text(component, ...),
+              "image" = render_image(component, ...))
 
             if(is.list(component)) {
               assertive.sets::is_subset(c("appendix", "component", "sidebar"), names(component))
