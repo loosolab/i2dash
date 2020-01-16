@@ -14,7 +14,7 @@
 #'
 #' @param dashboard A \linkS4class{i2dash::i2dashboard}.
 #' @param page The name of the page to add the component to.
-#' @param component The name of a function of a path to a file.
+#' @param component The name of a function or a path to a file.
 #' @param copy Whether or not to copy images to \code{dashboard@datadir}.
 #' @param ... Additional parameters passed to the components render function.
 #'
@@ -83,7 +83,7 @@ setMethod("add_component",
 embed_var <- function(x, ...) {
   f = tempfile(fileext = '.csv')
   write.csv(x, f)
-  xfun::embed_file(f, text = 'Download full data as .csv', ...)
+  xfun::embed_file(f, text = 'Download data', ...)
 }
 
 #' Method to embed content from a text file in a component/sidebar

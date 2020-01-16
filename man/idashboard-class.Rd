@@ -12,6 +12,9 @@
 
 i2dashboard(...)
 }
+\value{
+An i2dashboard object.
+}
 \description{
 The idashboard S4 class.
 
@@ -34,7 +37,7 @@ Create a new i2dashboard object.
 
 \item{\code{datadir}}{Path to the directory, where report data is stored.}
 
-\item{\code{file}}{Filename of the resulting report Rmd file.}
+\item{\code{file}}{The output filename (recommend that the suffix should be '.Rmd').}
 
 \item{\code{pages}}{A list of dashboard pages}
 

@@ -4,8 +4,13 @@
 \alias{.render_page}
 \title{Method for rendering a page with a given layout and components}
 \usage{
-.render_page(title, components, layout = c("default", "storyboard",
-  "focal_left", "2x2_grid"), menu = NULL, sidebar = NULL)
+.render_page(
+  title,
+  components,
+  layout = c("default", "storyboard", "focal_left", "2x2_grid"),
+  menu = NULL,
+  sidebar = NULL
+)
 }
 \arguments{
 \item{title}{The page title.}

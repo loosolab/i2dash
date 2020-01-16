@@ -1,10 +1,10 @@
 #' Method to assemble a dashboard to a Rmd file.
 #'
 #' @param dashboard A \linkS4class{i2dash::i2dashboard}.
-#' @param pages A string or vector with the names of pages, which should be assembled to a report.
+#' @param pages A string or vector with the names of pages, which should be assembled to a dashboard.
 #' @param file The output filename (recommend that the suffix should be '.Rmd'). This file will be saved in the working directory.
-#' @param exclude A string or vector with the names of pages, which should be excluded from report assembly.
-#' @param render A logical indicating whether the assembled report should immediately be rendered with \code{rmarkdown::render} or run with \code{rmarkdown::run}.
+#' @param exclude A string or vector with the names of pages, which should be excluded from dashboard assembly.
+#' @param render A logical indicating whether the assembled dashboard should immediately be rendered with \code{rmarkdown::render} or run with \code{rmarkdown::run}.
 #' @param ... Additional arguments passed on to \code{rmarkdown::render}.
 #'
 #' @rdname i2dashboard-methods

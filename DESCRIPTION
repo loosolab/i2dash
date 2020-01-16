@@ -10,7 +10,7 @@ Description: Easily build dashboards from individual components in HTML and Shin
 License: MIT
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0
 Imports: 
     magrittr,
     knitr,
