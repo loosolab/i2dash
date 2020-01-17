@@ -5,10 +5,12 @@
 #' @slot interactive If a shiny-based report should be created
 #' @slot theme The theme of the dashboard
 #' @slot datadir Path to the directory, where report data is stored.
-#' @slot file Filename of the resulting report Rmd file.
+#' @slot file The output filename (recommend that the suffix should be '.Rmd').
 #' @slot pages A list of dashboard pages
 #' @slot sidebar Content of the global sidebar
 #' @slot colormaps A named list with color mappings.
+#'
+#' @return An i2dashboard object.
 #'
 #' @name idashboard-class
 #' @rdname idashboard-class
@@ -43,7 +45,7 @@ setMethod("initialize", "i2dashboard", function(.Object, ...) {
   .Object <- callNextMethod()
 
   # Create nice filename from title
-  if(!is.null(.Object@title)) {
+  if(length(.Object@file) == 0 & length(.Object@title) > 0) {
     .Object@title %>% tolower %>% gsub(pattern = " ", replacement = "-") %>% gsub(pattern = '[^a-zA-Z0-9-]', replacement = '') %>% paste0(".Rmd") -> .Object@file
   }
 

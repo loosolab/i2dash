@@ -11,6 +11,6 @@ options(knitr.duplicate.label = "allow")
 datadir <- "<% datadir %>"
 
 # Set up color mappings
-colormap <- <% if(!is.null(colormap)) sprintf('readRDS(file.path(datadir, "%s"))', colormap) else sprintf("list()") %>
+colormaps <- <% if(!is.null(colormap)) sprintf('readRDS(file.path(datadir, "%s"))', colormap) else sprintf("list()") %>
 ```
 
