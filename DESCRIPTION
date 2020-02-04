@@ -18,7 +18,8 @@ Imports:
     yaml,
     assertive.sets,
     stringr,
-    glue
+    glue,
+    ymlthis
 Suggests: 
     highcharter,
     plotly,

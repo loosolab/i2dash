@@ -20,13 +20,13 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
   }
 
   # Add YAML header
-  knitr::knit_expand(file = system.file("templates", "yaml_header.Rmd", package = "i2dash"),
-                     delim = c("<%", "%>"),
-                     title = dashboard@title,
-                     author = dashboard@author,
-                     theme = dashboard@theme,
-                     interactive = dashboard@interactive) %>%
-    cat(file = tmp_document, append = FALSE, sep = "\n")
+  options(ymlthis.rmd_body = "")
+  ymlthis::yml(date = F) %>%
+    ymlthis::yml_title(dashboard@title) %>%
+    ymlthis::yml_author(dashboard@author) %>%
+    ymlthis::yml_output(flexdashboard::flex_dashboard(theme = dashboard@theme)) %>%
+    {if(dashboard@interactive) ymlthis::yml_runtime(., runtime = "shiny") else .} %>%
+    ymlthis::use_rmarkdown(path = tmp_document, include_body = FALSE, quiet = TRUE, open_doc = FALSE)
 
   # Add i2dash global setup
   knitr::knit_expand(file = system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash"),
@@ -67,6 +67,7 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
       warning(sprintf("i2dashboard dashboard does not contain a page named '%s'", pagename))
     }
   }
+
   # copy tempfile to final_document
   file.copy(from = tmp_document, to = file, overwrite = TRUE)
 
@@ -115,3 +116,4 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
                      components = components,
                      date = Sys.time())
 }
+
