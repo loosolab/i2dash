@@ -116,4 +116,3 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
                      components = components,
                      date = Sys.time())
 }
-

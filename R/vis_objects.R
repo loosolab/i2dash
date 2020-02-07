@@ -39,7 +39,7 @@ add_vis_object <- function(dashboard, object, package, page = "default", title =
 }
 
 #
-# Methods to add common visualization dashboards
+# Methods to add common visualization objects
 #
 setMethod("add_component",
           signature = signature(dashboard = "i2dashboard", component = "highchart"),

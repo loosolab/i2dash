@@ -3,4 +3,7 @@
 .RData
 .Ruserdata
 .DS_store
+Thumbs.db
 *.html
+doc
+Meta
