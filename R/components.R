@@ -1,20 +1,22 @@
 #' Method to add a component to a page of an i2dashboard.
 #'
-#' Components can be created by evaluating a function, or by including a text or image file.
-#' The function tries to guess the intended usage by applying regular expressions to the argument \code{component} (see below for details).
+#' Components can be created by evaluating a function, or by including an object, a text or image file.
 #'
-#' @section Adding a component by evaluating a function:
-#' If the argument \code{component} is a valid function name, the function will be called and its return value is used as component content.
+#' @section Adding content by evaluating a function:
+#' If the argument \code{component} is a function, the function will be called and its return value is used as content.
 #'
-#' @section Adding plain text as a component:
-#' If the argument \code{component} ends with \code{.md} or \code{.txt}, the function will try to open a file and use its content as the components content.
+#' @section Adding plain text as content:
+#' If the argument \code{component} is a character and ends with \code{.md} or \code{.txt}, the function will try to open a file and use its content.
 #'
-#' @section Adding images as a component:
-#' If the argument \code{component} end matches \code{\\.[png|jpg|jpeg|gif]}, the function will try to include an image as the components content.
+#' @section Adding images as content:
+#' If the argument \code{component} is a character and its end matches \code{\\.[png|jpg|jpeg|gif]}, the function will try to include an image as the content.
+#'
+#' @section Adding a R object as content:
+#' If the argument \code{component} is a supported R object (e.g. a htmlwidget), the function will include its representation as content.
 #'
 #' @param dashboard A \linkS4class{i2dash::i2dashboard}.
 #' @param page The name of the page to add the component to.
-#' @param component The name of a function or a path to a file.
+#' @param component A R object, function, or character.
 #' @param copy Whether or not to copy images to \code{dashboard@datadir}.
 #' @param ... Additional parameters passed to the components render function.
 #'
@@ -24,7 +26,7 @@ setMethod("add_component",
           signature = signature(dashboard = "i2dashboard", component = "character"),
           function(dashboard, component, page = "default", copy = FALSE, ...) {
             # Logic to guess intended usage
-            mode <- "function"
+            mode <- NULL
             if(stringr::str_detect(tolower(component), "\\.[md|txt]+$")) {
               mode <- "text"
             }
@@ -37,7 +39,7 @@ setMethod("add_component",
               mode <- "image"
             }
 
-            # Create page
+            # validate "page" input
             name <- .create_page_name(page)
             if (!(name %in% names(dashboard@pages))) {
               warning(sprintf("i2dashboard dashboard does not contain a page named '%s'", name))
@@ -49,29 +51,29 @@ setMethod("add_component",
               return(dashboard)
             }
 
-            if(mode == "function") {
-              pn <- strsplit(component, "::")[[1]]
-              eval_function <- if(length(pn) == 1) {
-                get(pn[[1]], envir = asNamespace("i2dash"), mode = "function")
-              } else {
-                get(pn[[2]], envir = asNamespace(pn[[1]]), mode = "function")
-              }
-            }
-
             component <- switch(mode,
-              "function" = eval_function(dashboard, ...),
               "text" = render_text(component, ...),
               "image" = render_image(component, ...))
 
-            if(is.list(component)) {
-              assertive.sets::is_subset(c("appendix", "component", "sidebar"), names(component))
-              dashboard@pages[[name]]$components <- append(dashboard@pages[[name]]$components, component$component)
-              dashboard@pages[[name]]$sidebar <- paste0(dashboard@pages[[name]]$sidebar, component$sidebar)
-              # ToDo: Handle appendix
-            } else {
-              dashboard@pages[[name]]$components <- append(dashboard@pages[[name]]$components, component)
+            return(.add_component(dashboard, name, component))
+          })
+
+setMethod("add_component", signature(dashboard = "i2dashboard", component = "function"),
+          function(dashboard, component, page = "default", title = NULL, ...) {
+            # validate "page" input
+            name <- .create_page_name(page)
+            if (!(name %in% names(dashboard@pages))) {
+              warning(sprintf("i2dashboard dashboard does not contain a page named '%s'", name))
+              return(dashboard)
             }
-            return(dashboard)
+
+            if(length(dashboard@pages[[name]]$components) + 1 > dashboard@pages[[name]]$max_components) {
+              warning(sprintf("Not enough space left on page '%s'", name))
+              return(dashboard)
+            }
+
+            content <- component(dashboard, ...)
+            return(.add_component(dashboard, name, content))
           })
 
 #' Method to download embed files into an Rmd-file
@@ -123,4 +125,23 @@ render_image <- function(image, image_alt_text = NULL, title = NULL, raw = FALSE
                      delim = c("<%", "%>"),
                      content = content,
                      title = title)
+}
+
+#' Helper function to add components to the dashboard
+#'
+#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
+#' @param page The name of the page to add the component to.
+#' @param component A string or list.
+#'
+#' @return The dashboard with added component.
+.add_component <- function(dashboard, page, component) {
+  if(is.list(component)) {
+    assertive.sets::is_subset(c("appendix", "component", "sidebar"), names(component))
+    dashboard@pages[[page]]$components <- append(dashboard@pages[[page]]$components, component$component)
+    dashboard@pages[[page]]$sidebar <- paste0(dashboard@pages[[page]]$sidebar, component$sidebar)
+    # ToDo: Handle appendix
+  } else {
+    dashboard@pages[[page]]$components <- append(dashboard@pages[[page]]$components, component)
+  }
+  return(dashboard)
 }

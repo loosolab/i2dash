@@ -1,7 +1,10 @@
 r-assertive.sets
 r-base
+bioconductor-biocstyle
+r-htmltools
 r-flexdashboard
 r-knitr
+r-magrittr
 r-yaml
 r-ymlthis
 zip

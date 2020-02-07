@@ -1,0 +1,275 @@
+---
+title: "Creating iterative and interactive dashboards with i2dash"
+author:
+- name: Jens Preussner
+  affiliation: 
+  email: jens.preussner@mpi-bn.mpg.de
+- name: Arsenij Ustjanzew
+  affiliation: 
+  email: arsenij.ustjanzew@mpi-bn.mpg.de
+date: "`r BiocStyle::doc_date()`"
+package: "`r BiocStyle::pkg_ver('i2dash')`"
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_float: true
+    fig_caption: true
+vignette: >
+  %\VignetteIndexEntry{Creating iterative and interactive dashboards with i2dash}
+  %\VignettePackage{i2dash}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Vignette last complied on `r Sys.Date()`. i2dash is licenced under `r utils::packageDescription("i2dash")[["License"]]`.
+
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    error = FALSE,
+    warning = FALSE,
+    message = FALSE
+)
+stopifnot(requireNamespace("htmltools"))
+htmltools::tagList(rmarkdown::html_dependency_font_awesome())
+
+library(magrittr)
+```
+
+<img src="images/i2dash_logo.png" align="center" width="150px"/>
+
+# Introduction and scope
+
+Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. [R Markdown](https://rmarkdown.rstudio.com) enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from [R Shiny](http://shiny.rstudio.com/).
+R Studio's [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio's Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file.
+The R package i2dash provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. Dashboard content is organised in so-called **components** and can be added iteratively to the dashboard, *i.e.* as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard **pages** to organize scientific findings thematically. Ultimately, i2dash enables xxx and therefore integrates well into existing data analysis pipelines.
+
+## Installation
+
+The package can be installed with the `r BiocStyle::CRANpkg("remotes")` library:
+
+```{r, eval=FALSE}
+remotes::install_git(url = "https://gitlab.gwdg.de/loosolab/software/i2dash.git", repos = BiocManager::repositories())
+```
+
+Once installed, the package can be loaded and attached to your current workspace as follows:
+
+```{r, eval=TRUE}
+library(i2dash)
+```
+
+# Working with i2dash
+
+## Creating a dashboard
+
+i2dash introduces a new S4 class called `i2dashboard`. We start by creating an instance of the `i2dashboard` class and set some relevant parameters:
+
+- `title` - the dashboard's title, as it will appear in the left corner of the navigation bar.
+- `author`- the name of the dashboard author, it will also appear in the navigation bar.
+- `interactive` - if set to `TRUE` a shiny-based dashboard will be created, otherwise a static HTML file.
+- `theme` - changes the appearance of the dashboard. A variety of themes are available at [R Studio's Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance) or [Semantic UI forest](https://semantic-ui-forest.com/themes/).
+- `datadir` - defines the directory where dashboard files are stored.
+- `file` - defines the file name of the dashboards R Markdown file.
+
+```{r, eval=TRUE}
+i2dashboard(
+  title = "Dashboard title",
+  author = "John Doe",
+  interactive = FALSE,
+  theme = "yeti",
+  datadir = "datadir",
+  file = "MyDashboard.Rmd") -> dashboard
+```
+
+We can examine the `i2dashboard` object by calling the object. The output shows the title of the dashboard, the number of saved pages and the number of components the page contains. By default the `i2dashboard` object contains the 'default' page without any components. 
+
+```{r, eval=TRUE}
+dashboard
+```
+
+Retrospectively, it is also possible to change the `interactive` slot of the `i2dashboard` object as follows:
+
+```{r, eval=FALSE}
+interactivity(dashboard) <- TRUE
+# or
+interactivity(dashboard) <- FALSE
+```
+
+## Adding and removing pages
+
+We next use the `add_page()` function to add two pages to the `dashboard` object. The first argument (`page`) sets an unique page identifier that will be used later to add components to it. The `title` defines a title of the page, which is shown in the navigation bar.
+
+```{r, eval=TRUE}
+dashboard %<>% 
+  add_page(
+    page = "page1",
+    title = "Page 1",
+    layout = "focal_left",
+    menu = NULL) %>%
+  add_page(
+    page = "page2",
+    title = "Page 2",
+    layout = "focal_left",
+    menu = NULL)
+```
+
+We can use the `menu` parameter to group several pages under a common drop-down menu: 
+
+```{r, eval=TRUE}
+dashboard %<>% 
+  add_page(
+    page = "page3",
+    title = "Lemurs",
+    layout = "focal_left",
+    menu = "Animals") %>%
+  add_page(
+    page = "page4",
+    title = "Tigers",
+    layout = "focal_left",
+    menu = "Animals")
+```
+
+```{r fig-1, fig.cap = "Figure 1: Navigation bar of the dashboard after adding several pages.", eval = TRUE, echo = FALSE}
+knitr::include_graphics("./images/navigation.png")
+```
+
+We can remove a page using the `remove_page()` function. The `page` argument contains the unique page identifier of the page to be removed.
+
+```{r, eval = FALSE}
+dashboard %<>%
+  remove_page(page = "page2")
+```
+
+## Adding content
+
+Content can be added to pages using **components**. A component can be a R object itself (*e.g.* a widget from [htmwlwidgets](http://gallery.htmlwidgets.org/)), a file path (*e.g.* to a markdown or image file) or a function that can be called to generate content. We'll use the `add_component` function to explore several options and fill `page1` iteratively with three R objects:
+
+```{r, eval=FALSE}
+library(leaflet)
+leaflet() %>%
+  addTiles() %>%  
+  addMarkers(lng=174.768, lat=-36.852,
+             popup="The birthplace of R") -> leaftlet_map
+
+dashboard %<>%
+  add_component(leaftlet_map,
+                page = "page1",
+                title = "A map from leaflet")
+
+library(plotly)
+plot_ly(mtcars, x = ~wt, y = ~mpg) -> plotly_object
+
+library(ggplot2)
+mtcars %>%
+  ggplot(aes(x=mpg)) +
+  geom_density(fill="darkgrey") -> ggplot2_object
+
+dashboard %<>%
+  add_component(plotly_object,
+                page = "page1",
+                title = "A plot from plotly") %>%
+  add_component(ggplot2_object,
+                page = "page1",
+                title = "A plot from ggplot2")
+```
+
+This results in the following dashboard:
+
+```{r fig-2, fig.cap = "Figure 2: The resulting page with three components added after assembly of the dashboard.", eval = TRUE, echo = FALSE}
+knitr::include_graphics("./images/example_page1.png")
+```
+
+### Adding text and images
+
+Text and images can be added to a **page** by calling the `add_component` function with a file path. The function will include file paths ending with `.[png|jpg|jpeg|gif]` as image content, and other files as text content:
+
+```{r, eval = TRUE}
+dashboard %<>%
+  add_component(file.path("images/lemur.jpg"),
+                page = "page3",
+                title = "A picture of a Lemur") %>%
+  add_component(file.path("texts/lemurs.md"),
+                page = "page3",
+                title = "About Lemurs")
+```
+
+This results in the following dashboard:
+
+```{r fig-3, fig.cap = "Figure 3: The resulting page with an image and text from a file.", eval = TRUE, echo = FALSE}
+knitr::include_graphics("./images/example_page3.png")
+```
+
+### Adding content from functions
+
+Near unlimited flexibility comes from the ability to pass functions to `add_component`. Functions can be used to *generate* content based on their parameters when they're called. Lets create such a function:
+
+```{r, eval = TRUE}
+text_generator <- function(dashboard, n) {
+  stringi::stri_rand_lipsum(nparagraphs = n) %>%
+    paste(collapse = "\n\n") -> content
+  paste0("### Generated content\n\n", content)
+}
+```
+
+The function `text_generator` from above can generate `n` paragraphs of Lorem Ipsum upon calling. We can include it's return as content:
+
+```{r, eval = TRUE}
+dashboard %<>%
+  add_component(text_generator,
+                page = "page4",
+                title = NULL,
+                n = 4)
+```
+
+When writing your own generating functions, please keep it mind to set the `title` of the component within the function: 
+
+```{r fig-4, fig.cap = "Figure 4: The resulting page with content generated from a function.", eval = TRUE, echo = FALSE}
+knitr::include_graphics("./images/example_page4.png")
+```
+
+## Colormaps
+
+Data analysis often have certain experimental factors (*e.g.* year or category) that are included repeatedly in figure scales. When communicating findings from such analysis, it would be desirable to have consitent representation (*e.g.* by color) of those factors across different figures. In i2dash, we solve this problem by introducing **colormaps**. Colormaps can be used by components to look up color scales for experimental factors. Here, we briefly introduce how colormaps are added to the dashboard, but refer to the development vignette for further information.
+
+Lets assume we have an experimental factor called year:
+
+```{r, eval = FALSE}
+year <- factor(c(2014, 2014, 2015, 2017, 2019, 2019), levels = c(2014:2021))
+```
+
+To assign each level a color from the [sequential greens](http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=9) palette from the `r BiocStyle::CRANpkg("RColorBrewer")` package, we create a character vector with the colors and assign the levels as names.
+
+```{r, eval = FALSE}
+colors <- RColorBrewer::brewer.pal(8, "BuGn")
+names(colors) <- levels(year)
+```
+
+The colormap can then be added to the dashboard. From there on, **components** can consume the colormap and use the desired colors for figure scales.
+
+```{r, eval = FALSE}
+dashboard %<>%
+  add_colormap(map = colors,
+               name = "year")
+```
+
+## Dashboard assembly
+
+At any point in time, and particular when data analysis is finished, the `assemble` function can be used to generate representation of the dashboard in R markdown format. Using the `pages` parameter, we can define which pages will be included in the output. 
+
+```{r, eval = FALSE}
+dashboard %>%
+  assemble(pages = c("page1", "page3", "page4"))
+```
+
+The resulting R Markdown file can be run with `r BiocStyle::CRANpkg("Shiny")` or rendered with `r BiocStyle::CRANpkg("rmarkdown")`.
+
+# Session Info {.unnumbered}
+
+```{r sessioninfo}
+sessionInfo()
+```

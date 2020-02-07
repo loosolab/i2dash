@@ -9,7 +9,7 @@
 \arguments{
 \item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
 
-\item{component}{The name of a function or a path to a file.}
+\item{component}{A R object, function, or character.}
 
 \item{page}{The name of the page to add the component to.}
 
@@ -18,21 +18,25 @@
 \item{...}{Additional parameters passed to the components render function.}
 }
 \description{
-Components can be created by evaluating a function, or by including a text or image file.
-The function tries to guess the intended usage by applying regular expressions to the argument \code{component} (see below for details).
+Components can be created by evaluating a function, or by including an object, a text or image file.
 }
-\section{Adding a component by evaluating a function}{
+\section{Adding content by evaluating a function}{
 
-If the argument \code{component} is a valid function name, the function will be called and its return value is used as component content.
-}
-
-\section{Adding plain text as a component}{
-
-If the argument \code{component} ends with \code{.md} or \code{.txt}, the function will try to open a file and use its content as the components content.
+If the argument \code{component} is a function, the function will be called and its return value is used as content.
 }
 
-\section{Adding images as a component}{
+\section{Adding plain text as content}{
 
-If the argument \code{component} end matches \code{\\.[png|jpg|jpeg|gif]}, the function will try to include an image as the components content.
+If the argument \code{component} is a character and ends with \code{.md} or \code{.txt}, the function will try to open a file and use its content.
+}
+
+\section{Adding images as content}{
+
+If the argument \code{component} is a character and its end matches \code{\\.[png|jpg|jpeg|gif]}, the function will try to include an image as the content.
+}
+
+\section{Adding a R object as content}{
+
+If the argument \code{component} is a supported R object (e.g. a htmlwidget), the function will include its representation as content.
 }
 

@@ -10,3 +10,4 @@ if (!requireNamespace("<% package %>", quietly = TRUE)) {
 readRDS(file.path(datadir, '<% component_id %>.rds'))
 ```
 
+
