@@ -19,4 +19,30 @@ setGeneric("add_colormap", function(dashboard, ...) standardGeneric("add_colorma
 
 #' @export
 setGeneric("interactivity", function(dashboard) standardGeneric("interactivity"))
+
+#' @export
 setGeneric("interactivity<-", function(dashboard, value) standardGeneric("interactivity<-"))
+
+#' @export
+setGeneric("title", function(dashboard) standardGeneric("title"))
+
+#' @export
+setGeneric("title<-", function(dashboard, value) standardGeneric("title<-"))
+
+#' @export
+setGeneric("author", function(dashboard) standardGeneric("author"))
+
+#' @export
+setGeneric("author<-", function(dashboard, value) standardGeneric("author<-"))
+
+#' @export
+setGeneric("theme", function(dashboard) standardGeneric("theme"))
+
+#' @export
+setGeneric("theme<-", function(dashboard, value) standardGeneric("theme<-"))
+
+#' @export
+setGeneric("datadir", function(dashboard) standardGeneric("datadir"))
+
+#' @export
+setGeneric("datadir<-", function(dashboard, value) standardGeneric("datadir<-"))
