@@ -7,6 +7,22 @@
 \S4method{interactivity}{i2dashboard}(dashboard)
 
 \S4method{interactivity}{i2dashboard}(dashboard) <- value
+
+\S4method{title}{i2dashboard}(dashboard)
+
+\S4method{title}{i2dashboard}(dashboard) <- value
+
+\S4method{author}{i2dashboard}(dashboard)
+
+\S4method{author}{i2dashboard}(dashboard) <- value
+
+\S4method{theme}{i2dashboard}(dashboard)
+
+\S4method{theme}{i2dashboard}(dashboard) <- value
+
+\S4method{datadir}{i2dashboard}(dashboard)
+
+\S4method{datadir}{i2dashboard}(dashboard) <- value
 }
 \arguments{
 \item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
@@ -15,4 +31,12 @@
 }
 \description{
 Get/set the interactivity of the i2dashboard.
+
+Get/set the title of the i2dashboard.
+
+Get/set the author of the i2dashboard.
+
+Get/set the theme of the i2dashboard.
+
+Get/set the datadir of the i2dashboard.
 }
