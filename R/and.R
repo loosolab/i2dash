@@ -135,30 +135,28 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
       grouping <- grouping[unique(element.grouping[[2]])]
 
       return <- lapply(seq_len(length(grouping)), function(i){
-        group <- lapply(unlist(grouping[i]), function(x){
+        group <- lapply(unlist(grouping[i]), function(x) {
           progress$inc(step, detail = x)
 
           if (is.numeric(data[[x]])) {
             ui <- orNumericUI(id = session$ns(openssl::sha1(x)))
-          } else {
-            ui <- orTextualUI(id = session$ns(openssl::sha1(x)))
-          }
 
-          if (length(ui) < 4) { # orTextual
-            shiny::tagList(shiny::fluidRow(
-              shiny::column(width = 4, ui[1]),
-              shiny::column(width = 3, ui[2]),
-              shiny::column(width = 1, offset = 4, ui[3])
-            ))
-          } else { # orNumeric
             shiny::tagList(shiny::fluidRow(
               shiny::column(width = 4, ui[1]),
               shiny::column(width = 1, ui[2]),
               shiny::column(width = 6, ui[3]),
               shiny::column(width = 1, ui[4])
             ))
-          }
+          } else {
+            ui <- orTextualUI(id = session$ns(openssl::sha1(x)))
 
+            shiny::tagList(shiny::fluidRow(
+              shiny::column(width = 4, ui[1]),
+              shiny::column(width = 2, ui[2]),
+              shiny::column(width = 1, ui[3]),
+              shiny::column(width = 1, offset = 4, ui[4])
+            ))
+          }
         })
 
         shiny::tagList(shinydashboard::box(width = 12, collapsible = TRUE, collapsed = TRUE, title = names(grouping[i]), shiny::tagList(group)))
@@ -169,22 +167,20 @@ and <- function(input, output, session, data, show.elements = NULL, element.grou
         if (is.numeric(data[[x]])) {
           ui <- orNumericUI(id = session$ns(openssl::sha1(names(data)[x])))
 
-        } else {
-          ui <- orTextualUI(id = session$ns(openssl::sha1(names(data)[x])))
-        }
-
-        if (length(ui) < 4) { # orTextual
-          shiny::tagList(shiny::fluidRow(
-            shiny::column(width = 4, ui[1]),
-            shiny::column(width = 3, ui[2]),
-            shiny::column(width = 1, offset = 4, ui[3])
-          ))
-        } else { # orNumeric
           shiny::tagList(shiny::fluidRow(
             shiny::column(width = 4, ui[1]),
             shiny::column(width = 1, ui[2]),
             shiny::column(width = 6, ui[3]),
             shiny::column(width = 1, ui[4])
+          ))
+        } else {
+          ui <- orTextualUI(id = session$ns(openssl::sha1(names(data)[x])))
+
+          shiny::tagList(shiny::fluidRow(
+            shiny::column(width = 4, ui[1]),
+            shiny::column(width = 2, ui[2]),
+            shiny::column(width = 1, ui[3]),
+            shiny::column(width = 1, offset = 4, ui[4])
           ))
         }
       })
