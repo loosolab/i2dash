@@ -47,7 +47,8 @@ Imports: shiny,
     methods,
     R6,
     magrittr,
-    zip
+    zip,
+    shinyWidgets
 RoxygenNote: 6.1.1
 biocViews: 
 Suggests: knitr,
