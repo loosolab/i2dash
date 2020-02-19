@@ -38,3 +38,4 @@ r-testthat
 r-vdiffr
 qpdf
 zip
+r-shinywidgets
