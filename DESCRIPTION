@@ -25,6 +25,7 @@ Imports:
 Suggests: 
     highcharter,
     plotly,
+    crosstalk,
     gt,
     ggplot2,
     DT,
