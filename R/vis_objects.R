@@ -5,6 +5,8 @@
 #' @param package The name of the R package that defines the class(object).
 #' @param page The name of the page to add the object to.
 #' @param title An optional component title.
+#'
+#' @export
 add_vis_object <- function(dashboard, object, package, page = "default", title = NULL, ...){
   sanitised_page <- i2dash:::.create_page_name(page)
   if (!(sanitised_page %in% names(dashboard@pages))) {
