@@ -7,7 +7,20 @@ if (!requireNamespace("<% package %>", quietly = TRUE)) {
     stop('The package <% package %> is needed to embed objects of class <% class %>.', call. = FALSE)
 }
 
-readRDS(file.path(datadir, '<% component_id %>.rds'))
+vis_<% component_id %> <- readRDS(file.path(datadir, '<% component_id %>.rds'))
+
+# workaround for plotly dependencies issue (https://github.com/ropensci/plotly/issues/1044)
+# 
+fix_dependency <- function(dependency){
+  if(dependency$name == "jquery") dependency$src$file <- file.path(system.file(package ="crosstalk"), "lib/jquery")
+  if(dependency$name == "crosstalk") dependency$src$file <- file.path(system.file(package ="crosstalk"), "www")
+  return(dependency)
+}
+if ("<% package %>" == "plotly"){
+  vis_<% component_id %>$dependencies <- lapply(vis_<% component_id %>$dependencies, fix_dependency)  
+}
+
+vis_<% component_id %>
 ```
 
 
