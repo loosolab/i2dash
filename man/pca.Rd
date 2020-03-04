@@ -4,8 +4,16 @@
 \alias{pca}
 \title{pca module server logic}
 \usage{
-pca(input, output, session, clarion, width = 28, height = 28,
-  ppi = 72, scale = 1)
+pca(
+  input,
+  output,
+  session,
+  clarion,
+  width = 28,
+  height = 28,
+  ppi = 72,
+  scale = 1
+)
 }
 \arguments{
 \item{input}{Shiny's input object}

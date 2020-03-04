@@ -49,7 +49,7 @@ Imports: shiny,
     magrittr,
     zip,
     shinyWidgets
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 biocViews: 
 Suggests: knitr,
     rmarkdown,

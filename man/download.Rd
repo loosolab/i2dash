@@ -6,8 +6,16 @@
 Creates a zip container containing plot in png, pdf and user input in json format.
 Use inside \code{\link[shiny]{downloadHandler}} content function.}
 \usage{
-download(file, filename, plot, width, height, ppi = 72,
-  save_plot = TRUE, ui = NULL)
+download(
+  file,
+  filename,
+  plot,
+  width,
+  height,
+  ppi = 72,
+  save_plot = TRUE,
+  ui = NULL
+)
 }
 \arguments{
 \item{file}{See \code{\link[shiny]{downloadHandler}} content parameter.}

@@ -4,9 +4,18 @@
 \alias{scatterPlot}
 \title{scatterPlot module server logic}
 \usage{
-scatterPlot(input, output, session, clarion, marker.output = NULL,
-  plot.method = "static", width = "auto", height = "auto",
-  ppi = 72, scale = 1)
+scatterPlot(
+  input,
+  output,
+  session,
+  clarion,
+  marker.output = NULL,
+  plot.method = "static",
+  width = "auto",
+  height = "auto",
+  ppi = 72,
+  scale = 1
+)
 }
 \arguments{
 \item{input}{Shiny's input object}

@@ -4,14 +4,33 @@
 \alias{create_scatterplot}
 \title{Method for scatter plot creation}
 \usage{
-create_scatterplot(data, data.labels = NULL, data.hovertext = NULL,
-  transparency = 1, pointsize = 1, labelsize = 3, color = NULL,
-  x_label = "", y_label = "", z_label = "", density = TRUE,
-  line = TRUE, categorized = FALSE, highlight.data = NULL,
-  highlight.labels = NULL, highlight.hovertext = NULL,
-  highlight.color = "#FF0000", xlim = NULL, ylim = NULL,
-  colorbar.limits = NULL, width = "auto", height = "auto",
-  ppi = 72, plot.method = "static", scale = 1)
+create_scatterplot(
+  data,
+  data.labels = NULL,
+  data.hovertext = NULL,
+  transparency = 1,
+  pointsize = 1,
+  labelsize = 3,
+  color = NULL,
+  x_label = "",
+  y_label = "",
+  z_label = "",
+  density = TRUE,
+  line = TRUE,
+  categorized = FALSE,
+  highlight.data = NULL,
+  highlight.labels = NULL,
+  highlight.hovertext = NULL,
+  highlight.color = "#FF0000",
+  xlim = NULL,
+  ylim = NULL,
+  colorbar.limits = NULL,
+  width = "auto",
+  height = "auto",
+  ppi = 72,
+  plot.method = "static",
+  scale = 1
+)
 }
 \arguments{
 \item{data}{data.table containing plot data

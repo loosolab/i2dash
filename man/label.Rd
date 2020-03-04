@@ -4,9 +4,18 @@
 \alias{label}
 \title{label module server logic}
 \usage{
-label(input, output, session, data, label = "Select label columns",
-  multiple = TRUE, sep = ", ", unique = TRUE, unique_sep = "_",
-  disable = NULL)
+label(
+  input,
+  output,
+  session,
+  data,
+  label = "Select label columns",
+  multiple = TRUE,
+  sep = ", ",
+  unique = TRUE,
+  unique_sep = "_",
+  disable = NULL
+)
 }
 \arguments{
 \item{input}{Shiny's input object.}

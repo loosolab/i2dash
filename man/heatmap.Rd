@@ -4,9 +4,18 @@
 \alias{heatmap}
 \title{heatmap module server logic}
 \usage{
-heatmap(input, output, session, clarion, plot.method = "static",
-  label.sep = ", ", width = "auto", height = "auto", ppi = 72,
-  scale = 1)
+heatmap(
+  input,
+  output,
+  session,
+  clarion,
+  plot.method = "static",
+  label.sep = ", ",
+  width = "auto",
+  height = "auto",
+  ppi = 72,
+  scale = 1
+)
 }
 \arguments{
 \item{input}{Shiny's input object}

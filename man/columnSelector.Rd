@@ -4,9 +4,19 @@
 \alias{columnSelector}
 \title{columnSelector module server logic}
 \usage{
-columnSelector(input, output, session, type.columns, type = NULL,
-  column.type.label = "Type of Column", label.label = "Label",
-  multiple = TRUE, none = FALSE, sep = ", ", suffix = NULL)
+columnSelector(
+  input,
+  output,
+  session,
+  type.columns,
+  type = NULL,
+  column.type.label = "Type of Column",
+  label.label = "Label",
+  multiple = TRUE,
+  none = FALSE,
+  sep = ", ",
+  suffix = NULL
+)
 }
 \arguments{
 \item{input}{Shiny's input object}

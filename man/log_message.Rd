@@ -4,8 +4,11 @@
 \alias{log_message}
 \title{logger message convenience function}
 \usage{
-log_message(message, level = c("DEBUG", "INFO", "WARN", "ERROR",
-  "FATAL"), token = NULL)
+log_message(
+  message,
+  level = c("DEBUG", "INFO", "WARN", "ERROR", "FATAL"),
+  token = NULL
+)
 }
 \arguments{
 \item{message}{String of message to be written in log. See \code{\link[log4r]{levellog}}.}

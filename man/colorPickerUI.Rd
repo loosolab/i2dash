@@ -4,9 +4,15 @@
 \alias{colorPickerUI}
 \title{colorPicker module UI representation}
 \usage{
-colorPickerUI(id, label = "Color scheme", custom = FALSE,
-  multiple = FALSE, show.reverse = TRUE, show.scaleoptions = TRUE,
-  show.transparency = TRUE)
+colorPickerUI(
+  id,
+  label = "Color scheme",
+  custom = FALSE,
+  multiple = FALSE,
+  show.reverse = TRUE,
+  show.scaleoptions = TRUE,
+  show.transparency = TRUE
+)
 }
 \arguments{
 \item{id}{The ID of the modules namespace.}

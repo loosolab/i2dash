@@ -4,9 +4,19 @@
 \alias{orTextual}
 \title{orTextual module server logic}
 \usage{
-orTextual(input, output, session, choices, selected = NULL,
-  label = "Column", delimiter = NULL, multiple = TRUE,
-  contains = FALSE, reset = NULL)
+orTextual(
+  input,
+  output,
+  session,
+  choices,
+  selected = NULL,
+  label = "Column",
+  delimiter = NULL,
+  multiple = TRUE,
+  contains = FALSE,
+  reset = NULL,
+  parse_mode = TRUE
+)
 }
 \arguments{
 \item{input}{Shiny's input object.}
@@ -28,6 +38,8 @@ orTextual(input, output, session, choices, selected = NULL,
 \item{contains}{Logical variable. If TRUE shows module as a textsearch input.}
 
 \item{reset}{A reactive which will trigger a module reset on change.}
+
+\item{parse_mode}{Boolean to enable text to selection parsing. Ignored if multiple = FALSE or contains = TRUE.}
 }
 \value{
 Returns a reactive containing a named list with the label, the selected choices as a character vector (text) and a boolean vector of length \code{length(choices)} (bool), indicating whether a item has been chosen. If no item has been chosen, the return is \code{TRUE} for items.
