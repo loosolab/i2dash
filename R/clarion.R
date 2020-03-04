@@ -20,8 +20,18 @@
 #'     \item{\code{get_factors()}}{
 #'       Returns a data.table columns: key and factor(s) if any. Named factors (e.g. factor1="name") will be cropped to their name.
 #'     }
+#'     \item{\code{get_level(column)}}{
+#'       Provide a vector of levels to the given columnnames in column. Returns NA for missing columns and character(0) if column = NULL.
+#'     }
+#'     \item{\code{get_label(column = NULL, sub_label = TRUE, sep = " ")}}{
+#'       Provides a vector of labels (+ sub_label) to the given columnnames in column. Returns NA for missing columns and all labels if column = NULL.
+#'       If a column does not have a label the key is returned.
+#'     }
 #'     \item{\code{validate(solve = TRUE)}}{
 #'       Check the object for inconsistencies. For solve = TRUE try to resolve some warnings.
+#'     }
+#'     \item{\code{write(file)}}{
+#'       Save the object as a clarion file. This will also parse and write all layers.
 #'     }
 #'   }
 #'
@@ -98,6 +108,37 @@ Clarion <- R6::R6Class("Clarion",
 
                            return(factor_table)
                          },
+                         get_level = function(column) {
+                           # return levels to given columns
+                           self$metadata[match(column, key)][["level"]]
+                         },
+                         get_label = function(column = NULL, sub_label = TRUE, sep = " ") {
+                           # return label to given columns
+
+                           # identify row index for given column(s)
+                           if (is.null(column)) {
+                             index <- seq_len(nrow(self$metadata))
+                           } else {
+                             index <- match(column, self$metadata[["key"]])
+                           }
+
+                           if (is.element("label", names(self$metadata))) {
+                             label <- self$metadata[["label"]]
+                             # replace empty label with key
+                             replace_ind <- which(label == "")
+                             label[replace_ind] <- self$metadata[replace_ind][["key"]]
+                           } else {
+                             label <- self$metadata[["key"]]
+                           }
+
+                           # add sub_label
+                           if (sub_label && is.element("sub_label", names(self$metadata))) {
+                             # TODO don't add sep when sub_label empty
+                             label <- paste(label, self$metadata[["sub_label"]], sep = sep)
+                           }
+
+                           return(label[index])
+                         },
                          validate = function(solve = TRUE) {
                            # validate header
                            private$check_delimiter()
@@ -107,6 +148,7 @@ Clarion <- R6::R6Class("Clarion",
                            private$check_level()
                            private$check_type()
                            private$check_label()
+                           private$check_order(solve)
                            # validate data
                            private$check_data_header(solve)
                            private$check_data_min()
@@ -126,6 +168,22 @@ Clarion <- R6::R6Class("Clarion",
                              cols <- c(self$get_id(), self$get_name())
                            }
                            self$data[, (cols) := lapply(.SD, as.character), .SDcols = cols]
+
+                           # set index
+                           data.table::setindexv(self$metadata, "key")
+                           data.table::setindexv(self$data, self$get_id())
+                         },
+                         write = function(file) {
+                           # prepare
+                           if (!is.null(self$header)) {
+                             flat_header <- private$flatten_header()
+                           }
+                           flat_metadata <- private$flatten_metadata()
+
+                           # write
+                           if (!is.null(self$header)) data.table::fwrite(flat_header, file = file, col.names = FALSE, sep = "\t", quote = FALSE)
+                           data.table::fwrite(flat_metadata, file = file, col.names = TRUE, sep = "\t", append = ifelse(is.null(self$header), FALSE, TRUE), quote = FALSE)
+                           data.table::fwrite(self$data, file = file, col.names = TRUE, sep = "\t", append = TRUE, quote = FALSE)
                          }
                        ),
                        private = list(
@@ -138,6 +196,22 @@ Clarion <- R6::R6Class("Clarion",
                              value
                            }
                          },
+                         # prepare header to be saved as clarion flat-file
+                         flatten_header = function() {
+                           # reformat header list to !name=value
+                           flat_header <- paste0("!", names(self$header), "=", self$header)
+                           data.table::data.table(flat_header)
+                         },
+                         # prepare metadata to be saved as clarion flat-file
+                         flatten_metadata = function() {
+                           flat_metadata <- data.table::copy(self$metadata)
+                           # add leading '#'
+                           names(flat_metadata)[1] <- paste0("#", names(flat_metadata)[1])
+                           flat_metadata[, names(flat_metadata)[1] := paste0("#", flat_metadata[[1]])]
+
+                           return(flat_metadata)
+                         },
+                         # checks ####
                          ## header checks
                          check_delimiter = function() {
                            if (is.element("delimiter", names(self$header))) {
@@ -218,6 +292,16 @@ Clarion <- R6::R6Class("Clarion",
                              if (length(contrast_labels) > 0) {
                                warning("Metadata: Missing '|' delimiter in contrast label(s): ", paste0(contrast_labels, collapse = ", "))
                              }
+                           }
+                         },
+                         check_order = function(solve = TRUE) {
+                           # case: key order differs to data column order
+                           if (!isTRUE(all.equal(self$metadata[["key"]], names(self$data)))) {
+                             # re-order metadata to match data column order
+                             if (solve) {
+                               self$metadata <- self$metadata[match(names(self$data), self$metadata[["key"]])]
+                             }
+                             warning("Metadata: Order between metadata keys and data columns differ. This is discouraged as it can eventually lead to problems.", if (solve) "\nAdjusting metadata order.")
                            }
                          },
                          ## data checks
