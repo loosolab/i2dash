@@ -59,7 +59,7 @@ setMethod("add_component",
           })
 
 setMethod("add_component", signature(dashboard = "i2dashboard", component = "function"),
-          function(dashboard, component, page = "default", title = NULL, ...) {
+          function(dashboard, component, page = "default", ...) {
             # validate "page" input
             name <- .create_page_name(page)
             if (!(name %in% names(dashboard@pages))) {
