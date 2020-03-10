@@ -1,3 +1,6 @@
+# wilson 2.4.0
+- implemented text-to-selection feature for orTextual
+- added several convenience functions to Clarion-class (e.g. write)
 # wilson 2.3.1
 - Rtools no longer required for windows users
 - Interactive plot download now uses [Orca](https://github.com/plotly/orca)
