@@ -28,7 +28,7 @@ test_that("plotly is downloadable", {
 })
 
 test_that("complexHeatmap is downloadable", {
-  plot <- ComplexHeatmap::Heatmap(mtcars)
+  plot <- ComplexHeatmap::Heatmap(as.matrix(mtcars))
   width <- 20
   height <- 20
   file <- tempfile(fileext = ".zip")
