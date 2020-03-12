@@ -61,6 +61,7 @@ object_copy <- object$clone(deep = TRUE)
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_id"></a>}}
+\if{latex}{\out{\hypertarget{method-get_id}{}}}
 \subsection{Method \code{get_id()}}{
 Returns name of unique identifier column. Assumes first feature to be unique if not specified.
 \subsection{Usage}{
@@ -73,6 +74,7 @@ Name of the id column.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_name"></a>}}
+\if{latex}{\out{\hypertarget{method-get_name}{}}}
 \subsection{Method \code{get_name()}}{
 Returns name of name column. If not specified return unique Id.
 \subsection{Usage}{
@@ -85,6 +87,7 @@ Name of the name column.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_delimiter"></a>}}
+\if{latex}{\out{\hypertarget{method-get_delimiter}{}}}
 \subsection{Method \code{get_delimiter()}}{
 Return delimiter used within multi-value fields (no delimiter = NULL).
 \subsection{Usage}{
@@ -94,6 +97,7 @@ Return delimiter used within multi-value fields (no delimiter = NULL).
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-is_delimited"></a>}}
+\if{latex}{\out{\hypertarget{method-is_delimited}{}}}
 \subsection{Method \code{is_delimited()}}{
 Logical whether the given column name is delimited.
 \subsection{Usage}{
@@ -113,6 +117,7 @@ boolean
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_factors"></a>}}
+\if{latex}{\out{\hypertarget{method-get_factors}{}}}
 \subsection{Method \code{get_factors()}}{
 Get factors to all columns.
 \subsection{Usage}{
@@ -129,6 +134,7 @@ Returns a data.table columns: key and factor(s) if any.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_level"></a>}}
+\if{latex}{\out{\hypertarget{method-get_level}{}}}
 \subsection{Method \code{get_level()}}{
 Get level(s) to given column name(s).
 \subsection{Usage}{
@@ -148,6 +154,7 @@ Provide a vector of levels to the given columnnames in column. Returns NA for mi
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_label"></a>}}
+\if{latex}{\out{\hypertarget{method-get_label}{}}}
 \subsection{Method \code{get_label()}}{
 Get label(s) to given column name(s).
 \subsection{Usage}{
@@ -175,6 +182,7 @@ Provides a vector of labels (+ sub_label) to the given columnnames in column. Re
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-validate}{}}}
 \subsection{Method \code{validate()}}{
 Check the object for inconsistencies.
 \subsection{Usage}{
@@ -191,6 +199,7 @@ Check the object for inconsistencies.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize a new clarion object.
 \subsection{Usage}{
@@ -216,6 +225,7 @@ Clarion object.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-write"></a>}}
+\if{latex}{\out{\hypertarget{method-write}{}}}
 \subsection{Method \code{write()}}{
 Save the object as a clarion file.
 \subsection{Usage}{
@@ -232,6 +242,7 @@ Save the object as a clarion file.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
