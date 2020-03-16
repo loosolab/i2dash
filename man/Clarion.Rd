@@ -168,7 +168,7 @@ Get label(s) to given column name(s).
 
 \item{\code{sub_label}}{Whether the sub_label should be included.}
 
-\item{\code{sep}}{Seperator between label and sub_label.}
+\item{\code{sep}}{Separator between label and sub_label.}
 }
 \if{html}{\out{</div>}}
 }

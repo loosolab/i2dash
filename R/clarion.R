@@ -118,7 +118,7 @@ Clarion <- R6::R6Class("Clarion",
                          #'
                          #' @param column One or more column name(s).
                          #' @param sub_label Whether the sub_label should be included.
-                         #' @param sep Seperator between label and sub_label.
+                         #' @param sep Separator between label and sub_label.
                          #'
                          #' @details If a column does not have a label the key is returned.
                          #' @return Provides a vector of labels (+ sub_label) to the given columnnames in column. Returns NA for missing columns and all labels if column = NULL.
