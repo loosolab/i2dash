@@ -9,6 +9,6 @@ Rscript -e 'install.packages("BiocManager", repos="http://cran.r-project.org")'
 while IFS= read -r package;
 do
   Rscript -e "BiocManager::install('"$package"')";
-done < "r-requirements.txt"
+done < ".ci/r-requirements.txt"
 
 # install other dependencies
