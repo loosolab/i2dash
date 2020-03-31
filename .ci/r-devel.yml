@@ -1,5 +1,5 @@
 # r-devel subpipeline
-image: rocker/r-base
+image: rocker/r-devel
 
 stages:
   - build
