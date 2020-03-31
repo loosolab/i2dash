@@ -1,0 +1,35 @@
+# r-devel subpipeline
+image: rocker/r-base
+
+stages:
+  - build
+  - check
+
+before_script:
+  - .ci/setup.sh
+
+build:
+  stage: build
+  tags:
+    - docker
+  script:
+    - R CMD build .
+  artifacts:
+    paths:
+      - wilson_*.tar.gz
+    name: "$CI_COMMIT_REF_NAME-dev-builds"
+
+check:
+  stage: check
+  tags:
+    - docker
+  variables:
+    http_proxy: http://www-proxy.t-online.de:80
+#    R_ZIPCMD: /opt/conda/bin/zip
+    _R_CHECK_FORCE_SUGGESTS_: 0
+  script:
+    - R CMD check *tar.gz --as-cran --no-manual
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - wilson.Rcheck/*
