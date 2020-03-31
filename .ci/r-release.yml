@@ -6,7 +6,7 @@ stages:
   - check
 
 before_script:
-  - setup.sh
+  - .ci/setup.sh
 
 build:
   stage: build
