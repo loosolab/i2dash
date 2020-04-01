@@ -2,22 +2,22 @@
 
 set -eo pipefail
 
-#
-# Set up correct channel order
-#
-conda config --system --add channels defaults
-conda config --system --add channels bioconda
-conda config --system --add channels conda-forge
+##### Debian #####
+# update package list
+apt-get update -y
+apt-get upgrade -y
 
-#
-# Install packages from requirements
-#
-conda install -q -y --file .ci/requirements.txt
+while IFS= read -r package;
+do
+  apt-get install -y $package
+done < ".ci/apt-requirements.txt"
 
-conda clean -q -y --all
-
-#
-# Install tinytex and symlink to /opt/conda/bin
-#
-#wget -qO- "https://yihui.name/gh/tinytex/tools/install-unx.sh" | sh
-#mv /root/bin/* /opt/conda/bin
+##### R #####
+# install BiocManager
+Rscript -e 'install.packages("BiocManager", repos="http://cran.r-project.org")'
+# install r dependencies
+# https://www.cyberciti.biz/faq/unix-howto-read-line-by-line-from-file/
+while IFS= read -r package;
+do
+  Rscript -e "BiocManager::install('"$package"', update = TRUE, ask = FALSE)";
+done < ".ci/r-requirements.txt"
