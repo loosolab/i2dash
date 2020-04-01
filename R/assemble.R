@@ -24,7 +24,7 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
   ymlthis::yml(date = F) %>%
     ymlthis::yml_title(dashboard@title) %>%
     ymlthis::yml_author(dashboard@author) %>%
-    ymlthis::yml_output(flexdashboard::flex_dashboard(theme = dashboard@theme)) %>%
+    ymlthis::yml_output(flexdashboard::flex_dashboard(theme = !!dashboard@theme)) %>%
     {if(dashboard@interactive) ymlthis::yml_runtime(., runtime = "shiny") else .} %>%
     ymlthis::use_rmarkdown(path = tmp_document, include_body = FALSE, quiet = TRUE, open_doc = FALSE)
 
