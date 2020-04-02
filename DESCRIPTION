@@ -18,11 +18,13 @@ Imports:
     flexdashboard,
     yaml,
     assertive.sets,
+    assertive.types,
     rmarkdown,
     stringr,
     glue,
     ymlthis
 Suggests: 
+    switchr,
     highcharter,
     plotly,
     crosstalk,
