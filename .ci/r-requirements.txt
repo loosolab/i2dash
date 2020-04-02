@@ -36,3 +36,4 @@ rmarkdown
 testthat
 vdiffr
 stringi
+shinyWidgets
