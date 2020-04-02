@@ -46,3 +46,21 @@ setGeneric("datadir", function(dashboard) standardGeneric("datadir"))
 
 #' @export
 setGeneric("datadir<-", function(dashboard, value) standardGeneric("datadir<-"))
+
+#' @export
+setGeneric("social_links", function(dashboard) standardGeneric("social_links"))
+
+#' @export
+setGeneric("social_links<-", function(dashboard, value) standardGeneric("social_links<-"))
+
+#' @export
+setGeneric("embed_source<-", function(dashboard, value) standardGeneric("embed_source<-"))
+
+#' @export
+setGeneric("source", function(dashboard) standardGeneric("source"))
+
+#' @export
+setGeneric("source<-", function(dashboard, value) standardGeneric("source<-"))
+
+#' @export
+setGeneric("add_link", function(dashboard, ...) standardGeneric("add_link"))
