@@ -23,7 +23,7 @@ vignette: >
 
 Vignette last complied on `r Sys.Date()`. i2dash is licenced under `r utils::packageDescription("i2dash")[["License"]]`.
 
-```{r style, echo = FALSE, results = 'asis'}
+```{r style, echo = FALSE, results = 'asis', include = FALSE}
 BiocStyle::markdown()
 ```
 
