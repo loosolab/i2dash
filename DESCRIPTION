@@ -23,6 +23,7 @@ Imports:
     glue,
     ymlthis
 Suggests: 
+    switchr,
     highcharter,
     plotly,
     crosstalk,
