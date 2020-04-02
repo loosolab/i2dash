@@ -23,11 +23,21 @@
 \S4method{datadir}{i2dashboard}(dashboard)
 
 \S4method{datadir}{i2dashboard}(dashboard) <- value
+
+\S4method{social_links}{i2dashboard}(dashboard)
+
+\S4method{social_links}{i2dashboard}(dashboard) <- value
+
+\S4method{source}{i2dashboard}(dashboard)
+
+\S4method{source}{i2dashboard}(dashboard) <- value
+
+\S4method{embed_source}{i2dashboard}(dashboard) <- value
 }
 \arguments{
 \item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
 
-\item{value}{The value of the desired property.}
+\item{value}{The value of the desired property. A URL pointing to where the source code can be found online.}
 }
 \description{
 Get/set the interactivity of the i2dashboard.
@@ -39,4 +49,8 @@ Get/set the author of the i2dashboard.
 Get/set the theme of the i2dashboard.
 
 Get/set the datadir of the i2dashboard.
+
+Get/set the links to be shown for sharing on social media. Any of the following services are allowed: “facebook”, “twitter”, “google-plus”, “linkedin”, and “pinterest”. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.
+
+Get/set the embedding of the source code of the i2dashboard. Can either be a URL pointing to where the source code can be found online or whether or not to embed the source code into the document.
 }
