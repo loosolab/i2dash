@@ -4,7 +4,7 @@
 
 ```{r}
 if (!requireNamespace("<% package %>", quietly = TRUE)) {
-    stop('The package <% package %> is needed to embed objects of class <% class %>.', call. = FALSE)
+    stop('The package "<% package %>" is needed to embed objects of class "<% class %>".', call. = FALSE)
 }
 
 vis_<% component_id %> <- readRDS(file.path(datadir, '<% component_id %>.rds'))

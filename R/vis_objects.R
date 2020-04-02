@@ -29,7 +29,7 @@ add_vis_object <- function(dashboard, object, package, page = "default", title =
                                            delim = c("<%", "%>"),
                                            title = title,
                                            package = package,
-                                           class = class(object),
+                                           class = is(object),
                                            component_id = component_id,
                                            timestamp = timestamp)
 
@@ -42,61 +42,42 @@ add_vis_object <- function(dashboard, object, package, page = "default", title =
 # Methods to add common visualization objects
 #
 setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "highchart"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "highcharter", page, title, ...) })
-
-setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "plotly"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "plotly", page, title, ...) })
-
-setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "leaflet"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "leaflet", page, title, ...) })
-
-setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "dygraphs"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "dygraphs", page, title, ...) })
-
-setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "rbokeh"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "rbokeh", page, title, ...) })
-
-setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "visNetwork"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "visNetwork", page, title, ...) })
-
-setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "d3heatmap"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "d3heatmap", page, title, ...) })
-
-setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "metricsgraphics"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "metricsgraphics", page, title, ...) })
-
-setMethod("add_component",
           signature = signature(dashboard = "i2dashboard", component = "gg"),
           definition = function(dashboard, component, page = "default", title = NULL, ...) {
             add_vis_object(dashboard, component, "ggplot2", page, title, ...) })
 
 setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "datatables"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "DT", page, title, ...) })
-
-setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "grViz"),
-          definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "DiagrammeR", page, title, ...) })
-
-setMethod("add_component",
           signature = signature(dashboard = "i2dashboard", component = "gt_tbl"),
           definition = function(dashboard, component, page = "default", title = NULL, ...) {
-            add_vis_object(dashboard, component, "gt", page, title, ...) })
+            add_vis_object(dashboard, component,"gt", page, title, ...) })
+
+setMethod("add_component",
+          signature = signature(dashboard = "i2dashboard", component = "knitr_kable"),
+          definition = function(dashboard, component, page = "default", title = NULL, ...) {
+            add_vis_object(dashboard, component, "kableExtra", page, title, ...) })
+
+setMethod("add_component",
+          signature = signature(dashboard = "i2dashboard", component = "Heatmap"),
+          definition = function(dashboard, component, page = "default", title = NULL, ...) {
+            add_vis_object(dashboard, component, "ComplexHeatmap", page, title, ...) })
+
+setMethod("add_component",
+          signature = signature(dashboard = "i2dashboard", component = "ANY"),
+          definition = function(dashboard, component, page = "default", title = NULL, ...) {
+
+            # HTMLWIDGETS
+            if(inherits(component, "htmlwidget")) {
+              package <- packageSlot(component)
+
+              if(is.null(package)) {
+                warning("No component added, since the package name of the HTML widget could not be determined.")
+                return(dashboard)
+              }
+
+              return(add_vis_object(dashboard, component, package, page, title, ...))
+            }
+
+            # OTHER
+            warning("The component did not inherit from any of the currently supported classes ('htmlwidget').")
+            return(dashboard)
+            })
