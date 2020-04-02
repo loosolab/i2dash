@@ -37,3 +37,4 @@ testthat
 vdiffr
 stringi
 shinyWidgets
+knitr
