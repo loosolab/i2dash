@@ -2,5 +2,7 @@ libssl-dev
 libcurl4-openssl-dev
 libxml2-dev
 libfontconfig1-dev
+libcairo2-dev
+netbase
 qpdf
 pandoc
