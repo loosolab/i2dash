@@ -13,7 +13,7 @@ build:
   tags:
     - docker
   script:
-    - R CMD build .
+    - RD CMD build .
   artifacts:
     paths:
       - wilson_*.tar.gz
@@ -28,7 +28,7 @@ check:
 #    R_ZIPCMD: /opt/conda/bin/zip
     _R_CHECK_FORCE_SUGGESTS_: 0
   script:
-    - R CMD check *tar.gz --as-cran --no-manual
+    - RD CMD check *tar.gz --as-cran --no-manual
   artifacts:
     expire_in: 1 week
     paths:
