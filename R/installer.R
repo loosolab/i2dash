@@ -10,6 +10,10 @@
 #'
 #' @export
 install_app <- function(location = ".", remove_data = FALSE, start_after_install = FALSE, app_name = "wilson-basic", repository = "https://github.molgen.mpg.de/loosolab/wilson-apps") {
+  if (!requireNamespace("utils", quietly = TRUE)) {
+    stop("Package utils required for this function. Please install it.")
+  }
+
   former_wd <- getwd()
   on.exit(setwd(former_wd))
   # change to where the app should be installed
@@ -17,7 +21,7 @@ install_app <- function(location = ".", remove_data = FALSE, start_after_install
 
   # check if dir exists ONLY in interactive mode
   if (interactive() && dir.exists(file.path(getwd(), app_name))) {
-    answer <- menu(choices = c("Yes", "No"), title = "App folder already exists! Proceeding will delete all of its contents. Proceed anyway?")
+    answer <- utils::menu(choices = c("Yes", "No"), title = "App folder already exists! Proceeding will delete all of its contents. Proceed anyway?")
 
     if (answer == 1) {
       # delete dir
@@ -31,7 +35,7 @@ install_app <- function(location = ".", remove_data = FALSE, start_after_install
   dir.create(file.path(app_name, "tmp"), recursive = TRUE)
   setwd(app_name)
   # download from repo
-  download.file(url = paste0(repository, "/archive/master.zip"), destfile = file.path("tmp", "repository.zip"))
+  utils::download.file(url = paste0(repository, "/archive/master.zip"), destfile = file.path("tmp", "repository.zip"))
   # extract zip
   zip::unzip(zipfile = file.path("tmp", "repository.zip"), exdir = "tmp")
 
@@ -56,6 +60,7 @@ install_app <- function(location = ".", remove_data = FALSE, start_after_install
   message("App successfully installed.")
   message("App folder: ", file.path(getwd()))
   message("Use your data by adding it to ", file.path(app_name, "data"))
+  message("\nStart app by running app.R e.g. shiny::runApp(\"", app_name, "\")")
 
   if (start_after_install) {
     shiny::runApp(".")
