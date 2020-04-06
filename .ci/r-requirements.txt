@@ -34,7 +34,6 @@ R6
 zip
 rmarkdown
 testthat
-vdiffr
 stringi
 shinyWidgets
 knitr

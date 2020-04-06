@@ -53,6 +53,5 @@ biocViews:
 Suggests: knitr,
     rmarkdown,
     testthat,
-    vdiffr,
     stringi
 VignetteBuilder: knitr
