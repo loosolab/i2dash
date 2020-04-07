@@ -7,7 +7,7 @@
 .add_component(dashboard, page, component)
 }
 \arguments{
-\item{dashboard}{A \linkS4class{i2dash::i2dashboard}.}
+\item{dashboard}{A \linkS4class{i2dashboard}.}
 
 \item{page}{The name of the page to add the component to.}
 

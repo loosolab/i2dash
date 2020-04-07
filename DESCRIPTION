@@ -21,29 +21,24 @@ Imports:
     assertive.types,
     rmarkdown,
     stringr,
+    stringi,
     glue,
-    ymlthis
+    ymlthis,
+    methods,
+    stats,
+    utils
 Suggests: 
     switchr,
-    highcharter,
     plotly,
-    crosstalk,
-    gt,
-    ggplot2,
-    DT,
-    leaflet,
-    dygraphs,
-    rbokeh,
-    visNetwork,
-    d3heatmap,
-    metricsgraphics,
-    BiocStyle
+    BiocStyle,
+    xfun,
+    htmltools
 Collate: 
     'i2dashboard.R'
     'AllGenerics.R'
     'assemble.R'
-    'colormap.R'
     'components.R'
+    'colormap.R'
     'get_set.R'
     'pages.R'
     'reexports.R'

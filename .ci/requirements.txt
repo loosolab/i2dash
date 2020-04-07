@@ -1,10 +1,15 @@
 r-assertive.sets
+r-assertive.types
 r-base
 bioconductor-biocstyle
 r-htmltools
 r-flexdashboard
+r-glue
 r-knitr
 r-magrittr
+r-stringi
+r-stringr
 r-yaml
 r-ymlthis
+qpdf
 zip

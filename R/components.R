@@ -1,30 +1,36 @@
-#' Method to add a component to a page of an i2dashboard.
+#' Add content to an i2dashboard object.
 #'
-#' Components can be created by evaluating a function, or by including an object, a text or image file.
+#' Content can be added to the dashboards pages, the sidebar or the navigation bar.
 #'
-#' @section Adding content by evaluating a function:
-#' If the argument \code{component} is a function, the function will be called and its return value is used as content.
+#' The options to add content in detail:
+#' \itemize{
+#'   \item \strong{\code{add_component}} adds content to a page of the dashboard by evaluating a function, or by including an object, a text or image file.
+#'   \item \strong{\code{add_to_sidebar}} adds content to the dashboards global sidebar or to a pages local sidebar.
+#'   \item \strong{\code{add_link}} adds a link to the navigation bar.
+#'   \item \strong{\code{add_colormap}} adds a global color mapping to the dashboards colormaps.
+#' }
 #'
-#' @section Adding plain text as content:
-#' If the argument \code{component} is a character and ends with \code{.md} or \code{.txt}, the function will try to open a file and use its content.
+#' The mechanism to add different types of content to a dashboards page or sidebar depends on the class of the object passed to the function \code{add_component} or \code{add_to_sidebar}:
 #'
-#' @section Adding images as content:
-#' If the argument \code{component} is a character and its end matches \code{\\.[png|jpg|jpeg|gif]}, the function will try to include an image as the content.
+#' \itemize{
+#'   \item A function will be evaluated and its return value is used as content.
+#'   \item A string that ends with \code{.md} or \code{.txt} will be used to open a file and use its content.
+#'   \item A string that ends with \code{\\.[png|jpg|jpeg|gif]} will be used to include an image as content.
+#'   \item An R object (e.g. a htmlwidget) will be included if a suitable signature method is implemented.
+#' }
 #'
-#' @section Adding a R object as content:
-#' If the argument \code{component} is a supported R object (e.g. a htmlwidget), the function will include its representation as content.
-#'
-#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
-#' @param page The name of the page to add the component to.
-#' @param component A R object, function, or character.
+#' @param dashboard A \linkS4class{i2dashboard}.
+#' @param page The name of the page to add the component or sidebar to.
+#' @param component An R object, function, or string.
 #' @param copy Whether or not to copy images to \code{dashboard@datadir}.
 #' @param ... Additional parameters passed to the components render function.
 #'
-#' @rdname add-component
-#' @export
+#' @return The (modified) \linkS4class{i2dashboard} object.
+#'
+#' @rdname i2dashboard-content
 setMethod("add_component",
           signature = signature(dashboard = "i2dashboard", component = "character"),
-          function(dashboard, component, page = "default", copy = FALSE, ...) {
+          function(dashboard, page = "default", component, copy = FALSE, ...) {
             # Logic to guess intended usage
             mode <- NULL
             if(stringr::str_detect(tolower(component), "\\.[md|txt]+$")) {
@@ -58,8 +64,9 @@ setMethod("add_component",
             return(.add_component(dashboard, name, component))
           })
 
+#' @rdname i2dashboard-content
 setMethod("add_component", signature(dashboard = "i2dashboard", component = "function"),
-          function(dashboard, component, page = "default", ...) {
+          function(dashboard, page = "default", component, ...) {
             # validate "page" input
             name <- .create_page_name(page)
             if (!(name %in% names(dashboard@pages))) {
@@ -76,6 +83,81 @@ setMethod("add_component", signature(dashboard = "i2dashboard", component = "fun
             return(.add_component(dashboard, name, content))
           })
 
+#' @rdname i2dashboard-content
+setMethod("add_component",
+          signature = signature(dashboard = "i2dashboard", component = "gg"),
+          definition = function(dashboard, component, page = "default", ...) {
+            add_vis_object(dashboard, component, "ggplot2", page, ...) })
+
+#' @rdname i2dashboard-content
+setMethod("add_component",
+          signature = signature(dashboard = "i2dashboard", component = "gt_tbl"),
+          definition = function(dashboard, component, page = "default", ...) {
+            add_vis_object(dashboard, component,"gt", page, ...) })
+
+#' @rdname i2dashboard-content
+setMethod("add_component",
+          signature = signature(dashboard = "i2dashboard", component = "knitr_kable"),
+          definition = function(dashboard, component, page = "default", ...) {
+            add_vis_object(dashboard, component, "kableExtra", page, ...) })
+
+#' @rdname i2dashboard-content
+setMethod("add_component",
+          signature = signature(dashboard = "i2dashboard", component = "Heatmap"),
+          definition = function(dashboard, component, page = "default", ...) {
+            add_vis_object(dashboard, component, "ComplexHeatmap", page, ...) })
+
+#' @rdname i2dashboard-content
+setMethod("add_component",
+          signature = signature(dashboard = "i2dashboard", component = "ANY"),
+          definition = function(dashboard, component, page = "default", ...) {
+
+            # HTMLWIDGETS
+            if(inherits(component, "htmlwidget")) {
+              package <- methods::packageSlot(component)
+
+              if(is.null(package)) {
+                warning("No component added, since the package name of the HTML widget could not be determined.")
+                return(dashboard)
+              }
+
+              return(add_vis_object(dashboard, component, package, page, ...))
+            }
+
+            # OTHER
+            warning("The component did not inherit from any of the currently supported classes ('htmlwidget').")
+            return(dashboard)
+          })
+
+#' @param href The target of the link.
+#' @param title The link title.
+#' @param icon An optional link icon (see https://rmarkdown.rstudio.com/flexdashboard/using.html#icon-sets)
+#' @param align Optional argument that can be “left” or “right” (defaults = “right”) defining the alignment of the links in the navigation bar
+#' @param target An optional target (e.g. "_blank")
+#'
+#' @rdname i2dashboard-content
+setMethod("add_link", "i2dashboard", function(dashboard, href, title = NULL, icon = NULL, align = c("right","left"), target = NULL) {
+  align <- match.arg(align)
+  if(is.null(title) & is.null(icon)) {
+    warning("Both, title and icon, cannot be NULL when adding a link.")
+    return(dashboard)
+  }
+
+  # Workaround for NULL values
+  if(is.null(icon)) {
+    icon <- ""
+  }
+  if(is.null(title)) {
+    title = ""
+  }
+  if(is.null(target)) {
+    target = ""
+  }
+
+  dashboard@navbar <- append(dashboard@navbar, list(list("href" = href, "title" = title, "icon" = icon, "align" = align, "target" = target)))
+  dashboard
+})
+
 #' Method to download embed files into an Rmd-file
 #'
 #' @param x Data, which will be written to the embedded file.
@@ -84,7 +166,7 @@ setMethod("add_component", signature(dashboard = "i2dashboard", component = "fun
 #' @export
 embed_var <- function(x, ...) {
   f = tempfile(fileext = '.csv')
-  write.csv(x, f)
+  utils::write.csv(x, f)
   xfun::embed_file(f, text = 'Download data', ...)
 }
 
@@ -129,7 +211,7 @@ render_image <- function(image, image_alt_text = NULL, title = NULL, raw = FALSE
 
 #' Helper function to add components to the dashboard
 #'
-#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
+#' @param dashboard A \linkS4class{i2dashboard}.
 #' @param page The name of the page to add the component to.
 #' @param component A string or list.
 #'
