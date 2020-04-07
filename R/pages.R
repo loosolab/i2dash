@@ -1,24 +1,19 @@
-#' Sanitize component names
+#' Methods to add and remove pages of an i2dashboard.
 #'
-#' This function takes a character string, replaces spaces by underscores and runs make.names.
+#' \code{add_page} creates a page and adds it to the \linkS4class{i2dashboard} object.
+#' \code{remove_page} removes a page from the \linkS4class{i2dashboard} object.
 #'
-#' @param x A character string.
-#'
-#' @return A sanitized string.
-.create_page_name <- function(x) {
-  x %>% tolower %>% gsub(x = ., pattern = " ", replacement = "_") %>% make.names %>% return
-}
-
-#' Method to add a page to an i2dashboard
-#'
-#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
-#' @param page The name of the page to be added.
+#' @param dashboard A \linkS4class{i2dashboard}.
+#' @param page The name of the page to be added or removed.
 #' @param title The title of the page to be added.
 #' @param layout The page layout (see below).
 #' @param menu The name of the menu, under which the page should appear.
+#' @param sidebar A Markdown string. Preferably, use the function add_to_sidebar.
+#' @param ... Additional arguments.
 #'
-#' @rdname i2dashboard-methods
-#' @export
+#' @return The \linkS4class{i2dashboard} object.
+#'
+#' @rdname i2dashboard-pages
 setMethod("add_page", "i2dashboard", function(dashboard, page, title, layout = "default", menu = NULL, sidebar = NULL, ...) {
   name <- .create_page_name(page)
 
@@ -44,15 +39,21 @@ setMethod("add_page", "i2dashboard", function(dashboard, page, title, layout = "
   return(dashboard)
 })
 
-#' Method to remove a page to an i2dashboard
-#'
-#' @param dashboard A \linkS4class{i2dash::i2dashboard}.
-#' @param page The name of the page to be removed.
-#'
-#' @rdname i2dashboard-methods
-#' @export
+#' @rdname i2dashboard-pages
 setMethod("remove_page", "i2dashboard", function(dashboard, page) {
   name <- .create_page_name(page)
   dashboard@pages[[name]] <- NULL
   return(dashboard)
 })
+
+#' Sanitize component names
+#'
+#' This function takes a character string, replaces spaces by underscores and runs make.names.
+#'
+#' @param x A character string.
+#'
+#' @return A sanitized string.
+.create_page_name <- function(x) {
+  . = NULL # workaround for R CMD check note: no visible binding for global variable '.'
+  x %>% tolower %>% gsub(x = ., pattern = " ", replacement = "_") %>% make.names %>% return
+}

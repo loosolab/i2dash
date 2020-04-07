@@ -222,7 +222,6 @@ The function `text_generator` from above can generate `n` paragraphs of Lorem Ip
 dashboard %<>%
   add_component(text_generator,
                 page = "page4",
-                title = NULL,
                 n = 4)
 ```
 

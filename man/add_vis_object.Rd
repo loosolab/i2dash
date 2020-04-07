@@ -4,10 +4,10 @@
 \alias{add_vis_object}
 \title{General method to add an object as component to a page of an i2dashboard.}
 \usage{
-add_vis_object(dashboard, object, package, page = "default", title = NULL, ...)
+add_vis_object(dashboard, object, package, page = "default", title = NULL)
 }
 \arguments{
-\item{dashboard}{The \linkS4class{i2dash::i2dashboard}.}
+\item{dashboard}{The \linkS4class{i2dashboard}.}
 
 \item{object}{The R visualization object to be addedd.}
 
