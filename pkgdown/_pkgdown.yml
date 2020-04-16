@@ -1,0 +1,37 @@
+destination: docs
+
+home:
+  links:
+  - text: Visit our webpage
+    href: https://loosolab.mpi-bn.mpg.de
+
+reference:
+  - title: "Dashboard lifecycle"
+    desc: Functions related to the i2dashboard lifecycle.
+    contents:
+      - i2dashboard
+      - add_page
+      - assemble
+  - title: "Dashboard properties"
+    desc: Functions to update / set i2dashboard properties.
+    contents:
+      - title
+      - author
+      - theme
+      - interactivity
+      - source
+  - title: "Dashboard content"
+    desc: Functions to add content to an i2dashboard
+    contents:
+      - add_component
+      - add_to_sidebar
+      - add_colormap
+      - add_link
+
+articles:
+  - title: Introduction
+    navbar: ~
+    desc: >
+      These articels give an overview over the core functions of **i2dash**
+    contents:
+      - '`i2dash-intro`'

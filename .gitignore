@@ -4,6 +4,5 @@
 .Ruserdata
 .DS_store
 Thumbs.db
-*.html
-doc
+./*.html
 Meta
