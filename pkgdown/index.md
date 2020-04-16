@@ -12,10 +12,6 @@ Scientific communication and data visualization are important aspects to illustr
 - Creation of web-based, sharable, static or interactive dashboards
 - Enables a flexible and iterative cycle of dashboard development
 
-![](vignettes/images/i2dash_intro.png)
-
-*(A) dashboard is initialized at the beginning of a data analysis pipeline. During the pipeline run, new content, results, or data visualizations are iteratively added to the dashboard’s pages. The final dashboard is rendered into a static or interactive document. (B) Pages added to the dashboard can be arranged in a flexible manner from a selection of predefined layouts. (C) Examples of programmatically created dashboards. (D) The i2dash docker container, providing all dependencies for interactive, shiny based apps, can be used to easily deploy individual data interpretations on a cloud infrastructure, such as Kubernetes, as a micro service.*
-
 ## Installation
 
 The package can be installed with:
@@ -24,22 +20,9 @@ The package can be installed with:
 install.packages("i2dash")
 ```
 
-## Where to start
-
--  [**Basics**]() This tutorial gives on overview over the core functions of **i2dash** and explains how you can build your first dashboard.
-
 ## Extension
 
 It is possible to extend the core functionality of **i2dash** with templates for components and pre-defined pages. This enables to provide an enhanced user interactivity e.g. dynamic change of plot settings. Further, extensions allow an easier integration of complex calculations and data manipulation, hidden behind functions.
 
 - [**i2dash.scrnaseq**](https://gitlab.gwdg.de/loosolab/software/i2dash.scrnaseq) enables an enhanced user interactivity and contains simple but effective tools for the creation of an i2dashboard with focus on single-cell RNA-sequencing data visualization and exploration.
 
-## How to cite
-
-If you use **i2dash** or **i2dash.scrnaseq** in your work, please cite:
-
-Ustjanzew A., Preussner J., Bentsen M., Kuenne C., and Looso M. i2dash: creation of flexible, interactive and web-based dashboards from data analysis pipelines. *tba* (2020)
-
-## License
-
-This project is licensed under the MIT license.
