@@ -67,7 +67,7 @@ setMethod("source", "i2dashboard", function(dashboard) dashboard@source)
 
 #' @rdname i2dashboard-methods
 setMethod("source<-", "i2dashboard", function(dashboard, value) {
-  dashboard@source <- tolower(as.character(value))
+  dashboard@source <- as.character(value)
   dashboard
 })
 
