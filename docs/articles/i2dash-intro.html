@@ -88,7 +88,7 @@
                   <a class="author_email" href="mailto:#"></a><a href="mailto:arsenij.ustjanzew@mpi-bn.mpg.de" class="email">arsenij.ustjanzew@mpi-bn.mpg.de</a>
       
                   
-            <h4 class="date">16 April 2020</h4>
+            <h4 class="date">22 April 2020</h4>
       
       
       <div class="hidden name"><code>i2dash-intro.Rmd</code></div>
@@ -97,19 +97,8 @@
 
     
     
-<p>Vignette last complied on 2020-04-16. i2dash is licenced under MIT + file LICENSE.</p>
-<script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelector("h1").className = "title";
-});
-</script><script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function() {
-  var links = document.links;  
-  for (var i = 0, linksLength = links.length; i < linksLength; i++)
-    if (links[i].hostname != window.location.hostname)
-      links[i].target = '_blank';
-});
-</script><p><img src="images/i2dash_logo.png" align="center" width="150px"></p>
+<p>Vignette last complied on 2020-04-22. i2dash is licenced under MIT + file LICENSE.</p>
+<p><img src="images/i2dash_logo.png" align="center" width="150px"></p>
 <div id="introduction-and-scope" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction-and-scope" class="anchor"></a>Introduction and scope</h1>
@@ -156,10 +145,11 @@ document.addEventListener("DOMContentLoaded", function() {
 <span class="co">#&gt; A flexdashboard with the title: Dashboard title</span>
 <span class="co">#&gt; ... containing  1 pages:</span>
 <span class="co">#&gt;  ... the page 'default' with the title 'Default page' contains 0 components.</span></pre></body></html></div>
-<p>Retrospectively, it is also possible to change the <code>interactive</code> slot of the <code>i2dashboard</code> object as follows:</p>
+<p>With several accessor methods, it is also possible to change the slots <code>interactive</code>, <code>author</code>, <code>theme</code>, <code>datadir</code> and <code>title</code> of the <code>i2dashboard</code> object retrospectively:</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/i2dashboard-methods.html">interactivity</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="fl">TRUE</span>
-<span class="co"># or</span>
-<span class="fu"><a href="../reference/i2dashboard-methods.html">interactivity</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="fl">FALSE</span></pre></body></html></div>
+<span class="fu"><a href="../reference/i2dashboard-methods.html">theme</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="st">"cosmo"</span>
+<span class="fu"><a href="../reference/i2dashboard-methods.html">author</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="st">"John Doe, MaxMustermann"</span>
+<span class="fu"><a href="../reference/i2dashboard-methods.html">title</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="st">"New dashboard title"</span></pre></body></html></div>
 </div>
 <div id="adding-and-removing-pages" class="section level2">
 <h2 class="hasAnchor">
@@ -272,18 +262,62 @@ Figure 4: The resulting page with content generated from a function.
 </p>
 </div>
 </div>
+<div id="linking-components" class="section level3">
+<h3 class="hasAnchor">
+<a href="#linking-components" class="anchor"></a>Linking components</h3>
+<p>The linking of several components enables an improvement in the communication of the structure of high-dimensional data. When linking several components, the data of the two visualizations are connected to each other by queries. Thus the interactive manipulation, e.g. selecting data points, of a component is transferred to the associated component.The package <code>plotly</code> enables us to link plotly charts in a client-side way (i.e., no special web server or callback to R is required). The following example demonstrates, how to link two plots together by using plotly. <a href="https://plotly-r.com/client-side-linking.html">Here</a> you can find a detailed explanation and further examples of the clint-sided linkink mechanism of <code>plotly</code>.</p>
+<p>First, we load the data and create an object of class <code><a href="https://rdrr.io/pkg/crosstalk/man/SharedData.html">crosstalk::SharedData</a></code> with the function <code>highlight_key</code>. This enables to query the data.</p>
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># load the `txhousing` dataset</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">txhousing</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"ggplot2"</span>)
+
+<span class="co"># declare `city` as the SQL 'query by' column</span>
+<span class="no">tx</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/highlight_key.html">highlight_key</a></span>(<span class="no">txhousing</span>, ~<span class="no">city</span>)</pre></body></html></div>
+<p>Next, we initiate a plotly object (<code>base</code>) with the data object. And create two further plots (<code>time_series</code> and <code>dot_plot</code>) based on the new plotly object.</p>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># initiate a plotly object</span>
+<span class="no">base</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plot_ly.html">plot_ly</a></span>(<span class="no">tx</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="st">"black"</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/reexports.html">group_by</a></span>(<span class="no">city</span>)
+
+<span class="co"># create a time series of median house price</span>
+<span class="no">time_series</span> <span class="kw">&lt;-</span> <span class="no">base</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/reexports.html">group_by</a></span>(<span class="no">city</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/add_trace.html">add_lines</a></span>(<span class="kw">x</span> <span class="kw">=</span> ~<span class="no">date</span>, <span class="kw">y</span> <span class="kw">=</span> ~<span class="no">median</span>)
+
+<span class="no">dot_plot</span> <span class="kw">&lt;-</span> <span class="no">base</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/reexports.html">summarise</a></span>(<span class="kw">miss</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">median</span>))) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/reexports.html">filter</a></span>(<span class="no">miss</span> <span class="kw">&gt;</span> <span class="fl">0</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/add_trace.html">add_markers</a></span>(
+    <span class="kw">x</span> <span class="kw">=</span> ~<span class="no">miss</span>,
+    <span class="kw">y</span> <span class="kw">=</span> ~<span class="kw pkg">forcats</span><span class="kw ns">::</span><span class="fu">fct_reorder</span>(<span class="no">city</span>, <span class="no">miss</span>),
+    <span class="kw">hoverinfo</span> <span class="kw">=</span> <span class="st">"x+y"</span>
+  ) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/layout.html">layout</a></span>(
+    <span class="kw">xaxis</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"Number of months missing"</span>),
+    <span class="kw">yaxis</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">""</span>)
+  )</pre></body></html></div>
+<p>Finally, we add a new page to our dashboard, create two components and provide the <code>plotly</code> objects as input.</p>
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
+  <span class="fu"><a href="../reference/i2dashboard-pages.html">add_page</a></span>(<span class="kw">page</span><span class="kw">=</span><span class="st">"page5"</span>, <span class="kw">layout</span><span class="kw">=</span><span class="st">"2x2_grid"</span>, <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Linked components"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="kw">page</span><span class="kw">=</span><span class="st">"page5"</span>, <span class="kw">component</span><span class="kw">=</span><span class="no">dot_plot</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="kw">page</span><span class="kw">=</span><span class="st">"page5"</span>, <span class="kw">component</span><span class="kw">=</span><span class="no">time_series</span>)</pre></body></html></div>
+<p>This results in the following dashboard page. We can select a data point in the left component and the lines of the right plot will be colour highlightened according to the selection:</p>
+<div class="figure">
+<img src="images/example_page5.png" alt="Figure 5: The resulting page with two linked components." width="960"><p class="caption">
+Figure 5: The resulting page with two linked components.
+</p>
+</div>
+</div>
 </div>
 <div id="colormaps" class="section level2">
 <h2 class="hasAnchor">
 <a href="#colormaps" class="anchor"></a>Colormaps</h2>
 <p>Data analysis often have certain experimental factors (<em>e.g.</em> year or category) that are included repeatedly in figure scales. When communicating findings from such analysis, it would be desirable to have consitent representation (<em>e.g.</em> by color) of those factors across different figures. In i2dash, we solve this problem by introducing <strong>colormaps</strong>. Colormaps can be used by components to look up color scales for experimental factors. Here, we briefly introduce how colormaps are added to the dashboard, but refer to the development vignette for further information.</p>
 <p>Lets assume we have an experimental factor called year:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">year</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2014</span>, <span class="fl">2014</span>, <span class="fl">2015</span>, <span class="fl">2017</span>, <span class="fl">2019</span>, <span class="fl">2019</span>), <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2014</span>:<span class="fl">2021</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">year</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2014</span>, <span class="fl">2014</span>, <span class="fl">2015</span>, <span class="fl">2017</span>, <span class="fl">2019</span>, <span class="fl">2019</span>), <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2014</span>:<span class="fl">2021</span>))</pre></body></html></div>
 <p>To assign each level a color from the <a href="http://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=9">sequential greens</a> palette from the <em><a href="https://CRAN.R-project.org/package=RColorBrewer">RColorBrewer</a></em> package, we create a character vector with the colors and assign the levels as names.</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">colors</span> <span class="kw">&lt;-</span> <span class="kw pkg">RColorBrewer</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="fl">8</span>, <span class="st">"BuGn"</span>)
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">colors</span> <span class="kw">&lt;-</span> <span class="kw pkg">RColorBrewer</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="fl">8</span>, <span class="st">"BuGn"</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">colors</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">year</span>)</pre></body></html></div>
 <p>The colormap can then be added to the dashboard. From there on, <strong>components</strong> can consume the colormap and use the desired colors for figure scales.</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
   <span class="fu"><a href="../reference/i2dashboard-content.html">add_colormap</a></span>(<span class="kw">map</span> <span class="kw">=</span> <span class="no">colors</span>,
                <span class="kw">name</span> <span class="kw">=</span> <span class="st">"year"</span>)</pre></body></html></div>
 </div>
@@ -291,15 +325,15 @@ Figure 4: The resulting page with content generated from a function.
 <h2 class="hasAnchor">
 <a href="#dashboard-assembly" class="anchor"></a>Dashboard assembly</h2>
 <p>At any point in time, and particular when data analysis is finished, the <code>assemble</code> function can be used to generate representation of the dashboard in R markdown format. Using the <code>pages</code> parameter, we can define which pages will be included in the output.</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/assemble.html">assemble</a></span>(<span class="kw">pages</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"page1"</span>, <span class="st">"page3"</span>, <span class="st">"page4"</span>))</pre></body></html></div>
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/assemble.html">assemble</a></span>(<span class="kw">pages</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"page1"</span>, <span class="st">"page3"</span>, <span class="st">"page4"</span>, <span class="st">"page5"</span>))</pre></body></html></div>
 <p>The resulting R Markdown file can be run with <em><a href="https://CRAN.R-project.org/package=Shiny">Shiny</a></em> or rendered with <em><a href="https://CRAN.R-project.org/package=rmarkdown">rmarkdown</a></em>.</p>
 </div>
 </div>
 <div id="session-info" class="section level1 unnumbered">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
 <span class="co">#&gt; R version 3.6.2 (2019-12-12)</span>
 <span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
 <span class="co">#&gt; Running under: Debian GNU/Linux 10 (buster)</span>
@@ -319,19 +353,30 @@ Figure 4: The resulting page with content generated from a function.
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] i2dash_0.2       magrittr_1.5     BiocStyle_2.14.4</span>
+<span class="co">#&gt; [1] plotly_4.9.2     ggplot2_3.3.0    leaflet_2.0.3    i2dash_0.2      </span>
+<span class="co">#&gt; [5] magrittr_1.5     BiocStyle_2.14.4</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;  [1] Rcpp_1.0.3          rstudioapi_0.11     knitr_1.28         </span>
-<span class="co">#&gt;  [4] MASS_7.3-51.4       R6_2.4.1            rlang_0.4.5        </span>
-<span class="co">#&gt;  [7] highr_0.8           stringr_1.4.0       tools_3.6.2        </span>
-<span class="co">#&gt; [10] xfun_0.12           png_0.1-7           htmltools_0.4.0    </span>
-<span class="co">#&gt; [13] yaml_2.2.1          assertthat_0.2.1    digest_0.6.25      </span>
-<span class="co">#&gt; [16] rprojroot_1.3-2     pkgdown_1.5.1       crayon_1.3.4       </span>
-<span class="co">#&gt; [19] BiocManager_1.30.10 fs_1.3.1            glue_1.3.1         </span>
-<span class="co">#&gt; [22] memoise_1.1.0       evaluate_0.14       rmarkdown_2.1      </span>
-<span class="co">#&gt; [25] stringi_1.4.6       compiler_3.6.2      desc_1.2.0         </span>
-<span class="co">#&gt; [28] backports_1.1.5</span></pre></body></html></div>
+<span class="co">#&gt;  [1] tidyselect_1.0.0    xfun_0.13           purrr_0.3.4        </span>
+<span class="co">#&gt;  [4] colorspace_1.4-1    vctrs_0.2.4         viridisLite_0.3.0  </span>
+<span class="co">#&gt;  [7] htmltools_0.4.0     yaml_2.2.1          rlang_0.4.5        </span>
+<span class="co">#&gt; [10] pkgdown_1.5.1       later_1.0.0         pillar_1.4.3       </span>
+<span class="co">#&gt; [13] glue_1.4.0          withr_2.2.0         lifecycle_0.2.0    </span>
+<span class="co">#&gt; [16] stringr_1.4.0       munsell_0.5.0       gtable_0.3.0       </span>
+<span class="co">#&gt; [19] htmlwidgets_1.5.1   memoise_1.1.0       evaluate_0.14      </span>
+<span class="co">#&gt; [22] knitr_1.28          fastmap_1.0.1       httpuv_1.5.2       </span>
+<span class="co">#&gt; [25] crosstalk_1.0.0     highr_0.8           Rcpp_1.0.4.6       </span>
+<span class="co">#&gt; [28] xtable_1.8-4        promises_1.1.0      backports_1.1.6    </span>
+<span class="co">#&gt; [31] scales_1.1.0        BiocManager_1.30.10 desc_1.2.0         </span>
+<span class="co">#&gt; [34] jsonlite_1.6.1      mime_0.9            fs_1.4.1           </span>
+<span class="co">#&gt; [37] png_0.1-7           digest_0.6.25       stringi_1.4.6      </span>
+<span class="co">#&gt; [40] dplyr_0.8.4         shiny_1.4.0.2       rprojroot_1.3-2    </span>
+<span class="co">#&gt; [43] grid_3.6.2          tools_3.6.2         lazyeval_0.2.2     </span>
+<span class="co">#&gt; [46] tibble_3.0.1        tidyr_1.0.2         crayon_1.3.4       </span>
+<span class="co">#&gt; [49] pkgconfig_2.0.3     MASS_7.3-51.4       ellipsis_0.3.0     </span>
+<span class="co">#&gt; [52] data.table_1.12.8   httr_1.4.1          assertthat_0.2.1   </span>
+<span class="co">#&gt; [55] rmarkdown_2.1       rstudioapi_0.11     R6_2.4.1           </span>
+<span class="co">#&gt; [58] compiler_3.6.2</span></pre></body></html></div>
 </div>
   </div>
 
