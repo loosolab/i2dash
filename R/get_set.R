@@ -51,13 +51,13 @@ setMethod("datadir<-", "i2dashboard", function(dashboard, value) {
 })
 
 #' @rdname i2dashboard-methods
-setMethod("social_links", "i2dashboard", function(dashboard) dashboard@social_links)
+setMethod("share", "i2dashboard", function(dashboard) dashboard@share)
 
 #' @rdname i2dashboard-methods
-setMethod("social_links<-", "i2dashboard", function(dashboard, value) {
+setMethod("share<-", "i2dashboard", function(dashboard, value) {
   i <- intersect(tolower(value), c("facebook", "twitter", "google-plus", "linkedin", "pinterest", "menu"))
   if (length(i) > 0) {
-    dashboard@social <- i
+    dashboard@share <- i
   }
   dashboard
 })

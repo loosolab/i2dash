@@ -10,7 +10,7 @@
 \alias{add_component,i2dashboard,function-method}
 \alias{add_component,i2dashboard,gg-method}
 \alias{add_component,i2dashboard,gt_tbl-method}
-\alias{add_component,i2dashboard,knitr_kable-method}
+\alias{add_component,i2dashboard,kableExtra-method}
 \alias{add_component,i2dashboard,Heatmap-method}
 \alias{add_component,i2dashboard,ANY-method}
 \alias{add_link,i2dashboard-method}
@@ -35,7 +35,7 @@ add_link(dashboard, ...)
 
 \S4method{add_component}{i2dashboard,gt_tbl}(dashboard, component, page = "default", ...)
 
-\S4method{add_component}{i2dashboard,knitr_kable}(dashboard, component, page = "default", ...)
+\S4method{add_component}{i2dashboard,kableExtra}(dashboard, component, page = "default", ...)
 
 \S4method{add_component}{i2dashboard,Heatmap}(dashboard, component, page = "default", ...)
 

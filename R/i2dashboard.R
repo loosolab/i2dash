@@ -28,7 +28,7 @@ NULL
 #' @slot sidebar Content of the global sidebar
 #' @slot colormaps A named list with color mappings.
 #' @slot source Either a logical value describing whether the source code should be embeded through an item in the navigation bar or a link to a URL where the source code can be found online.
-#' @slot social A vector with any number of the following services: “facebook”, “twitter”, “google-plus”, “linkedin”, and “pinterest”. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.
+#' @slot share A vector with any number of the following services: “facebook”, “twitter”, “google-plus”, “linkedin”, and “pinterest”. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.
 #' @slot navbar A list of links in the navigation bar (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#navigation_bar}{documentation of flexdashboard}).
 #'
 #' @return An \linkS4class{i2dashboard} object.
@@ -47,7 +47,7 @@ setClass("i2dashboard",
     sidebar = "character",
     colormaps = "list",
     source = "character",
-    social = "character",
+    share = "character",
     navbar = "list"
     ),
   prototype=list(
@@ -57,7 +57,7 @@ setClass("i2dashboard",
     datadir = file.path(getwd(), "report-data"),
     pages = list(default = list(title = "Default page", layout = "default", menu = NULL, components = list(), sidebar = NULL, max_components = Inf)),
     source = "",
-    social = ""
+    share = ""
     )
   )
 

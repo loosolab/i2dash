@@ -1,0 +1,37 @@
+---
+author: []
+title: i2dashboard
+output:
+  flexdashboard::flex_dashboard:
+    theme: yeti
+    social: null
+    source: null
+    navbar: []
+---
+
+```{r i2dash-global-setup}
+# Deal with operation within a switchr environment
+if (any(grepl(pattern = ".switchr", x = .libPaths()))) {
+  switchr::switchrNoUnload(TRUE)
+}
+
+# Make it possible to reuse chunk labels
+options(knitr.duplicate.label = "allow")
+
+# Set datadir variable, components should fetch their env from here!
+datadir <- "input-data"
+
+# Set up color mappings
+colormaps <- list()
+```
+
+Default page 
+====================================================
+
+
+
+Column {.tabset}
+----------------------------------------------------
+
+
+

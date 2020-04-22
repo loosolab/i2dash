@@ -65,11 +65,11 @@ setGeneric("datadir<-", function(dashboard, value) standardGeneric("datadir<-"))
 
 #' @export
 #' @rdname i2dashboard-methods
-setGeneric("social_links", function(dashboard) standardGeneric("social_links"))
+setGeneric("share", function(dashboard) standardGeneric("share"))
 
 #' @export
 #' @rdname i2dashboard-methods
-setGeneric("social_links<-", function(dashboard, value) standardGeneric("social_links<-"))
+setGeneric("share<-", function(dashboard, value) standardGeneric("share<-"))
 
 #' @export
 #' @rdname i2dashboard-methods
