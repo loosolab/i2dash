@@ -131,7 +131,14 @@
     <p>Method to embed an image file in a component</p>
     </div>
 
-    <pre class="usage"><span class='fu'>render_image</span>(<span class='no'>image</span>, <span class='kw'>image_alt_text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>render_image</span>(
+  <span class='no'>image</span>,
+  <span class='kw'>image_alt_text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>width</span> <span class='kw'>=</span> <span class='st'>"100%"</span>,
+  <span class='kw'>height</span> <span class='kw'>=</span> <span class='st'>"auto"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -151,6 +158,14 @@
     <tr>
       <th>raw</th>
       <td><p>Whether or not to emit solely the markdown image code.</p></td>
+    </tr>
+    <tr>
+      <th>width</th>
+      <td><p>Width defined with CSS in the HTML img-tag.</p></td>
+    </tr>
+    <tr>
+      <th>height</th>
+      <td><p>Height defined with CSS in the HTML img-tag.</p></td>
     </tr>
     </table>
 

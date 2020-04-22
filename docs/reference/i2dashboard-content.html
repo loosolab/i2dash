@@ -140,10 +140,10 @@
 <span class='fu'>add_link</span>(<span class='no'>dashboard</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for i2dashboard,character</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>component</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for i2dashboard,`function`</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>component</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>...</span>)
 
 <span class='co'># S4 method for i2dashboard,gg</span>
 <span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>...</span>)
@@ -173,7 +173,17 @@
 <span class='co'># S4 method for i2dashboard</span>
 <span class='fu'>add_colormap</span>(<span class='no'>dashboard</span>, <span class='no'>map</span>, <span class='no'>name</span>)
 
-<span class='co'># S4 method for i2dashboard</span>
+<span class='co'># S4 method for i2dashboard,character</span>
+<span class='fu'>add_to_sidebar</span>(
+  <span class='no'>dashboard</span>,
+  <span class='no'>component</span>,
+  <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
+  <span class='kw'>global</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)
+
+<span class='co'># S4 method for i2dashboard,`function`</span>
 <span class='fu'>add_to_sidebar</span>(
   <span class='no'>dashboard</span>,
   <span class='no'>component</span>,
@@ -196,7 +206,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional parameters passed to the components render function.</p></td>
+      <td><p>Additional parameters passed to the components render function. In case of an image, parameters <code>height</code> and <code>width</code> can be used to define the dimensions of the image with CSS or provide an alternative text with <code>image_alt_text</code>.</p></td>
     </tr>
     <tr>
       <th>page</th>
