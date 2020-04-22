@@ -15,7 +15,8 @@
 \alias{add_component,i2dashboard,ANY-method}
 \alias{add_link,i2dashboard-method}
 \alias{add_colormap,i2dashboard-method}
-\alias{add_to_sidebar,i2dashboard-method}
+\alias{add_to_sidebar,i2dashboard,character-method}
+\alias{add_to_sidebar,i2dashboard,function-method}
 \title{Add content to an i2dashboard object.}
 \usage{
 add_component(dashboard, component, ...)
@@ -26,9 +27,9 @@ add_colormap(dashboard, ...)
 
 add_link(dashboard, ...)
 
-\S4method{add_component}{i2dashboard,character}(dashboard, page = "default", component, copy = FALSE, ...)
+\S4method{add_component}{i2dashboard,character}(dashboard, component, page = "default", copy = FALSE, ...)
 
-\S4method{add_component}{i2dashboard,`function`}(dashboard, page = "default", component, ...)
+\S4method{add_component}{i2dashboard,`function`}(dashboard, component, page = "default", ...)
 
 \S4method{add_component}{i2dashboard,gg}(dashboard, component, page = "default", ...)
 
@@ -51,7 +52,16 @@ add_link(dashboard, ...)
 
 \S4method{add_colormap}{i2dashboard}(dashboard, map, name)
 
-\S4method{add_to_sidebar}{i2dashboard}(
+\S4method{add_to_sidebar}{i2dashboard,character}(
+  dashboard,
+  component,
+  page = "default",
+  global = FALSE,
+  copy = FALSE,
+  ...
+)
+
+\S4method{add_to_sidebar}{i2dashboard,`function`}(
   dashboard,
   component,
   page = "default",
@@ -65,7 +75,7 @@ add_link(dashboard, ...)
 
 \item{component}{An R object, function, or string.}
 
-\item{...}{Additional parameters passed to the components render function.}
+\item{...}{Additional parameters passed to the components render function. In case of an image, parameters \code{height} and \code{width} can be used to define the dimensions of the image with CSS or provide an alternative text with \code{image_alt_text}.}
 
 \item{page}{The name of the page to add the component or sidebar to.}
 

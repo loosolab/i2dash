@@ -23,14 +23,14 @@
 #' @param page The name of the page to add the component or sidebar to.
 #' @param component An R object, function, or string.
 #' @param copy Whether or not to copy images to \code{dashboard@datadir}.
-#' @param ... Additional parameters passed to the components render function.
+#' @param ... Additional parameters passed to the components render function. In case of an image, parameters \code{height} and \code{width} can be used to define the dimensions of the image with CSS or provide an alternative text with \code{image_alt_text}.
 #'
 #' @return The (modified) \linkS4class{i2dashboard} object.
 #'
 #' @rdname i2dashboard-content
 setMethod("add_component",
           signature = signature(dashboard = "i2dashboard", component = "character"),
-          function(dashboard, page = "default", component, copy = FALSE, ...) {
+          function(dashboard, component, page = "default", copy = FALSE, ...) {
             # Logic to guess intended usage
             mode <- NULL
             if(stringr::str_detect(tolower(component), "\\.[md|txt]+$")) {
@@ -66,7 +66,7 @@ setMethod("add_component",
 
 #' @rdname i2dashboard-content
 setMethod("add_component", signature(dashboard = "i2dashboard", component = "function"),
-          function(dashboard, page = "default", component, ...) {
+          function(dashboard, component, page = "default", ...) {
             # validate "page" input
             name <- .create_page_name(page)
             if (!(name %in% names(dashboard@pages))) {
@@ -194,13 +194,21 @@ render_text <- function(file, title = NULL, raw = FALSE) {
 #' @param image_alt_text The alt text of the image.
 #' @param title The components title.
 #' @param raw Whether or not to emit solely the markdown image code.
+#' @param width Width defined with CSS in the HTML img-tag.
+#' @param height Height defined with CSS in the HTML img-tag.
 #'
 #' @return A character string containing the evaluated component
-render_image <- function(image, image_alt_text = NULL, title = NULL, raw = FALSE) {
+render_image <- function(image, image_alt_text = NULL, title = NULL, raw = FALSE, width = "100%", height = "auto") {
   if(is.null(image_alt_text)) {
     image_alt_text <- image
   }
-  content <- glue::glue("![{image_alt_text}]({image})\n", image_alt_text = image_alt_text, image = image)
+
+  content <- glue::glue(as.character(
+    htmltools::img(
+      src = image,
+      alt = image_alt_text,
+      style = paste0('height:', height, ';width:', width)
+    )),as.character(htmltools::br()))
 
   if(raw) return(content)
   knitr::knit_expand(file = system.file("templates", "component.Rmd", package = "i2dash"),
