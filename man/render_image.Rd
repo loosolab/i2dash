@@ -4,7 +4,14 @@
 \alias{render_image}
 \title{Method to embed an image file in a component}
 \usage{
-render_image(image, image_alt_text = NULL, title = NULL, raw = FALSE)
+render_image(
+  image,
+  image_alt_text = NULL,
+  title = NULL,
+  raw = FALSE,
+  width = "100\%",
+  height = "auto"
+)
 }
 \arguments{
 \item{image}{The path to the image file.}
@@ -14,6 +21,10 @@ render_image(image, image_alt_text = NULL, title = NULL, raw = FALSE)
 \item{title}{The components title.}
 
 \item{raw}{Whether or not to emit solely the markdown image code.}
+
+\item{width}{Width defined with CSS in the HTML img-tag.}
+
+\item{height}{Height defined with CSS in the HTML img-tag.}
 }
 \value{
 A character string containing the evaluated component

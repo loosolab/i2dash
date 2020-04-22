@@ -109,7 +109,7 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
 #' @return A markdown string with the final page.
 .render_page <- function(title, components, layout = c("default", "storyboard", "focal_left", "2x2_grid"), menu = NULL, sidebar = NULL) {
   if(!is.null(sidebar)) {
-    sidebar <- knitr::knit_expand(file = system.file("templates", "local_sidebar", package = "i2dash"),
+    sidebar <- knitr::knit_expand(file = system.file("templates", "local_sidebar.Rmd", package = "i2dash"),
                                   delim = c("<%", "%>"),
                                   content = sidebar, datawidth = 250)
   }
