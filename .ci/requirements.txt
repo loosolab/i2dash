@@ -4,10 +4,12 @@ r-base
 bioconductor-biocstyle
 r-htmltools
 r-flexdashboard
+r-ggplot2
 r-glue
 r-leaflet
 r-knitr
 r-magrittr
+r-plotly
 r-stringi
 r-stringr
 r-yaml
