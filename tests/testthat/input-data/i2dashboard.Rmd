@@ -1,6 +1,6 @@
 ---
-author: []
 title: i2dashboard
+author: []
 output:
   flexdashboard::flex_dashboard:
     theme: yeti
