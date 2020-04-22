@@ -23,7 +23,7 @@ vignette: >
 
 Vignette last complied on `r Sys.Date()`. i2dash is licenced under `r utils::packageDescription("i2dash")[["License"]]`.
 
-```{r style, echo = FALSE, results = 'asis'}
+```{r style, echo = FALSE, results = 'asis', include = FALSE}
 BiocStyle::markdown()
 ```
 
@@ -92,12 +92,13 @@ We can examine the `i2dashboard` object by calling the object. The output shows 
 dashboard
 ```
 
-Retrospectively, it is also possible to change the `interactive` slot of the `i2dashboard` object as follows:
+With several accessor methods, it is also possible to change the slots `interactive`, `author`, `theme`, `datadir` and `title` of the `i2dashboard` object retrospectively:
 
 ```{r, eval=FALSE}
 interactivity(dashboard) <- TRUE
-# or
-interactivity(dashboard) <- FALSE
+theme(dashboard) <- "cosmo"
+author(dashboard) <- "John Doe, MaxMustermann"
+title(dashboard) <- "New dashboard title"
 ```
 
 ## Adding and removing pages
@@ -140,7 +141,7 @@ knitr::include_graphics("./images/navigation.png")
 
 We can remove a page using the `remove_page()` function. The `page` argument contains the unique page identifier of the page to be removed.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 dashboard %<>%
   remove_page(page = "page2")
 ```
@@ -149,7 +150,7 @@ dashboard %<>%
 
 Content can be added to pages using **components**. A component can be a R object itself (*e.g.* a widget from [htmwlwidgets](http://gallery.htmlwidgets.org/)), a file path (*e.g.* to a markdown or image file) or a function that can be called to generate content. We'll use the `add_component` function to explore several options and fill `page1` iteratively with three R objects:
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 library(leaflet)
 leaflet() %>%
   addTiles() %>%  
@@ -231,6 +232,62 @@ When writing your own generating functions, please keep it mind to set the `titl
 knitr::include_graphics("./images/example_page4.png")
 ```
 
+### Linking components
+
+The linking of several components enables an improvement in the communication of the structure of high-dimensional data. When linking several components, the data of the two visualizations are connected to each other by queries. Thus the interactive manipulation, e.g. selecting data points, of a component is transferred to the associated component.The package `plotly` enables us to link plotly charts in a client-side way (i.e., no special web server or callback to R is required). The following example demonstrates, how to link two plots together by using plotly. [Here](https://plotly-r.com/client-side-linking.html) you can find a detailed explanation and further examples of the clint-sided linkink mechanism of `plotly`. 
+
+
+First, we load the data and create an object of class `crosstalk::SharedData` with the function `highlight_key`. This enables to query the data.
+
+```{r, eval = TRUE}
+# load the `txhousing` dataset
+data(txhousing, package = "ggplot2")
+
+# declare `city` as the SQL 'query by' column
+tx <- highlight_key(txhousing, ~city)
+```
+
+Next, we initiate a plotly object (`base`) with the data object. And create two further plots (`time_series` and `dot_plot`) based on the new plotly object.
+
+```{r, eval = TRUE}
+# initiate a plotly object
+base <- plot_ly(tx, color = I("black")) %>%
+  group_by(city)
+
+# create a time series of median house price
+time_series <- base %>%
+  group_by(city) %>%
+  add_lines(x = ~date, y = ~median)
+
+dot_plot <- base %>%
+  summarise(miss = sum(is.na(median))) %>%
+  filter(miss > 0) %>%
+  add_markers(
+    x = ~miss,
+    y = ~forcats::fct_reorder(city, miss),
+    hoverinfo = "x+y"
+  ) %>%
+  layout(
+    xaxis = list(title = "Number of months missing"),
+    yaxis = list(title = "")
+  )
+```
+
+Finally, we add a new page to our dashboard, create two components and provide the `plotly` objects as input.
+
+```{r, eval = TRUE}
+dashboard %<>%
+  add_page(page="page5", layout="2x2_grid", title = "Linked components") %>%
+  add_component(page="page5", component=dot_plot) %>%
+  add_component(page="page5", component=time_series)
+```
+
+This results in the following dashboard page. We can select a data point in the left component and the lines of the right plot will be colour highlightened according to the selection:
+
+```{r fig-5, fig.cap = "Figure 5: The resulting page with two linked components.", eval = TRUE, echo = FALSE}
+knitr::include_graphics("./images/example_page5.png")
+```
+
 ## Colormaps
 
 Data analysis often have certain experimental factors (*e.g.* year or category) that are included repeatedly in figure scales. When communicating findings from such analysis, it would be desirable to have consitent representation (*e.g.* by color) of those factors across different figures. In i2dash, we solve this problem by introducing **colormaps**. Colormaps can be used by components to look up color scales for experimental factors. Here, we briefly introduce how colormaps are added to the dashboard, but refer to the development vignette for further information.
@@ -262,7 +319,7 @@ At any point in time, and particular when data analysis is finished, the `assemb
 
 ```{r, eval = FALSE}
 dashboard %>%
-  assemble(pages = c("page1", "page3", "page4"))
+  assemble(pages = c("page1", "page3", "page4", "page5"))
 ```
 
 The resulting R Markdown file can be run with `r BiocStyle::CRANpkg("Shiny")` or rendered with `r BiocStyle::CRANpkg("rmarkdown")`.
