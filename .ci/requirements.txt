@@ -5,6 +5,7 @@ bioconductor-biocstyle
 r-htmltools
 r-flexdashboard
 r-glue
+r-leaflet
 r-knitr
 r-magrittr
 r-stringi
