@@ -1,4 +1,11 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.ci$
+^\.gitlab-ci.yml
+^README\.md
 ^doc$
 ^Meta$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^cran-comments\.md$
