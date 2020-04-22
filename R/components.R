@@ -20,8 +20,8 @@
 #' }
 #'
 #' @param dashboard A \linkS4class{i2dashboard}.
-#' @param page The name of the page to add the component or sidebar to.
 #' @param component An R object, function, or string.
+#' @param page The name of the page to add the component or sidebar to.
 #' @param copy Whether or not to copy images to \code{dashboard@datadir}.
 #' @param ... Additional parameters passed to the components render function. In case of an image, parameters \code{height} and \code{width} can be used to define the dimensions of the image with CSS or provide an alternative text with \code{image_alt_text}.
 #'
@@ -97,7 +97,7 @@ setMethod("add_component",
 
 #' @rdname i2dashboard-content
 setMethod("add_component",
-          signature = signature(dashboard = "i2dashboard", component = "knitr_kable"),
+          signature = signature(dashboard = "i2dashboard", component = "kableExtra"),
           definition = function(dashboard, component, page = "default", ...) {
             add_vis_object(dashboard, component, "kableExtra", page, ...) })
 
@@ -196,20 +196,23 @@ render_text <- function(file, title = NULL, raw = FALSE) {
 #' @param raw Whether or not to emit solely the markdown image code.
 #' @param width Width defined with CSS in the HTML img-tag.
 #' @param height Height defined with CSS in the HTML img-tag.
+#' @param in_component Whether the image belongs to a component or the sidebar
 #'
 #' @return A character string containing the evaluated component
-render_image <- function(image, image_alt_text = NULL, title = NULL, raw = FALSE, width = "100%", height = "auto") {
+render_image <- function(image, image_alt_text = NULL, title = NULL, raw = FALSE, width = "100%", height = "auto", in_component=TRUE) {
   if(is.null(image_alt_text)) {
     image_alt_text <- image
   }
-
-  content <- glue::glue(as.character(
-    htmltools::img(
-      src = image,
-      alt = image_alt_text,
-      style = paste0('height:', height, ';width:', width)
-    )),as.character(htmltools::br()))
-
+  if(in_component){
+    content <- glue::glue("![{image_alt_text}]({image})\n", image_alt_text = image_alt_text, image = image)
+  } else {
+    content <- glue::glue(as.character(
+      htmltools::img(
+        src = image,
+        alt = image_alt_text,
+        style = paste0('height:', height, ';width:', width)
+      )),as.character(htmltools::br()))
+  }
   if(raw) return(content)
   knitr::knit_expand(file = system.file("templates", "component.Rmd", package = "i2dash"),
                      delim = c("<%", "%>"),

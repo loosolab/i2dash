@@ -20,7 +20,7 @@ setMethod("add_to_sidebar",
 
             component <- switch(mode,
                                 "text" = render_text(component, ...),
-                                "image" = render_image(component, ...))
+                                "image" = render_image(component, in_component=FALSE, ...))
 
             if(global) {
               dashboard@sidebar <- paste0(dashboard@sidebar, component)

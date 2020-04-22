@@ -11,8 +11,8 @@
 \alias{theme<-}
 \alias{datadir}
 \alias{datadir<-}
-\alias{social_links}
-\alias{social_links<-}
+\alias{share}
+\alias{share<-}
 \alias{embed_source<-}
 \alias{source}
 \alias{source<-}
@@ -26,8 +26,8 @@
 \alias{theme<-,i2dashboard-method}
 \alias{datadir,i2dashboard-method}
 \alias{datadir<-,i2dashboard-method}
-\alias{social_links,i2dashboard-method}
-\alias{social_links<-,i2dashboard-method}
+\alias{share,i2dashboard-method}
+\alias{share<-,i2dashboard-method}
 \alias{source,i2dashboard-method}
 \alias{source<-,i2dashboard-method}
 \alias{embed_source<-,i2dashboard-method}
@@ -53,9 +53,9 @@ datadir(dashboard)
 
 datadir(dashboard) <- value
 
-social_links(dashboard)
+share(dashboard)
 
-social_links(dashboard) <- value
+share(dashboard) <- value
 
 embed_source(dashboard) <- value
 
@@ -83,9 +83,9 @@ source(dashboard) <- value
 
 \S4method{datadir}{i2dashboard}(dashboard) <- value
 
-\S4method{social_links}{i2dashboard}(dashboard)
+\S4method{share}{i2dashboard}(dashboard)
 
-\S4method{social_links}{i2dashboard}(dashboard) <- value
+\S4method{share}{i2dashboard}(dashboard) <- value
 
 \S4method{source}{i2dashboard}(dashboard)
 

@@ -27,10 +27,10 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
   } else {
     source <- dashboard@source
   }
-  if (dashboard@social == "") {
+  if (dashboard@share == "") {
     social <- NULL
   } else {
-    social <- dashboard@social
+    social <- dashboard@share
   }
 
   # Add YAML header

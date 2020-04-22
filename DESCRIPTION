@@ -32,7 +32,15 @@ Suggests:
     plotly,
     BiocStyle,
     xfun,
-    htmltools
+    htmltools,
+    testthat,
+    ComplexHeatmap,
+    digest,
+    ggplot2,
+    gt,
+    kableExtra,
+    forcats,
+    leaflet
 Collate: 
     'i2dashboard.R'
     'AllGenerics.R'

@@ -10,7 +10,8 @@ render_image(
   title = NULL,
   raw = FALSE,
   width = "100\%",
-  height = "auto"
+  height = "auto",
+  in_component = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ render_image(
 \item{width}{Width defined with CSS in the HTML img-tag.}
 
 \item{height}{Height defined with CSS in the HTML img-tag.}
+
+\item{in_component}{Whether the image belongs to a component or the sidebar}
 }
 \value{
 A character string containing the evaluated component
