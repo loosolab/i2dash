@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Fixed the test
+
 ## Test environments
 - R-hub windows-x86_64-devel (r-devel)
 - R-hub ubuntu-gcc-release (r-release)
