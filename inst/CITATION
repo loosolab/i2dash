@@ -12,11 +12,8 @@ citEntry(entry = "Article",
   volume       = "40",
   number       = "3",
   pages        = "1--25",
-  url          = "tba",
 
   textVersion  =
   paste("Ustjanzew A., Preussner J., Bentsen M., Kuenne C., and Looso M.",
-        "i2dash: creation of flexible, interactive and web-based dashboards from data analysis pipelines.",
-        "tba",
-        "URL tba")
+        "i2dash: creation of flexible, interactive and web-based dashboards from data analysis pipelines.")
 )

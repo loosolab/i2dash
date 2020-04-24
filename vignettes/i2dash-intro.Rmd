@@ -322,7 +322,7 @@ dashboard %>%
   assemble(pages = c("page1", "page3", "page4", "page5"))
 ```
 
-The resulting R Markdown file can be run with `r BiocStyle::CRANpkg("Shiny")` or rendered with `r BiocStyle::CRANpkg("rmarkdown")`.
+The resulting R Markdown file can be run with `r BiocStyle::CRANpkg("shiny")` or rendered with `r BiocStyle::CRANpkg("rmarkdown")`.
 
 # Session Info {.unnumbered}
 

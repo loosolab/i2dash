@@ -1,3 +1,17 @@
+## 2nd resubmission 
+
+This is the second resubmission. In this version, we have:
+
+* Fixed the file `LICENSE` to contain only year and copyright holder
+* Fixed a broken link to shiny in the `vignette/i2dash-intro.Rmd` file
+* Fixed / Removed an invalid URI in `inst/CITATION`
+
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Fixed the test
+
 ## Test environments
 - R-hub windows-x86_64-devel (r-devel)
 - R-hub ubuntu-gcc-release (r-release)
