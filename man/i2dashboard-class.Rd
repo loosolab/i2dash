@@ -55,3 +55,19 @@ The \linkS4class{i2dashboard} S4 class provides main functionality of the packag
 \item{\code{navbar}}{A list of links in the navigation bar (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#navigation_bar}{documentation of flexdashboard}).}
 }}
 
+\examples{
+dashboard <- i2dashboard()
+dashboard <- i2dashboard(
+    title = "Dashboard title",
+    author = "John Doe",
+    interactive = TRUE,
+    theme = "cosmo",
+    datadir = "path/to/workdir/",
+    file = "MyDashboard.Rmd",
+    source = "embed"
+)
+
+# inspect dashboard:
+show(dashboard)
+dashboard
+}

@@ -121,3 +121,28 @@ The mechanism to add different types of content to a dashboards page or sidebar 
   \item An R object (e.g. a htmlwidget) will be included if a suitable signature method is implemented.
 }
 }
+\examples{
+library(magrittr)
+i2dashboard() -> dashboard
+myFunction <- function(dashboard) paste0("### Generate component\n\n",
+    "Lorem ipsum dolor sit amet\n")
+
+dashboard \%<>\% add_component(component = myFunction)
+dashboard \%<>\% add_component(component = plotly::plot_ly(mtcars, x=~wt, y=~hp),
+    title = "Include htmlwidget")
+\dontrun{
+  dashboard \%<>\% add_component(component = "sample.txt", title = "Include text")
+  dashboard \%<>\% add_component(component = "sample.jpg", title = "Include image")
+}
+
+dashboard \%<>\% add_to_sidebar(component = myFunction)
+\dontrun{
+  dashboard \%<>\% add_to_sidebar(component = "sample.txt", package="i2dash"))
+  dashboard \%<>\% add_to_sidebar(component = "sample.jpg", package="i2dash"))
+}
+
+colors <- c("l1" = "#F7FCFD", "l2" ="#E5F5F9", "l3" = "#CCECE6")
+dashboard \%<>\% add_colormap(map = colors, name = "test")
+
+dashboard \%<>\% add_link(href = "www.sample_url.net", title = "MyLink", align = "left")
+}

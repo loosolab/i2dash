@@ -2,7 +2,7 @@
 % Please edit documentation in R/components.R
 \name{embed_var}
 \alias{embed_var}
-\title{Method to download embed files into an Rmd-file}
+\title{A method to embed tabular data into an HTML link for download.}
 \usage{
 embed_var(x, ...)
 }
@@ -12,5 +12,8 @@ embed_var(x, ...)
 \item{...}{Additional parameters.}
 }
 \description{
-Method to download embed files into an Rmd-file
+A method to embed tabular data into an HTML link for download.
+}
+\examples{
+embed_var(mtcars)
 }

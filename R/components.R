@@ -28,6 +28,30 @@
 #' @return The (modified) \linkS4class{i2dashboard} object.
 #'
 #' @rdname i2dashboard-content
+#' @examples
+#' library(magrittr)
+#' i2dashboard() -> dashboard
+#' myFunction <- function(dashboard) paste0("### Generate component\n\n",
+#'     "Lorem ipsum dolor sit amet\n")
+#'
+#' dashboard %<>% add_component(component = myFunction)
+#' dashboard %<>% add_component(component = plotly::plot_ly(mtcars, x=~wt, y=~hp),
+#'     title = "Include htmlwidget")
+#' \dontrun{
+#'   dashboard %<>% add_component(component = "sample.txt", title = "Include text")
+#'   dashboard %<>% add_component(component = "sample.jpg", title = "Include image")
+#' }
+#'
+#' dashboard %<>% add_to_sidebar(component = myFunction)
+#' \dontrun{
+#'   dashboard %<>% add_to_sidebar(component = "sample.txt", package="i2dash"))
+#'   dashboard %<>% add_to_sidebar(component = "sample.jpg", package="i2dash"))
+#' }
+#'
+#' colors <- c("l1" = "#F7FCFD", "l2" ="#E5F5F9", "l3" = "#CCECE6")
+#' dashboard %<>% add_colormap(map = colors, name = "test")
+#'
+#' dashboard %<>% add_link(href = "www.sample_url.net", title = "MyLink", align = "left")
 setMethod("add_component",
           signature = signature(dashboard = "i2dashboard", component = "character"),
           function(dashboard, component, page = "default", copy = FALSE, ...) {
@@ -158,12 +182,14 @@ setMethod("add_link", "i2dashboard", function(dashboard, href, title = NULL, ico
   dashboard
 })
 
-#' Method to download embed files into an Rmd-file
+#' A method to embed tabular data into an HTML link for download.
 #'
 #' @param x Data, which will be written to the embedded file.
 #' @param ... Additional parameters.
 #'
 #' @export
+#' @examples
+#' embed_var(mtcars)
 embed_var <- function(x, ...) {
   f = tempfile(fileext = '.csv')
   utils::write.csv(x, f)

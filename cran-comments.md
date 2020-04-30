@@ -1,3 +1,12 @@
+## 3nd resubmission 
+
+This is the third resubmission. In this version, we have:
+
+* Fixed the package names by adding single quotes
+* Added 'cph' tag to Authors@R field
+* Added small executable examples to the Rd-files
+* Fixed missing \value of .Rd files
+
 ## 2nd resubmission 
 
 This is the second resubmission. In this version, we have:

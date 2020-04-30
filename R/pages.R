@@ -14,6 +14,14 @@
 #' @return The \linkS4class{i2dashboard} object.
 #'
 #' @rdname i2dashboard-pages
+#' @examples
+#' library(magrittr)
+#' i2dashboard() %>%
+#'      add_page(page="page1",
+#'          title="Page Title",
+#'          layout = "2x2_grid",
+#'          menu="Menu A") -> dashboard
+#' dashboard %<>% remove_page(page="page1")
 setMethod("add_page", "i2dashboard", function(dashboard, page, title, layout = "default", menu = NULL, sidebar = NULL, ...) {
   name <- .create_page_name(page)
 

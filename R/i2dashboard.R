@@ -98,4 +98,19 @@ setMethod("show", "i2dashboard", function(object) {
 
 #' @rdname i2dashboard-class
 #' @export
+#' @examples
+#' dashboard <- i2dashboard()
+#' dashboard <- i2dashboard(
+#'     title = "Dashboard title",
+#'     author = "John Doe",
+#'     interactive = TRUE,
+#'     theme = "cosmo",
+#'     datadir = "path/to/workdir/",
+#'     file = "MyDashboard.Rmd",
+#'     source = "embed"
+#' )
+#'
+#' # inspect dashboard:
+#' show(dashboard)
+#' dashboard
 i2dashboard <- function(...) methods::new("i2dashboard", ...)
