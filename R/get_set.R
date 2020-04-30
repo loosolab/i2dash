@@ -5,6 +5,18 @@
 #' @param dashboard A \linkS4class{i2dashboard}.
 #' @param value The value of the desired property. See \linkS4class{i2dashboard} for details.
 #'
+#' @examples
+#' dashboard <- i2dashboard()
+#'
+#' title(dashboard) <- "New dashboard title"
+#' author(dashboard) <- "John Doe"
+#' theme(dashboard) <- "cosmo"
+#' datadir(dashboard) <- "path/to/workdir/"
+#' interactivity(dashboard) <- TRUE
+#' share(dashboard) <- "menu"
+#' embed_source(dashboard) <- TRUE
+#' source(dashboard) <- "www.url_to_souce_code.net"
+#'
 #' @rdname i2dashboard-methods
 setMethod("interactivity", "i2dashboard", function(dashboard) dashboard@interactive)
 

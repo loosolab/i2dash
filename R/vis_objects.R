@@ -1,10 +1,10 @@
 #' @include components.R
 NULL
 
-#' General method to add an object as component to a page of an i2dashboard.
+#' General method to add an object as component to a page of an \linkS4class{i2dashboard} object.
 #'
 #' @param dashboard The \linkS4class{i2dashboard}.
-#' @param object The R visualization object to be addedd.
+#' @param object The R visualization object to be added.
 #' @param package The name of the R package that defines the class(object).
 #' @param page The name of the page to add the object to.
 #' @param title An optional component title.

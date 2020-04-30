@@ -5,7 +5,7 @@
 \alias{remove_page}
 \alias{add_page,i2dashboard-method}
 \alias{remove_page,i2dashboard-method}
-\title{Methods to add and remove pages of an i2dashboard.}
+\title{Methods to add and remove pages of an \linkS4class{i2dashboard} object.}
 \usage{
 add_page(dashboard, ...)
 
@@ -36,12 +36,21 @@ remove_page(dashboard, page)
 
 \item{menu}{The name of the menu, under which the page should appear.}
 
-\item{sidebar}{A Markdown string. Preferably, use the function add_to_sidebar.}
+\item{sidebar}{A Markdown string. Preferably, use the function '\code{add_to_sidebar()}'.}
 }
 \value{
 The \linkS4class{i2dashboard} object.
 }
 \description{
-\code{add_page} creates a page and adds it to the \linkS4class{i2dashboard} object.
-\code{remove_page} removes a page from the \linkS4class{i2dashboard} object.
+'\code{add_page()}' creates a page and adds it to the \linkS4class{i2dashboard} object.
+'\code{remove_page()}' removes a page from the \linkS4class{i2dashboard} object.
+}
+\examples{
+library(magrittr)
+i2dashboard() \%>\%
+     add_page(page="page1",
+         title="Page Title",
+         layout = "2x2_grid",
+         menu="Menu A") -> dashboard
+dashboard \%<>\% remove_page(page="page1")
 }

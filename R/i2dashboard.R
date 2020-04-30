@@ -1,6 +1,6 @@
-#' i2dash: A package for programmatic creation of interactive, web-based dashboards
+#' 'i2dash': A package for programmatic creation of interactive, web-based dashboards
 #'
-#' i2dash relies on the widely used R packages flexdashboard, knitr and rmarkdown. i2dash introduces a new class from R's S4 object system named \linkS4class{i2dashboard}, which by design provides the main functionality of the package. Besides global properties such as the dashboard title, author and theme, an instance of the \linkS4class{i2dashboard} class also stores individual dashboard pages and the navigation menu, as well as all components that make up the content of individual pages.
+#' 'i2dash' relies on the widely used R packages 'flexdashboard', 'knitr' and 'rmarkdown'. 'i2dash' introduces a new class from R's S4 object system named \linkS4class{i2dashboard}, which by design provides the main functionality of the package. Besides global properties such as the dashboard title, author and theme, an instance of the \linkS4class{i2dashboard} class also stores individual dashboard pages and the navigation menu, as well as all components that make up the content of individual pages.
 #'
 #' @section Citation:
 #'
@@ -20,16 +20,16 @@ NULL
 #'
 #' @slot title The dashboards title
 #' @slot author The author of the dashboard
-#' @slot interactive If a shiny-based report should be created
-#' @slot theme The theme of the dashboard (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance}{documentation of flexdashboard} for available themes)
+#' @slot interactive If a 'shiny'-based report should be created
+#' @slot theme The theme of the dashboard (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes)
 #' @slot datadir Path to the directory, where report data is stored.
 #' @slot file The output filename (recommend that the suffix should be '.Rmd').
 #' @slot pages A list of dashboard pages
 #' @slot sidebar Content of the global sidebar
 #' @slot colormaps A named list with color mappings.
 #' @slot source Either a logical value describing whether the source code should be embeded through an item in the navigation bar or a link to a URL where the source code can be found online.
-#' @slot share A vector with any number of the following services: “facebook”, “twitter”, “google-plus”, “linkedin”, and “pinterest”. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.
-#' @slot navbar A list of links in the navigation bar (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#navigation_bar}{documentation of flexdashboard}).
+#' @slot share A vector with any number of the following services: 'facebook', 'twitter', 'google-plus', 'linkedin', and 'pinterest'. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.
+#' @slot navbar A list of links in the navigation bar (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#navigation_bar}{documentation of 'flexdashboard'}).
 #'
 #' @return An \linkS4class{i2dashboard} object.
 #'
@@ -98,4 +98,19 @@ setMethod("show", "i2dashboard", function(object) {
 
 #' @rdname i2dashboard-class
 #' @export
+#' @examples
+#' dashboard <- i2dashboard()
+#' dashboard <- i2dashboard(
+#'     title = "Dashboard title",
+#'     author = "John Doe",
+#'     interactive = TRUE,
+#'     theme = "cosmo",
+#'     datadir = "path/to/workdir/",
+#'     file = "MyDashboard.Rmd",
+#'     source = "embed"
+#' )
+#'
+#' # inspect dashboard:
+#' show(dashboard)
+#' dashboard
 i2dashboard <- function(...) methods::new("i2dashboard", ...)

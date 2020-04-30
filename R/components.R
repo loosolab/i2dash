@@ -1,22 +1,22 @@
-#' Add content to an i2dashboard object.
+#' Add content to an \linkS4class{i2dashboard} object.
 #'
 #' Content can be added to the dashboards pages, the sidebar or the navigation bar.
 #'
 #' The options to add content in detail:
 #' \itemize{
-#'   \item \strong{\code{add_component}} adds content to a page of the dashboard by evaluating a function, or by including an object, a text or image file.
-#'   \item \strong{\code{add_to_sidebar}} adds content to the dashboards global sidebar or to a pages local sidebar.
-#'   \item \strong{\code{add_link}} adds a link to the navigation bar.
-#'   \item \strong{\code{add_colormap}} adds a global color mapping to the dashboards colormaps.
+#'   \item \strong{'\code{add_component()}'} adds content to a page of the dashboard by evaluating a function, or by including an object, a text or image file.
+#'   \item \strong{'\code{add_to_sidebar()}'} adds content to the dashboards global sidebar or to a pages local sidebar.
+#'   \item \strong{'\code{add_link()}'} adds a link to the navigation bar.
+#'   \item \strong{'\code{add_colormap()}'} adds a global color mapping to the dashboards colormaps.
 #' }
 #'
-#' The mechanism to add different types of content to a dashboards page or sidebar depends on the class of the object passed to the function \code{add_component} or \code{add_to_sidebar}:
+#' The mechanism to add different types of content to a dashboards page or sidebar depends on the class of the object passed to the function '\code{add_component()}' or '\code{add_to_sidebar()}':
 #'
 #' \itemize{
 #'   \item A function will be evaluated and its return value is used as content.
 #'   \item A string that ends with \code{.md} or \code{.txt} will be used to open a file and use its content.
 #'   \item A string that ends with \code{\\.[png|jpg|jpeg|gif]} will be used to include an image as content.
-#'   \item An R object (e.g. a htmlwidget) will be included if a suitable signature method is implemented.
+#'   \item An R object (e.g. an 'htmlwidget') will be included if a suitable signature method is implemented.
 #' }
 #'
 #' @param dashboard A \linkS4class{i2dashboard}.
@@ -28,6 +28,30 @@
 #' @return The (modified) \linkS4class{i2dashboard} object.
 #'
 #' @rdname i2dashboard-content
+#' @examples
+#' library(magrittr)
+#' i2dashboard() -> dashboard
+#' myFunction <- function(dashboard) paste0("### Generate component\n\n",
+#'     "Lorem ipsum dolor sit amet\n")
+#'
+#' dashboard %<>% add_component(component = myFunction)
+#' dashboard %<>% add_component(component = plotly::plot_ly(mtcars, x=~wt, y=~hp),
+#'     title = "Include htmlwidget")
+#' \dontrun{
+#'   dashboard %<>% add_component(component = "sample.txt", title = "Include text")
+#'   dashboard %<>% add_component(component = "sample.jpg", title = "Include image")
+#' }
+#'
+#' dashboard %<>% add_to_sidebar(component = myFunction)
+#' \dontrun{
+#'   dashboard %<>% add_to_sidebar(component = "sample.txt", package="i2dash"))
+#'   dashboard %<>% add_to_sidebar(component = "sample.jpg", package="i2dash"))
+#' }
+#'
+#' colors <- c("l1" = "#F7FCFD", "l2" ="#E5F5F9", "l3" = "#CCECE6")
+#' dashboard %<>% add_colormap(map = colors, name = "test")
+#'
+#' dashboard %<>% add_link(href = "www.sample_url.net", title = "MyLink", align = "left")
 setMethod("add_component",
           signature = signature(dashboard = "i2dashboard", component = "character"),
           function(dashboard, component, page = "default", copy = FALSE, ...) {
@@ -158,12 +182,14 @@ setMethod("add_link", "i2dashboard", function(dashboard, href, title = NULL, ico
   dashboard
 })
 
-#' Method to download embed files into an Rmd-file
+#' A method to embed tabular data into an HTML link for download.
 #'
 #' @param x Data, which will be written to the embedded file.
 #' @param ... Additional parameters.
 #'
 #' @export
+#' @examples
+#' embed_var(mtcars)
 embed_var <- function(x, ...) {
   f = tempfile(fileext = '.csv')
   utils::write.csv(x, f)
