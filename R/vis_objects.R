@@ -8,6 +8,7 @@ NULL
 #' @param package The name of the R package that defines the class(object).
 #' @param page The name of the page to add the object to.
 #' @param title An optional component title.
+#' @return Returns the modified \linkS4class{i2dashboard} object, if the component was added, otherwise an unmodified \linkS4class{i2dashboard} object.
 add_vis_object <- function(dashboard, object, package, page = "default", title = NULL){
   sanitised_page <- .create_page_name(page)
   if (!(sanitised_page %in% names(dashboard@pages))) {

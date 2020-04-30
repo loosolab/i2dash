@@ -98,6 +98,9 @@ source(dashboard) <- value
 
 \item{value}{The value of the desired property. See \linkS4class{i2dashboard} for details.}
 }
+\value{
+The Getter methods return the value of the respective slot of the \linkS4class{i2dashboard} object. The Setter methods return the \linkS4class{i2dashboard} object containing the modified slot.
+}
 \description{
 Getter and Setter methods can be used to directly manipulate properties (slots) of an \linkS4class{i2dashboard} object. See \linkS4class{i2dashboard} for details.
 }
