@@ -17,7 +17,7 @@
 \alias{add_colormap,i2dashboard-method}
 \alias{add_to_sidebar,i2dashboard,character-method}
 \alias{add_to_sidebar,i2dashboard,function-method}
-\title{Add content to an i2dashboard object.}
+\title{Add content to an \linkS4class{i2dashboard} object.}
 \usage{
 add_component(dashboard, component, ...)
 
@@ -106,18 +106,18 @@ Content can be added to the dashboards pages, the sidebar or the navigation bar.
 \details{
 The options to add content in detail:
 \itemize{
-  \item \strong{\code{add_component}} adds content to a page of the dashboard by evaluating a function, or by including an object, a text or image file.
-  \item \strong{\code{add_to_sidebar}} adds content to the dashboards global sidebar or to a pages local sidebar.
-  \item \strong{\code{add_link}} adds a link to the navigation bar.
-  \item \strong{\code{add_colormap}} adds a global color mapping to the dashboards colormaps.
+  \item \strong{'\code{add_component()}'} adds content to a page of the dashboard by evaluating a function, or by including an object, a text or image file.
+  \item \strong{'\code{add_to_sidebar()}'} adds content to the dashboards global sidebar or to a pages local sidebar.
+  \item \strong{'\code{add_link()}'} adds a link to the navigation bar.
+  \item \strong{'\code{add_colormap()}'} adds a global color mapping to the dashboards colormaps.
 }
 
-The mechanism to add different types of content to a dashboards page or sidebar depends on the class of the object passed to the function \code{add_component} or \code{add_to_sidebar}:
+The mechanism to add different types of content to a dashboards page or sidebar depends on the class of the object passed to the function '\code{add_component()}' or '\code{add_to_sidebar()}':
 
 \itemize{
   \item A function will be evaluated and its return value is used as content.
   \item A string that ends with \code{.md} or \code{.txt} will be used to open a file and use its content.
   \item A string that ends with \code{\\.[png|jpg|jpeg|gif]} will be used to include an image as content.
-  \item An R object (e.g. a htmlwidget) will be included if a suitable signature method is implemented.
+  \item An R object (e.g. an 'htmlwidget') will be included if a suitable signature method is implemented.
 }
 }

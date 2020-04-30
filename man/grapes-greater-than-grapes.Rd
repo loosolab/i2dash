@@ -2,7 +2,7 @@
 % Please edit documentation in R/reexports.R
 \name{\%>\%}
 \alias{\%>\%}
-\title{magrittr forward-pipe operator}
+\title{'magrittr' forward-pipe operator}
 \description{
 See \code{\link[magrittr]{\%>\%}}.
 }

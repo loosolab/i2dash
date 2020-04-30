@@ -1,11 +1,11 @@
-#' Generate an RMarkdown file from an i2dashboard object.
+#' Generate an RMarkdown file from an \linkS4class{i2dashboard} object.
 #'
 #' @param dashboard A \linkS4class{i2dashboard}.
 #' @param pages A string or vector with the names of pages, which should be assembled into the resulting Rmd file.
 #' @param file The filename of the resulting Rmd file (recommend that the suffix should be '.Rmd').
 #' @param exclude A string or vector with the names of pages, which should be excluded from dashboard assembly.
-#' @param render A logical indicating whether the assembled dashboard should immediately be rendered with \code{rmarkdown::render} or run with \code{rmarkdown::run}.
-#' @param ... Additional arguments passed on to \code{rmarkdown::render}.
+#' @param render A logical indicating whether the assembled dashboard should immediately be rendered with '\code{rmarkdown::render()}' or run with '\code{rmarkdown::run()}'.
+#' @param ... Additional arguments passed on to '\code{rmarkdown::render()}'.
 #'
 #' @return Invisibly returns the dashboard.
 #'

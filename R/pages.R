@@ -1,14 +1,14 @@
-#' Methods to add and remove pages of an i2dashboard.
+#' Methods to add and remove pages of an \linkS4class{i2dashboard} object.
 #'
-#' \code{add_page} creates a page and adds it to the \linkS4class{i2dashboard} object.
-#' \code{remove_page} removes a page from the \linkS4class{i2dashboard} object.
+#' '\code{add_page()}' creates a page and adds it to the \linkS4class{i2dashboard} object.
+#' '\code{remove_page()}' removes a page from the \linkS4class{i2dashboard} object.
 #'
 #' @param dashboard A \linkS4class{i2dashboard}.
 #' @param page The name of the page to be added or removed.
 #' @param title The title of the page to be added.
 #' @param layout The page layout (see below).
 #' @param menu The name of the menu, under which the page should appear.
-#' @param sidebar A Markdown string. Preferably, use the function add_to_sidebar.
+#' @param sidebar A Markdown string. Preferably, use the function '\code{add_to_sidebar()}'.
 #' @param ... Additional arguments.
 #'
 #' @return The \linkS4class{i2dashboard} object.

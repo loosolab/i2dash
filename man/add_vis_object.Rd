@@ -2,14 +2,14 @@
 % Please edit documentation in R/vis_objects.R
 \name{add_vis_object}
 \alias{add_vis_object}
-\title{General method to add an object as component to a page of an i2dashboard.}
+\title{General method to add an object as component to a page of an \linkS4class{i2dashboard} object.}
 \usage{
 add_vis_object(dashboard, object, package, page = "default", title = NULL)
 }
 \arguments{
 \item{dashboard}{The \linkS4class{i2dashboard}.}
 
-\item{object}{The R visualization object to be addedd.}
+\item{object}{The R visualization object to be added.}
 
 \item{package}{The name of the R package that defines the class(object).}
 
@@ -18,5 +18,5 @@ add_vis_object(dashboard, object, package, page = "default", title = NULL)
 \item{title}{An optional component title.}
 }
 \description{
-General method to add an object as component to a page of an i2dashboard.
+General method to add an object as component to a page of an \linkS4class{i2dashboard} object.
 }

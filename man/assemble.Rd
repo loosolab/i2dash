@@ -3,7 +3,7 @@
 \name{assemble}
 \alias{assemble}
 \alias{assemble,i2dashboard-method}
-\title{Generate an RMarkdown file from an i2dashboard object.}
+\title{Generate an RMarkdown file from an \linkS4class{i2dashboard} object.}
 \usage{
 assemble(dashboard, ...)
 
@@ -19,7 +19,7 @@ assemble(dashboard, ...)
 \arguments{
 \item{dashboard}{A \linkS4class{i2dashboard}.}
 
-\item{...}{Additional arguments passed on to \code{rmarkdown::render}.}
+\item{...}{Additional arguments passed on to '\code{rmarkdown::render()}'.}
 
 \item{pages}{A string or vector with the names of pages, which should be assembled into the resulting Rmd file.}
 
@@ -27,11 +27,11 @@ assemble(dashboard, ...)
 
 \item{exclude}{A string or vector with the names of pages, which should be excluded from dashboard assembly.}
 
-\item{render}{A logical indicating whether the assembled dashboard should immediately be rendered with \code{rmarkdown::render} or run with \code{rmarkdown::run}.}
+\item{render}{A logical indicating whether the assembled dashboard should immediately be rendered with '\code{rmarkdown::render()}' or run with '\code{rmarkdown::run()}'.}
 }
 \value{
 Invisibly returns the dashboard.
 }
 \description{
-Generate an RMarkdown file from an i2dashboard object.
+Generate an RMarkdown file from an \linkS4class{i2dashboard} object.
 }

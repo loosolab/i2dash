@@ -1,4 +1,4 @@
-#' magrittr forward-pipe operator
+#' 'magrittr' forward-pipe operator
 #'
 #' See \code{\link[magrittr]{\%>\%}}.
 #' @name %>%
