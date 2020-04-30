@@ -35,3 +35,11 @@ Invisibly returns the dashboard.
 \description{
 Generate an RMarkdown file from an \linkS4class{i2dashboard} object.
 }
+\examples{
+library(magrittr)
+i2dashboard() \%>\% assemble()
+i2dashboard() \%>\%
+    add_page("p1", "Title 1") \%>\%
+    add_page("p2", "Title 2") \%>\%
+    assemble(file="MyDashboard.Rmd", exclude="default", render=TRUE)
+}

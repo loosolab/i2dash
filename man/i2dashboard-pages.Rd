@@ -45,3 +45,12 @@ The \linkS4class{i2dashboard} object.
 '\code{add_page()}' creates a page and adds it to the \linkS4class{i2dashboard} object.
 '\code{remove_page()}' removes a page from the \linkS4class{i2dashboard} object.
 }
+\examples{
+library(magrittr)
+i2dashboard() \%>\%
+     add_page(page="page1",
+         title="Page Title",
+         layout = "2x2_grid",
+         menu="Menu A") -> dashboard
+dashboard \%<>\% remove_page(page="page1")
+}
