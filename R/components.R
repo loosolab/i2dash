@@ -25,7 +25,14 @@
 #' @param copy Whether or not to copy images to \code{dashboard@datadir}.
 #' @param ... Additional parameters passed to the components render function. In case of an image, parameters \code{height} and \code{width} can be used to define the dimensions of the image with CSS or provide an alternative text with \code{image_alt_text}.
 #'
-#' @return The (modified) \linkS4class{i2dashboard} object.
+#' @return Returns the modified \linkS4class{i2dashboard} object.
+#' \itemize{
+#'   \item '\code{add_component()}' extends the list of components of the respective page, stored in the '\code{pages}' slot, by an R Markdown string containing the provided content.
+#'   \item '\code{add_to_sidebar()}' extends either the '\code{sidebar}' slot or the '\code{sidebar}' entry of a single page by an R Markdown string containing the provided content.
+#'   \item '\code{add_link()}' extends the '\code{navbar}' slot by a list of link properties.
+#'   \item '\code{add_colormap()}' extends the '\code{colormaps}' slot by the new color mapping.
+#' }
+#' If something went wrong during the addition, the unmodified \linkS4class{i2dashboard} object is returned.
 #'
 #' @rdname i2dashboard-content
 #' @examples
@@ -187,6 +194,7 @@ setMethod("add_link", "i2dashboard", function(dashboard, href, title = NULL, ico
 #' @param x Data, which will be written to the embedded file.
 #' @param ... Additional parameters.
 #'
+#' @return HTML code of a hyperlink containing the base64 encoded data.
 #' @export
 #' @examples
 #' embed_var(mtcars)

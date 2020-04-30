@@ -98,7 +98,14 @@ add_link(dashboard, ...)
 \item{global}{Whether or not to add the content to the global sidebar.}
 }
 \value{
-The (modified) \linkS4class{i2dashboard} object.
+Returns the modified \linkS4class{i2dashboard} object.
+\itemize{
+  \item '\code{add_component()}' extends the list of components of the respective page, stored in the '\code{pages}' slot, by an R Markdown string containing the provided content.
+  \item '\code{add_to_sidebar()}' extends either the '\code{sidebar}' slot or the '\code{sidebar}' entry of a single page by an R Markdown string containing the provided content.
+  \item '\code{add_link()}' extends the '\code{navbar}' slot by a list of link properties.
+  \item '\code{add_colormap()}' extends the '\code{colormaps}' slot by the new color mapping.
+}
+If something went wrong during the addition, the unmodified \linkS4class{i2dashboard} object is returned.
 }
 \description{
 Content can be added to the dashboards pages, the sidebar or the navigation bar.
