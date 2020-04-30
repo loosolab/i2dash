@@ -22,7 +22,9 @@ i2dashboard(...)
 \item{object}{An \linkS4class{i2dashboard} class object.}
 }
 \value{
-An \linkS4class{i2dashboard} object.
+'\code{i2dashboard()}' returns an \linkS4class{i2dashboard} object with a default title, theme, and an empty 'default' page.
+
+'\code{show()}' returns text, describing the structure of the \linkS4class{i2dashboard} object.
 }
 \description{
 The \linkS4class{i2dashboard} S4 class provides main functionality of the package. Besides global properties such as the dashboard title, author and theme, an instance of the i2dashboard class also stores individual dashboard pages and the navigation menu, as well as all components that make up the content of individual pages. A new instance can be created using the \code{i2dashboard} function.
@@ -30,19 +32,19 @@ The \linkS4class{i2dashboard} S4 class provides main functionality of the packag
 \section{Slots}{
 
 \describe{
-\item{\code{title}}{The dashboards title}
+\item{\code{title}}{The dashboards title (default 'i2dashboard').}
 
-\item{\code{author}}{The author of the dashboard}
+\item{\code{author}}{The author of the dashboard.}
 
-\item{\code{interactive}}{If a 'shiny'-based report should be created}
+\item{\code{interactive}}{If a 'shiny'-based report should be created (default 'FALSE').}
 
-\item{\code{theme}}{The theme of the dashboard (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes)}
+\item{\code{theme}}{The theme of the dashboard (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes) (default 'yeti').}
 
 \item{\code{datadir}}{Path to the directory, where report data is stored.}
 
 \item{\code{file}}{The output filename (recommend that the suffix should be '.Rmd').}
 
-\item{\code{pages}}{A list of dashboard pages}
+\item{\code{pages}}{A list of dashboard pages.}
 
 \item{\code{sidebar}}{Content of the global sidebar}
 

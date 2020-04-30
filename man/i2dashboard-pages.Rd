@@ -39,7 +39,7 @@ remove_page(dashboard, page)
 \item{sidebar}{A Markdown string. Preferably, use the function '\code{add_to_sidebar()}'.}
 }
 \value{
-The \linkS4class{i2dashboard} object.
+Returns the \linkS4class{i2dashboard} object with a modified 'pages' slot.
 }
 \description{
 '\code{add_page()}' creates a page and adds it to the \linkS4class{i2dashboard} object.

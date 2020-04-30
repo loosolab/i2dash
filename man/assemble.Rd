@@ -30,7 +30,7 @@ assemble(dashboard, ...)
 \item{render}{A logical indicating whether the assembled dashboard should immediately be rendered with '\code{rmarkdown::render()}' or run with '\code{rmarkdown::run()}'.}
 }
 \value{
-Invisibly returns the dashboard.
+Invisibly returns the unmodified \linkS4class{i2dashboard} object.
 }
 \description{
 Generate an RMarkdown file from an \linkS4class{i2dashboard} object.

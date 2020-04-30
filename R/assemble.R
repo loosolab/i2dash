@@ -7,7 +7,7 @@
 #' @param render A logical indicating whether the assembled dashboard should immediately be rendered with '\code{rmarkdown::render()}' or run with '\code{rmarkdown::run()}'.
 #' @param ... Additional arguments passed on to '\code{rmarkdown::render()}'.
 #'
-#' @return Invisibly returns the dashboard.
+#' @return Invisibly returns the unmodified \linkS4class{i2dashboard} object.
 #'
 #' @rdname assemble
 #' @examples

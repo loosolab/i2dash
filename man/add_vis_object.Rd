@@ -17,6 +17,9 @@ add_vis_object(dashboard, object, package, page = "default", title = NULL)
 
 \item{title}{An optional component title.}
 }
+\value{
+Returns the modified \linkS4class{i2dashboard} object, if the component was added, otherwise an unmodified \linkS4class{i2dashboard} object.
+}
 \description{
 General method to add an object as component to a page of an \linkS4class{i2dashboard} object.
 }

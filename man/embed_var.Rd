@@ -11,6 +11,9 @@ embed_var(x, ...)
 
 \item{...}{Additional parameters.}
 }
+\value{
+HTML code of a hyperlink containing the base64 encoded data.
+}
 \description{
 A method to embed tabular data into an HTML link for download.
 }

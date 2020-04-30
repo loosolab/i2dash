@@ -5,6 +5,7 @@
 #' @param dashboard A \linkS4class{i2dashboard}.
 #' @param value The value of the desired property. See \linkS4class{i2dashboard} for details.
 #'
+#' @return The Getter methods return the value of the respective slot of the \linkS4class{i2dashboard} object. The Setter methods return the \linkS4class{i2dashboard} object containing the modified slot.
 #' @examples
 #' dashboard <- i2dashboard()
 #'
