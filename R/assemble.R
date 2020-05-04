@@ -11,12 +11,13 @@
 #'
 #' @rdname assemble
 #' @examples
-#' library(magrittr)
+#' \dontrun{
 #' i2dashboard() %>% assemble()
 #' i2dashboard() %>%
 #'     add_page("p1", "Title 1") %>%
 #'     add_page("p2", "Title 2") %>%
 #'     assemble(file="MyDashboard.Rmd", exclude="default", render=TRUE)
+#' }
 setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard@pages), file = dashboard@file, exclude = NULL, render = FALSE, ...) {
   . = NULL # workaround for R CMD check note: no visible binding for global variable '.'
   tmp_document <- tempfile()
