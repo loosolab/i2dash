@@ -5,7 +5,7 @@ test_that("general getter and setter methods work correctly",{
   i <- TRUE
   s <- "menu"
 
-  dashboard <- i2dashboard()
+  dashboard <- i2dashboard(datadir = tempdir())
   title(dashboard) <- t
   expect_equal(title(dashboard), t)
 
@@ -23,7 +23,7 @@ test_that("general getter and setter methods work correctly",{
 })
 
 test_that("getting/setting the source code embedding works as expected", {
-  dashboard <- i2dashboard()
+  dashboard <- i2dashboard(datadir = tempdir())
 
   embed_source(dashboard) <- TRUE
   expect_equal(source(dashboard), "embed")
@@ -36,7 +36,7 @@ test_that("getting/setting the source code embedding works as expected", {
 })
 
 test_that("getting/setting the share links for social media work as expected", {
-  dashboard <- i2dashboard()
+  dashboard <- i2dashboard(datadir = tempdir())
 
   share(dashboard) <- c("Facebook", "reddit")
   expect_equal(share(dashboard), c("facebook"))

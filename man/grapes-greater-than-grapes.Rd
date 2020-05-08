@@ -3,6 +3,9 @@
 \name{\%>\%}
 \alias{\%>\%}
 \title{'magrittr' forward-pipe operator}
+\value{
+No return value, called for forward-piping
+}
 \description{
 See \code{\link[magrittr]{\%>\%}}.
 }

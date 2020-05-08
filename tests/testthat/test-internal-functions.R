@@ -6,11 +6,10 @@ context("Internal functions")
 test_that("add_vis_object works correctly",{
   if(requireNamespace("plotly", quietly = TRUE)) {
     obj <- plotly::plot_ly(mtcars,x=~wt,y=~mpg)
-    i2dashboard() %>% i2dash:::add_vis_object(obj, "plotly", title = "Test") -> dashboard
+    i2dashboard(datadir = tempdir()) %>% i2dash:::add_vis_object(obj, "plotly", title = "Test") -> dashboard
 
     expect_equal(length(dashboard@pages$default$components), 1)
     expect_match(dashboard@pages$default$components[[1]], "### Test")
-    unlink(dashboard@datadir, recursive=TRUE)
   }
 })
 
@@ -43,7 +42,7 @@ test_that("render_text works correctly",{
 #
 test_that(".add_component works correctly",{
   comp <- "### Component\n\nContent\n\n"
-  i2dashboard() %>% i2dash:::.add_component("default", comp) -> dashboard
+  i2dashboard(datadir = tempdir()) %>% i2dash:::.add_component("default", comp) -> dashboard
 
   expect_equal(length(dashboard@pages$default$components), 1)
   expect_match(dashboard@pages$default$components[[1]], "### Component\n\nContent\n\n")
