@@ -36,7 +36,7 @@ Invisibly returns the unmodified \linkS4class{i2dashboard} object.
 Generate an RMarkdown file from an \linkS4class{i2dashboard} object.
 }
 \examples{
-\dontrun{
+\donttest{
 i2dashboard() \%>\% assemble()
 i2dashboard() \%>\%
     add_page("p1", "Title 1") \%>\%

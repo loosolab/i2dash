@@ -46,8 +46,7 @@ Returns the \linkS4class{i2dashboard} object with a modified 'pages' slot.
 '\code{remove_page()}' removes a page from the \linkS4class{i2dashboard} object.
 }
 \examples{
-library(magrittr)
-i2dashboard() \%>\%
+i2dashboard(datadir=tempdir()) \%>\%
      add_page(page="page1",
          title="Page Title",
          layout = "2x2_grid",

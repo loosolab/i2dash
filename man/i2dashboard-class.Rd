@@ -58,7 +58,7 @@ The \linkS4class{i2dashboard} S4 class provides main functionality of the packag
 }}
 
 \examples{
-\dontrun{
+\donttest{
 dashboard <- i2dashboard()
 dashboard <- i2dashboard(
     title = "Dashboard title",
@@ -69,7 +69,7 @@ dashboard <- i2dashboard(
     file = "MyDashboard.Rmd",
     source = "embed"
 )
-#' # inspect dashboard:
+# inspect dashboard:
 show(dashboard)
 dashboard
 }

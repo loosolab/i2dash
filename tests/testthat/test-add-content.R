@@ -6,7 +6,7 @@ context("Adding content to the dashboard")
 test_that("adding a link to the navigation works as expected",{
   l1 <- list(href = "sample_url", title = "Link", icon = "", align = "right", target = "")
 
-  i2dashboard() %>%
+  i2dashboard(datadir = tempdir()) %>%
     add_link(
       href = "sample_url",
       title = "Link") -> dashboard
@@ -22,7 +22,7 @@ test_that("adding a link to the navigation works as expected",{
 test_that("adding a colorbar to the dashboard works as expected",{
   colors <- c("l1" = "#F7FCFD", "l2" ="#E5F5F9", "l3" = "#CCECE6")
 
-  i2dashboard() %>%
+  i2dashboard(datadir = tempdir()) %>%
     add_colormap(map = colors, name = "test") -> dashboard
 
   expect_s4_class(dashboard, "i2dashboard")
@@ -34,7 +34,7 @@ test_that("adding a colorbar to the dashboard works as expected",{
 #
 test_that("adding sidebar content to the dashboard works as expected",{
   text_generator <- function(dashboard) paste0("Lorem ipsum dolor sit amet\n")
-  base_sidebar <- function(component, global=F) i2dashboard() %>% add_to_sidebar(component = component, global=global) -> dashboard
+  base_sidebar <- function(component, global=F) i2dashboard(datadir = tempdir()) %>% add_to_sidebar(component = component, global=global) -> dashboard
 
   # add text to local sidebar
   expect_s4_class(base_sidebar("input-data/sample.txt"), "i2dashboard")
@@ -60,7 +60,7 @@ test_that("adding sidebar content to the dashboard works as expected",{
   expect_s4_class(base_sidebar(text_generator, global=TRUE), "i2dashboard")
   expect_equal(base_sidebar(text_generator, global=TRUE)@sidebar, "Lorem ipsum dolor sit amet\n")
 
-  expect_warning(i2dashboard() %>% add_to_sidebar(component = "input-data/sample.txt", page = "page1"), "i2dashboard dashboard does not contain a page named 'page1'")
+  expect_warning(i2dashboard(datadir = tempdir()) %>% add_to_sidebar(component = "input-data/sample.txt", page = "page1"), "i2dashboard dashboard does not contain a page named 'page1'")
 })
 
 #
@@ -71,12 +71,12 @@ test_that("adding components to a dashboard is correct",{
 
   # test signature 'i2dashboard,'function''
   text_generator <- function(dashboard) paste0("### Test\n\n", "Lorem ipsum dolor sit amet\n")
-  i2dashboard() %>%
+  i2dashboard(datadir = tempdir()) %>%
     add_component(component = text_generator) -> dashboard
   expect_equal(length(dashboard@pages$default$components), 1)
   expect_equal(dashboard@pages$default$components[[1]], "### Test\n\nLorem ipsum dolor sit amet\n")
 
-  base_component <- function(component) i2dashboard() %>% add_component(component = component, title = "Test") -> dashboard
+  base_component <- function(component) i2dashboard(datadir = tempdir()) %>% add_component(component = component, title = "Test") -> dashboard
 
   # test signature 'i2dashboard,character'
   expect_equal(length(base_component("input-data/sample.txt")@pages$default$components), 1)
@@ -126,6 +126,4 @@ test_that("adding components to a dashboard is correct",{
   }
   expect_warning(add_component(dashboard, component = text_generator, page = "page1"), "i2dashboard dashboard does not contain a page named 'page1'")
   #expect_warning(add_component(dashboard, component = o6), "The component did not inherit from any of the currently supported classes ('htmlwidget').")
-
-  unlink(dashboard@datadir, recursive=TRUE)
 })

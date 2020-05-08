@@ -1,3 +1,11 @@
+## 4th resubmission 
+
+This is the third resubmission. In this version, we have:
+
+* Fixed the grapes-greater-than-grapes.Rd: \value and grapes-less-than-greater-than-grapes.Rd: \value
+* Replaced \dontrun with \donttest.
+* Omitted any default path in writing functions in examples/vignettes/tests and changed to tempdir().
+
 ## 3nd resubmission 
 
 This is the third resubmission. In this version, we have:
