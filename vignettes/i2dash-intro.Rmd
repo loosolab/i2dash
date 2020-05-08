@@ -82,7 +82,7 @@ i2dashboard(
   author = "John Doe",
   interactive = FALSE,
   theme = "yeti",
-  datadir = "datadir",
+  datadir = tempdir(),
   file = "MyDashboard.Rmd") -> dashboard
 ```
 

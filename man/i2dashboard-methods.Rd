@@ -105,7 +105,7 @@ The Getter methods return the value of the respective slot of the \linkS4class{i
 Getter and Setter methods can be used to directly manipulate properties (slots) of an \linkS4class{i2dashboard} object. See \linkS4class{i2dashboard} for details.
 }
 \examples{
-dashboard <- i2dashboard()
+dashboard <- i2dashboard(datadir=tempdir())
 
 title(dashboard) <- "New dashboard title"
 author(dashboard) <- "John Doe"

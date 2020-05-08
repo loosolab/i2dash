@@ -10,7 +10,7 @@ p <- list(
 )
 
 test_that("Adding new page is correct",{
-  i2dashboard() %>%
+  i2dashboard(datadir = tempdir()) %>%
     add_page(
       page = "new",
       title = "New page",
@@ -22,7 +22,7 @@ test_that("Adding new page is correct",{
 })
 
 test_that("Removing page is correct",{
-  i2dashboard() %>%
+  i2dashboard(datadir = tempdir()) %>%
     add_page(
       page = "new",
       title = "New page",

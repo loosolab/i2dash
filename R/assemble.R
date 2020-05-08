@@ -11,7 +11,7 @@
 #'
 #' @rdname assemble
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' i2dashboard() %>% assemble()
 #' i2dashboard() %>%
 #'     add_page("p1", "Title 1") %>%

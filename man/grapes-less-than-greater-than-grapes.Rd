@@ -3,6 +3,9 @@
 \name{\%<>\%}
 \alias{\%<>\%}
 \title{magrittr compound assignment pipe-operator}
+\value{
+No return value, called for side effect
+}
 \description{
 See \code{\link[magrittr]{\%<>\%}}.
 }
