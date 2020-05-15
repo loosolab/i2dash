@@ -130,7 +130,7 @@ The mechanism to add different types of content to a dashboards page or sidebar 
 }
 \examples{
 library(magrittr)
-i2dashboard(datadir=tempdir()) -> dashboard
+i2dashboard() -> dashboard
 myFunction <- function(dashboard) paste0("### Generate component\n\n",
     "Lorem ipsum dolor sit amet\n")
 

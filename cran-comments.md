@@ -1,6 +1,14 @@
+## 5th resubmission 
+
+This is the fifth resubmission. In this version, we have:
+
+* Removed changing the user's options
+* Omitted any default path in writing functions.
+
+
 ## 4th resubmission 
 
-This is the third resubmission. In this version, we have:
+This is the fourth resubmission. In this version, we have:
 
 * Fixed the grapes-greater-than-grapes.Rd: \value and grapes-less-than-greater-than-grapes.Rd: \value
 * Replaced \dontrun with \donttest.

@@ -9,8 +9,8 @@ assemble(dashboard, ...)
 
 \S4method{assemble}{i2dashboard}(
   dashboard,
+  file,
   pages = names(dashboard@pages),
-  file = dashboard@file,
   exclude = NULL,
   render = FALSE,
   ...
@@ -21,9 +21,9 @@ assemble(dashboard, ...)
 
 \item{...}{Additional arguments passed on to '\code{rmarkdown::render()}'.}
 
-\item{pages}{A string or vector with the names of pages, which should be assembled into the resulting Rmd file.}
+\item{file}{The path and filename of the resulting Rmd file (recommend that the suffix should be '.Rmd').}
 
-\item{file}{The filename of the resulting Rmd file (recommend that the suffix should be '.Rmd').}
+\item{pages}{A string or vector with the names of pages, which should be assembled into the resulting Rmd file}
 
 \item{exclude}{A string or vector with the names of pages, which should be excluded from dashboard assembly.}
 
@@ -37,7 +37,7 @@ Generate an RMarkdown file from an \linkS4class{i2dashboard} object.
 }
 \examples{
 \donttest{
-i2dashboard() \%>\% assemble()
+i2dashboard() \%>\% assemble(file="MyDashboard.Rmd")
 i2dashboard() \%>\%
     add_page("p1", "Title 1") \%>\%
     add_page("p2", "Title 2") \%>\%
