@@ -1,8 +1,8 @@
 #' Generate an RMarkdown file from an \linkS4class{i2dashboard} object.
 #'
 #' @param dashboard A \linkS4class{i2dashboard}.
-#' @param pages A string or vector with the names of pages, which should be assembled into the resulting Rmd file.
-#' @param file The filename of the resulting Rmd file (recommend that the suffix should be '.Rmd').
+#' @param file The path and filename of the resulting Rmd file (recommend that the suffix should be '.Rmd').
+#' @param pages A string or vector with the names of pages, which should be assembled into the resulting Rmd file
 #' @param exclude A string or vector with the names of pages, which should be excluded from dashboard assembly.
 #' @param render A logical indicating whether the assembled dashboard should immediately be rendered with '\code{rmarkdown::render()}' or run with '\code{rmarkdown::run()}'.
 #' @param ... Additional arguments passed on to '\code{rmarkdown::render()}'.
@@ -12,13 +12,13 @@
 #' @rdname assemble
 #' @examples
 #' \donttest{
-#' i2dashboard() %>% assemble()
+#' i2dashboard() %>% assemble(file="MyDashboard.Rmd")
 #' i2dashboard() %>%
 #'     add_page("p1", "Title 1") %>%
 #'     add_page("p2", "Title 2") %>%
 #'     assemble(file="MyDashboard.Rmd", exclude="default", render=TRUE)
 #' }
-setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard@pages), file = dashboard@file, exclude = NULL, render = FALSE, ...) {
+setMethod("assemble", "i2dashboard", function(dashboard, file, pages = names(dashboard@pages), exclude = NULL, render = FALSE, ...) {
   . = NULL # workaround for R CMD check note: no visible binding for global variable '.'
   tmp_document <- tempfile()
 
@@ -42,18 +42,17 @@ setMethod("assemble", "i2dashboard", function(dashboard, pages = names(dashboard
   }
 
   # Add YAML header
-  options(ymlthis.rmd_body = "")
   ymlthis::yml(date = F) %>%
     ymlthis::yml_title(dashboard@title) %>%
     ymlthis::yml_author(dashboard@author) %>%
     ymlthis::yml_output(flexdashboard::flex_dashboard(theme = !!dashboard@theme, social = !!social, source = !!source, navbar = !!dashboard@navbar)) %>%
     {if(dashboard@interactive) ymlthis::yml_runtime(., runtime = "shiny") else .} %>%
-    ymlthis::use_rmarkdown(path = tmp_document, include_body = FALSE, quiet = TRUE, open_doc = FALSE)
+    ymlthis::use_rmarkdown(path = tmp_document, include_body = FALSE, quiet = TRUE, open_doc = FALSE, body = "")
 
   # Add i2dash global setup
   knitr::knit_expand(file = system.file("templates", "i2dash-global-setup.Rmd", package = "i2dash"),
                      delim = c("<%", "%>"),
-                     datadir = dashboard@datadir,
+                     datadir = encodeString(dashboard@datadir),
                      colormap = colormap_id) %>%
     cat(file = tmp_document, append = TRUE, sep = "\n")
 
