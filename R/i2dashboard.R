@@ -22,8 +22,7 @@ NULL
 #' @slot author The author of the dashboard.
 #' @slot interactive If a 'shiny'-based report should be created (default 'FALSE').
 #' @slot theme The theme of the dashboard (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes) (default 'yeti').
-#' @slot datadir Path to the directory, where report data is stored.
-#' @slot file The output filename (recommend that the suffix should be '.Rmd').
+#' @slot datadir Path to the directory, where report data is stored (default 'tempdir()').
 #' @slot pages A list of dashboard pages.
 #' @slot sidebar Content of the global sidebar
 #' @slot colormaps A named list with color mappings.
@@ -42,7 +41,6 @@ setClass("i2dashboard",
     interactive = "logical",
     theme = "character",
     datadir = "character",
-    file = "character",
     pages = "list",
     sidebar = "character",
     colormaps = "list",
@@ -54,7 +52,7 @@ setClass("i2dashboard",
     title = "i2dashboard",
     interactive = FALSE,
     theme = "yeti",
-    datadir = file.path(getwd(), "report-data"),
+    datadir = file.path(tempdir()),
     pages = list(default = list(title = "Default page", layout = "default", menu = NULL, components = list(), sidebar = NULL, max_components = Inf)),
     source = "",
     share = ""
@@ -66,11 +64,6 @@ setClass("i2dashboard",
 setMethod("initialize", "i2dashboard", function(.Object, ...) {
   # Do prototyping
   .Object <- methods::callNextMethod()
-
-  # Create nice filename from title
-  if(length(.Object@file) == 0 & length(.Object@title) > 0) {
-    .Object@title %>% tolower %>% gsub(pattern = " ", replacement = "-") %>% gsub(pattern = '[^a-zA-Z0-9-]', replacement = '') %>% paste0(".Rmd") -> .Object@file
-  }
 
   # Create working directory and directory for environments
   dir.create(.Object@datadir, showWarnings = FALSE, recursive = T)
@@ -108,8 +101,7 @@ setMethod("show", "i2dashboard", function(object) {
 #'     author = "John Doe",
 #'     interactive = TRUE,
 #'     theme = "cosmo",
-#'     datadir = "path/to/workdir/",
-#'     file = "MyDashboard.Rmd",
+#'     datadir = "path/to/workdir",
 #'     source = "embed"
 #' )
 #' # inspect dashboard:

@@ -40,9 +40,7 @@ The \linkS4class{i2dashboard} S4 class provides main functionality of the packag
 
 \item{\code{theme}}{The theme of the dashboard (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes) (default 'yeti').}
 
-\item{\code{datadir}}{Path to the directory, where report data is stored.}
-
-\item{\code{file}}{The output filename (recommend that the suffix should be '.Rmd').}
+\item{\code{datadir}}{Path to the directory, where report data is stored (default 'tempdir()').}
 
 \item{\code{pages}}{A list of dashboard pages.}
 
@@ -65,8 +63,7 @@ dashboard <- i2dashboard(
     author = "John Doe",
     interactive = TRUE,
     theme = "cosmo",
-    datadir = "path/to/workdir/",
-    file = "MyDashboard.Rmd",
+    datadir = "path/to/workdir",
     source = "embed"
 )
 # inspect dashboard:

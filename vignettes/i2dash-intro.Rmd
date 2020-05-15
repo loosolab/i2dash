@@ -74,16 +74,13 @@ i2dash introduces a new S4 class called `i2dashboard`. We start by creating an i
 - `interactive` - if set to `TRUE` a shiny-based dashboard will be created, otherwise a static HTML file.
 - `theme` - changes the appearance of the dashboard. A variety of themes are available at [R Studio's Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance) or [Semantic UI forest](https://semantic-ui-forest.com/themes/).
 - `datadir` - defines the directory where dashboard files are stored.
-- `file` - defines the file name of the dashboards R Markdown file.
 
 ```{r, eval=TRUE}
 i2dashboard(
   title = "Dashboard title",
   author = "John Doe",
   interactive = FALSE,
-  theme = "yeti",
-  datadir = tempdir(),
-  file = "MyDashboard.Rmd") -> dashboard
+  theme = "yeti") -> dashboard
 ```
 
 We can examine the `i2dashboard` object by calling the object. The output shows the title of the dashboard, the number of saved pages and the number of components the page contains. By default the `i2dashboard` object contains the 'default' page without any components. 
@@ -96,6 +93,7 @@ With several accessor methods, it is also possible to change the slots `interact
 
 ```{r, eval=FALSE}
 interactivity(dashboard) <- TRUE
+datadir(dashboard) <- "getwd()"
 theme(dashboard) <- "cosmo"
 author(dashboard) <- "John Doe, MaxMustermann"
 title(dashboard) <- "New dashboard title"
@@ -319,7 +317,7 @@ At any point in time, and particular when data analysis is finished, the `assemb
 
 ```{r, eval = FALSE}
 dashboard %>%
-  assemble(pages = c("page1", "page3", "page4", "page5"))
+  assemble(file = "MyDashboard.Rmd", pages = c("page1", "page3", "page4", "page5"))
 ```
 
 The resulting R Markdown file can be run with `r BiocStyle::CRANpkg("shiny")` or rendered with `r BiocStyle::CRANpkg("rmarkdown")`.

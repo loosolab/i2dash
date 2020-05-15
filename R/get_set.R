@@ -7,7 +7,7 @@
 #'
 #' @return The Getter methods return the value of the respective slot of the \linkS4class{i2dashboard} object. The Setter methods return the \linkS4class{i2dashboard} object containing the modified slot.
 #' @examples
-#' dashboard <- i2dashboard(datadir=tempdir())
+#' dashboard <- i2dashboard()
 #'
 #' title(dashboard) <- "New dashboard title"
 #' author(dashboard) <- "John Doe"
