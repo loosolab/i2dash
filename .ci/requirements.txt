@@ -1,6 +1,6 @@
 r-assertive.sets
 r-assertive.types
-r-base
+r-base=3.6.3
 bioconductor-biocstyle
 r-htmltools
 r-flexdashboard
