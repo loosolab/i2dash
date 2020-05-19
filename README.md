@@ -14,7 +14,7 @@ The WIlsON R package employs the R Shiny and Plotly web-based frameworks using a
 The WIlsON R package includes a toolbox of R Shiny modules that can be used to construct a wide array of web-interfaces for plotting feature-based data.
 
 ## Availability
-All components of the WIlsON R package have been implemented in an integrated web application that is available for download from the Github repository [wilson-apps](https://github.molgen.mpg.de/loosolab/wilson-apps/) and can be tested on our [official demonstration server](http://loosolab.mpi-bn.mpg.de/apps/wilson/).
+All components of the WIlsON R package have been implemented in an integrated web application that is available for download from the Github repository [wilson-apps](https://github.molgen.mpg.de/loosolab/wilson-apps/) and can be tested on our [official demonstration server](http://loosolab.mpi-bn.mpg.de/wilson).
 
 Usage instructions can be found in the extensive [documentation](https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/).
 
