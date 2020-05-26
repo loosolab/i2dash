@@ -4,10 +4,14 @@
 \alias{transformationUI}
 \title{transformation module UI representation}
 \usage{
-transformationUI(id, label = "Transformation", selected = "raw",
-  choices = list(None = "raw", log2 = "log2", `-log2` = "-log2", log10 =
-  "log10", `-log10` = "-log10", `Z score` = "zscore", `regularized log` =
-  "rlog"), transposeOptions = FALSE)
+transformationUI(
+  id,
+  label = "Transformation",
+  selected = "raw",
+  choices = list(None = "raw", log2 = "log2", `-log2` = "-log2", log10 = "log10",
+    `-log10` = "-log10", `Z score` = "zscore", `regularized log` = "rlog"),
+  transposeOptions = FALSE
+)
 }
 \arguments{
 \item{id}{The ID of the modules namespace.}

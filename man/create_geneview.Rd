@@ -4,11 +4,22 @@
 \alias{create_geneview}
 \title{Method for geneView creation}
 \usage{
-create_geneview(data, grouping, plot.type = "line",
-  facet.target = "gene", facet.cols = 2, colors = NULL,
-  ylabel = NULL, ylimits = NULL, gene.label = NULL,
-  plot.method = "static", width = "auto", height = "auto",
-  ppi = 72, scale = 1)
+create_geneview(
+  data,
+  grouping,
+  plot.type = "line",
+  facet.target = "gene",
+  facet.cols = 2,
+  colors = NULL,
+  ylabel = NULL,
+  ylimits = NULL,
+  gene.label = NULL,
+  plot.method = "static",
+  width = "auto",
+  height = "auto",
+  ppi = 72,
+  scale = 1
+)
 }
 \arguments{
 \item{data}{data.table containing plot data}

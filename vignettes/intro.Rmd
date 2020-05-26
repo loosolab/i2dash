@@ -38,7 +38,7 @@ But depending on the actual implementation neither the order nor the number of s
 
 ## Example
 
-In this example we will create a wilson-application with a static dataset, a single visualization method and a preceding filter, seperated into a *Filter* and a *Visualization* tab.
+In this example we will create a wilson-application with a static dataset, a single visualization method and a preceding filter, separated into a *Filter* and a *Visualization* tab.
 
 So to start we first import the needed packages and afterwards define the application interface:
 ```

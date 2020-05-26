@@ -4,11 +4,19 @@
 \alias{tobias_parser}
 \title{TOBIAS TFBS table to clarion parser}
 \usage{
-tobias_parser(input, output, filter_columns = NULL,
-  filter_pattern = NULL, config = system.file("extdata",
-  "tobias_config.json", package = "wilson"), omit_NA = FALSE,
-  condition_names = NULL, condition_pattern = "_bound$",
-  in_field_delimiter = ",", dec = ".", ...)
+tobias_parser(
+  input,
+  output,
+  filter_columns = NULL,
+  filter_pattern = NULL,
+  config = system.file("extdata", "tobias_config.json", package = "wilson"),
+  omit_NA = FALSE,
+  condition_names = NULL,
+  condition_pattern = "_bound$",
+  in_field_delimiter = ",",
+  dec = ".",
+  ...
+)
 }
 \arguments{
 \item{input}{Path to input table}

@@ -4,8 +4,13 @@
 \alias{searchData}
 \title{Function to search data for selection}
 \usage{
-searchData(input, choices, options = c("=", "<", ">"),
-  min. = min(choices, na.rm = TRUE), max. = max(choices, na.rm = TRUE))
+searchData(
+  input,
+  choices,
+  options = c("=", "<", ">"),
+  min. = min(choices, na.rm = TRUE),
+  max. = max(choices, na.rm = TRUE)
+)
 }
 \arguments{
 \item{input}{Vector length one (single) or two (ranged) containing numeric values for selection.}

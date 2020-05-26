@@ -657,8 +657,8 @@ create_heatmap <- function(data, unitlabel = "auto", row.label = TRUE, row.custo
     }
     colors <- circlize::colorRamp2(breaks, colors)
 
-    # convert data to data.frame so rownames can be used for annotation
-    prep_data <- as.data.frame(data[, -1])
+    # convert data to matrix so rownames can be used for annotation
+    prep_data <- as.matrix(data[, -1])
 
     row.names(prep_data) <- row_label_strings
     colnames(prep_data) <- column_label_strings
@@ -958,9 +958,9 @@ create_geneview <- function(data, grouping, plot.type = "line", facet.target = "
       matrixplot <- matrixplot + ggplot2::geom_errorbar(ggplot2::aes_(ymin = ~ value - se, ymax = ~ value + se), size = 0.2, width = 0.05)								# error bar = standard error
       matrixplot <- matrixplot + ggplot2::geom_line() + ggplot2::geom_point()											# bar plot of the mean (color = condition)
       # set hovertext
-      matrixplot <- matrixplot + ggplot2::aes(text = paste("ID: ", data$variable, "\n",
-                                                           "Condition: ", data$condition, "\n",
-                                                           "Value: ", data$value
+      matrixplot <- matrixplot + ggplot2::aes(text = paste("ID: ", data[, "variable"], "\n",
+                                                           "Condition: ", data[, "condition"], "\n",
+                                                           "Value: ", data[, "value"]
       ))
     }
 
@@ -1253,10 +1253,10 @@ download <- function(file, filename, plot, width, height, ppi = 72, save_plot = 
   } else if (class(plot) == "Heatmap") { # TODO: find better way to check for complexHeatmap object
     # complexHeatmap
     grDevices::pdf(plot_file_pdf, width = width / 2.54, height = height / 2.54, useDingbats = FALSE) # cm to inch
-    ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom")
+    ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom", auto_adjust = FALSE)
     grDevices::dev.off()
     grDevices::png(plot_file_png, width = width, height = height, units = "cm", res = ppi)
-    ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom")
+    ComplexHeatmap::draw(plot, heatmap_legend_side = "bottom", auto_adjust = FALSE)
     grDevices::dev.off()
   }
 

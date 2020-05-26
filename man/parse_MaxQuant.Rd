@@ -5,10 +5,17 @@
 \title{Converting MaxQuant Output file proteinGroups.txt to CLARION format
 by creating a headline of metadata for each column}
 \usage{
-parse_MaxQuant(proteinGroups_in, summary_in, outfile, outfile_reduced,
-  config = system.file("extdata", "parser_MaxQuant_config.json", package
-  = "wilson"), delimiter = ";", format = NULL, version = NULL,
-  experiment_id = NULL)
+parse_MaxQuant(
+  proteinGroups_in,
+  summary_in,
+  outfile,
+  outfile_reduced,
+  config = system.file("extdata", "parser_MaxQuant_config.json", package = "wilson"),
+  delimiter = ";",
+  format = NULL,
+  version = NULL,
+  experiment_id = NULL
+)
 }
 \arguments{
 \item{proteinGroups_in}{path of proteinGroup.txt file}

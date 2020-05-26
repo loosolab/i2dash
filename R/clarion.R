@@ -1,38 +1,21 @@
-#' Clarion R6-class definition
+#' @title Clarion R6-class definition
 #'
+#' @name Clarion
+#'
+#' @description
 #' Use this to create a clarion object.
 #' This object is used by all top-level wilson modules.
 #'
-#' @section Methods:
-#' \describe{
-#'     \item{\code{get_id()}}{
-#'       Returns name of unique identifier column. Assumes first feature to be unique if not specified.
-#'     }
-#'     \item{\code{get_name()}}{
-#'       Returns name of name column. If not specified return unique Id.
-#'     }
-#'     \item{\code{get_delimiter()}}{
-#'       Return delimiter used within multi-value fields (no delimiter = NULL).
-#'     }
-#'     \item{\code{is_delimited(x)}}{
-#'       Logical whether the given column name is delimited.
-#'     }
-#'     \item{\code{get_factors()}}{
-#'       Returns a data.table columns: key and factor(s) if any. Named factors (e.g. factor1="name") will be cropped to their name.
-#'     }
-#'     \item{\code{validate(solve = TRUE)}}{
-#'       Check the object for inconsistencies. For solve = TRUE try to resolve some warnings.
-#'     }
-#'   }
+#' @section Constructor: Clarion$new(header = NULL, metadata, data, validate = TRUE)
 #'
-#' @param header A named list. Defaults to NULL.
-#' @param metadata Clarion metadata in form of a data.table.
-#' @param data Data.table according to metadata.
-#' @param validate Logical value to validate on initialization. Defaults to TRUE.
-#'
-#' @field header List of global information regarding the whole experiment.
-#' @field metadata Data.table with additional information for each column.
-#' @field data Data.table containing experiment result data.
+#' @section Constructor Arguments:
+#' \tabular{lll}{
+#'   \strong{Variable} \tab \strong{Return} \cr
+#'   \code{header} \tab A named list. Defaults to NULL. \cr
+#'   \code{metadata} \tab Clarion metadata in form of a data.table. \cr
+#'   \code{data} \tab Data.table according to metadata. \cr
+#'   \code{validate} \tab Logical value to validate on initialization. Defaults to TRUE. \cr
+#' }
 #'
 #' @examples
 #' \dontrun{
@@ -49,9 +32,16 @@
 #' @export
 Clarion <- R6::R6Class("Clarion",
                        public = list(
+                         #' @field header List of global information regarding the whole experiment.
                          header = NULL,
+                         #' @field metadata Data.table with additional information for each column.
                          metadata = NULL,
+                         #' @field data Data.table containing experiment result data.
                          data = NULL,
+                         #' @description
+                         #' Returns name of unique identifier column. Assumes first feature to be unique if not specified.
+                         #'
+                         #' @return Name of the id column.
                          get_id = function() {
                            # return unique_id
                            # if no type return first feature
@@ -61,6 +51,10 @@ Clarion <- R6::R6Class("Clarion",
                              return(self$metadata[level == "feature"][["key"]][1])
                            }
                          },
+                         #' @description
+                         #' Returns name of name column. If not specified return unique Id.
+                         #'
+                         #' @return Name of the name column.
                          get_name = function() {
                            # return name
                            # if not existing fall back to unqiue_id
@@ -69,9 +63,16 @@ Clarion <- R6::R6Class("Clarion",
                            }
                            return(self$get_id())
                          },
+                         #' @description
+                         #' Return delimiter used within multi-value fields (no delimiter = NULL).
                          get_delimiter = function() {
                            self$header$delimiter
                          },
+                         #' @description
+                         #' Logical whether the given column name is delimited.
+                         #' @param x Name of the column.
+                         #'
+                         #' @return boolean
                          is_delimited = function(x) {
                            if (is.element("type", names(self$metadata))) {
                              return(self$metadata[key == x, type] == "array")
@@ -79,6 +80,10 @@ Clarion <- R6::R6Class("Clarion",
                              return(FALSE)
                            }
                          },
+                         #' @description
+                         #' Get factors to all columns.
+                         #' @details  Named factors (e.g. factor1="name") will be cropped to their name.
+                         #' @return Returns a data.table columns: key and factor(s) if any.
                          get_factors = function() {
                            # returns data.table key(, factor columns)
                            # only name for named factors (e.g. factor1="name")
@@ -98,6 +103,56 @@ Clarion <- R6::R6Class("Clarion",
 
                            return(factor_table)
                          },
+                         #' @description
+                         #' Get level(s) to given column name(s).
+                         #'
+                         #' @param column One or more column name(s).
+                         #'
+                         #' @return Provide a vector of levels to the given columnnames in column. Returns NA for missing columns and character(0) if column = NULL.
+                         get_level = function(column) {
+                           # return levels to given columns
+                           self$metadata[match(column, key)][["level"]]
+                         },
+                         #' @description
+                         #' Get label(s) to given column name(s).
+                         #'
+                         #' @param column One or more column name(s).
+                         #' @param sub_label Whether the sub_label should be included.
+                         #' @param sep Separator between label and sub_label.
+                         #'
+                         #' @details If a column does not have a label the key is returned.
+                         #' @return Provides a vector of labels (+ sub_label) to the given columnnames in column. Returns NA for missing columns and all labels if column = NULL.
+                         get_label = function(column = NULL, sub_label = TRUE, sep = " ") {
+                           # return label to given columns
+
+                           # identify row index for given column(s)
+                           if (is.null(column)) {
+                             index <- seq_len(nrow(self$metadata))
+                           } else {
+                             index <- match(column, self$metadata[["key"]])
+                           }
+
+                           if (is.element("label", names(self$metadata))) {
+                             label <- self$metadata[["label"]]
+                             # replace empty label with key
+                             replace_ind <- which(label == "")
+                             label[replace_ind] <- self$metadata[replace_ind][["key"]]
+                           } else {
+                             label <- self$metadata[["key"]]
+                           }
+
+                           # add sub_label
+                           if (sub_label && is.element("sub_label", names(self$metadata))) {
+                             # TODO don't add sep when sub_label empty
+                             label <- paste(label, self$metadata[["sub_label"]], sep = sep)
+                           }
+
+                           return(label[index])
+                         },
+                         #' @description
+                         #' Check the object for inconsistencies.
+                         #'
+                         #' @param solve For solve = TRUE try to resolve some warnings.
                          validate = function(solve = TRUE) {
                            # validate header
                            private$check_delimiter()
@@ -107,11 +162,21 @@ Clarion <- R6::R6Class("Clarion",
                            private$check_level()
                            private$check_type()
                            private$check_label()
+                           private$check_order(solve)
                            # validate data
                            private$check_data_header(solve)
                            private$check_data_min()
                            private$check_data_column_types()
                          },
+                         #' @description
+                         #' Initialize a new clarion object.
+                         #'
+                         #' @param header A named list. Defaults to NULL.
+                         #' @param metadata Clarion metadata in form of a data.table.
+                         #' @param data Data.table according to metadata.
+                         #' @param validate Logical value to validate on initialization. Defaults to TRUE.
+                         #'
+                         #' @return Clarion object.
                          initialize = function(header = NULL, metadata, data, validate = TRUE) {
                            self$header <- header
                            self$metadata <- metadata
@@ -126,6 +191,26 @@ Clarion <- R6::R6Class("Clarion",
                              cols <- c(self$get_id(), self$get_name())
                            }
                            self$data[, (cols) := lapply(.SD, as.character), .SDcols = cols]
+
+                           # set index
+                           data.table::setindexv(self$metadata, "key")
+                           data.table::setindexv(self$data, self$get_id())
+                         },
+                         #' @description
+                         #' Save the object as a clarion file.
+                         #'
+                         #' @param file Filename for the file to be written.
+                         write = function(file) {
+                           # prepare
+                           if (!is.null(self$header)) {
+                             flat_header <- private$flatten_header()
+                           }
+                           flat_metadata <- private$flatten_metadata()
+
+                           # write
+                           if (!is.null(self$header)) data.table::fwrite(flat_header, file = file, col.names = FALSE, sep = "\t", quote = FALSE)
+                           data.table::fwrite(flat_metadata, file = file, col.names = TRUE, sep = "\t", append = ifelse(is.null(self$header), FALSE, TRUE), quote = FALSE)
+                           data.table::fwrite(self$data, file = file, col.names = TRUE, sep = "\t", append = TRUE, quote = FALSE)
                          }
                        ),
                        private = list(
@@ -138,6 +223,22 @@ Clarion <- R6::R6Class("Clarion",
                              value
                            }
                          },
+                         # prepare header to be saved as clarion flat-file
+                         flatten_header = function() {
+                           # reformat header list to !name=value
+                           flat_header <- paste0("!", names(self$header), "=", self$header)
+                           data.table::data.table(flat_header)
+                         },
+                         # prepare metadata to be saved as clarion flat-file
+                         flatten_metadata = function() {
+                           flat_metadata <- data.table::copy(self$metadata)
+                           # add leading '#'
+                           names(flat_metadata)[1] <- paste0("#", names(flat_metadata)[1])
+                           flat_metadata[, names(flat_metadata)[1] := paste0("#", flat_metadata[[1]])]
+
+                           return(flat_metadata)
+                         },
+                         # checks ####
                          ## header checks
                          check_delimiter = function() {
                            if (is.element("delimiter", names(self$header))) {
@@ -218,6 +319,16 @@ Clarion <- R6::R6Class("Clarion",
                              if (length(contrast_labels) > 0) {
                                warning("Metadata: Missing '|' delimiter in contrast label(s): ", paste0(contrast_labels, collapse = ", "))
                              }
+                           }
+                         },
+                         check_order = function(solve = TRUE) {
+                           # case: key order differs to data column order
+                           if (!isTRUE(all.equal(self$metadata[["key"]], names(self$data)))) {
+                             # re-order metadata to match data column order
+                             if (solve) {
+                               self$metadata <- self$metadata[match(names(self$data), self$metadata[["key"]])]
+                             }
+                             warning("Metadata: Order between metadata keys and data columns differ. This is discouraged as it can eventually lead to problems.", if (solve) "\nAdjusting metadata order.")
                            }
                          },
                          ## data checks

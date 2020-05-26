@@ -1,7 +1,7 @@
 Package: wilson
 Type: Package
 Title: Web-Based Interactive Omics Visualization
-Version: 2.3.1
+Version: 2.4.0
 Authors@R: c(
     person("Hendrik", "Schultheis", email = "hendrik.schultheis@mpi-bn.mpg.de", role = c("aut", "cre")),
     person("Jens", "Preussner", email = "jens.preussner@mpi-bn.mpg.de", role = "aut"),
@@ -46,13 +46,13 @@ Imports: shiny,
     openssl,
     methods,
     R6,
-    magrittr,
-    zip
-RoxygenNote: 6.1.1
+    zip,
+    shinyWidgets
+RoxygenNote: 7.1.0
 biocViews: 
 Suggests: knitr,
     rmarkdown,
     testthat,
-    vdiffr,
-    stringi
+    stringi,
+    utils
 VignetteBuilder: knitr

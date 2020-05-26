@@ -14,6 +14,7 @@ orTextualUI <- function(id){
   shiny::tagList(
     shiny::tagList(shinyjs::useShinyjs(), shiny::uiOutput(ns("label"))),
     shiny::uiOutput(ns("select")),
+    shiny::uiOutput(ns("text_parse")),
     shiny::uiOutput(ns("info"))
   )
 }
@@ -32,11 +33,12 @@ orTextualUI <- function(id){
 #' @param multiple Whether or not selection of multiple items is allowed.
 #' @param contains Logical variable. If TRUE shows module as a textsearch input.
 #' @param reset A reactive which will trigger a module reset on change.
+#' @param parse_mode Boolean to enable text to selection parsing. Ignored if multiple = FALSE or contains = TRUE.
 #'
 #' @return Returns a reactive containing a named list with the label, the selected choices as a character vector (text) and a boolean vector of length \code{length(choices)} (bool), indicating whether a item has been chosen. If no item has been chosen, the return is \code{TRUE} for items.
 #'
 #' @export
-orTextual <- function(input, output, session, choices, selected = NULL, label = "Column", delimiter = NULL, multiple = TRUE, contains = FALSE, reset = NULL){
+orTextual <- function(input, output, session, choices, selected = NULL, label = "Column", delimiter = NULL, multiple = TRUE, contains = FALSE, reset = NULL, parse_mode = TRUE){
   raw_choices <- choices
 
   # delimit choices
@@ -59,6 +61,37 @@ orTextual <- function(input, output, session, choices, selected = NULL, label = 
 
     return(ui)
   })
+
+  if (parse_mode && multiple && !contains) {
+    output$text_parse <- shiny::renderUI({
+      shinyWidgets::actionBttn(inputId = session$ns("parse"), label = "Parse Text", size = "xs")
+    })
+
+    shiny::observeEvent(input$parse, {
+      shiny::showModal(
+        shiny::modalDialog(
+          title = label,
+          #footer = shiny::modalButton("close"),
+          easyClose = TRUE,
+          shiny::HTML("Add selections through given text. Each line will be considered as a separate selection. Current selections will be discarded!"),
+          shiny::textAreaInput(inputId = session$ns("text_selections"), placeholder = "Single selection per line.", label = NULL),
+          shiny::actionButton(inputId = session$ns("add_selection"), label = "Add")
+        )
+      )
+    })
+
+    shiny::observeEvent(input$add_selection, {
+      # close popup window (modal)
+      shiny::removeModal()
+
+      # parse text to selection
+      selections <- unlist(strsplit(input$text_selections, split = "\n", fixed = TRUE))
+
+      # keep selections that are listed as possible choices
+      selections <- intersect(selections, unique(choices))
+      shiny::updateSelectizeInput(session, "column", choices = unique(choices), selected = selections, server = TRUE)
+    })
+  }
 
   output$info <- shiny::renderUI({
     shiny::tagList(

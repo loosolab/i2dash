@@ -4,10 +4,21 @@
 \alias{and}
 \title{AND module server logic}
 \usage{
-and(input, output, session, data, show.elements = NULL,
-  element.grouping = NULL, column.labels = NULL, delimiter = NULL,
-  multiple = TRUE, contains = FALSE, ranged = FALSE, step = 100,
-  reset = NULL)
+and(
+  input,
+  output,
+  session,
+  data,
+  show.elements = NULL,
+  element.grouping = NULL,
+  column.labels = NULL,
+  delimiter = NULL,
+  multiple = TRUE,
+  contains = FALSE,
+  ranged = FALSE,
+  step = 100,
+  reset = NULL
+)
 }
 \arguments{
 \item{input}{Shiny's input object.}

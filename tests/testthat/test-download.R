@@ -22,13 +22,12 @@ test_that("plotly is downloadable", {
   filename <- "plot"
 
   expect_false(file.exists(file))
-  # TODO change back to expect_silent as soon as orca can be used (no need for mapbox token)
   download(file = file, filename = filename, plot = plot, width = width, height = height)
   expect_true(file.exists(file))
 })
 
 test_that("complexHeatmap is downloadable", {
-  plot <- ComplexHeatmap::Heatmap(mtcars)
+  plot <- ComplexHeatmap::Heatmap(as.matrix(mtcars))
   width <- 20
   height <- 20
   file <- tempfile(fileext = ".zip")

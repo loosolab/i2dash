@@ -4,8 +4,16 @@
 \alias{transformation}
 \title{transformation module server logic}
 \usage{
-transformation(input, output, session, data, transpose = FALSE,
-  pseudocount = 1, replaceInf = TRUE, replaceNA = TRUE)
+transformation(
+  input,
+  output,
+  session,
+  data,
+  transpose = FALSE,
+  pseudocount = 1,
+  replaceInf = TRUE,
+  replaceNA = TRUE
+)
 }
 \arguments{
 \item{input}{Shiny's input object.}

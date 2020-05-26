@@ -4,9 +4,18 @@
 \alias{featureSelector}
 \title{featureSelector module server logic}
 \usage{
-featureSelector(input, output, session, clarion, multiple = TRUE,
-  contains = FALSE, ranged = TRUE, step = 100, truncate = 30,
-  selection.default = "all")
+featureSelector(
+  input,
+  output,
+  session,
+  clarion,
+  multiple = TRUE,
+  contains = FALSE,
+  ranged = TRUE,
+  step = 100,
+  truncate = 30,
+  selection.default = "all"
+)
 }
 \arguments{
 \item{input}{Shiny's input object.}

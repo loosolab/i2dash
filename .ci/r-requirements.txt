@@ -31,9 +31,9 @@ log4r
 openssl
 methods
 R6
-magrittr
 zip
 rmarkdown
 testthat
-vdiffr
 stringi
+shinyWidgets
+knitr
