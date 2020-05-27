@@ -13,7 +13,6 @@ test_that("Assembling dashboard is correct",{
   writeLines(new_rmd, temp)
 
   ref_hash <- digest::digest(file = temp, serialize = F, seed = 100)
-  print(ref_hash)
   expect_true(stringi::stri_detect_regex(ref_hash, "(1055ed29147446902eb224e7c17c52af|442bef06307bb6dea490435230f7e22e|11a5a0938212656d1fbb02496fb7cfa0|48152155fd455e7642da35e03f404dd5)"))
 
   expect_warning(assemble(dashboard, file = temp, pages = "page1"), "i2dashboard dashboard does not contain a page named 'page1'")
