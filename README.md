@@ -40,7 +40,7 @@ At first, install [Docker](https://docs.docker.com/engine/install/). Then pull t
 
 `docker pull docker.gitlab.gwdg.de/loosolab/container/i2dash.deployment:r3.6.3_bioc3.10`
 
-The next step is to run a container and simultaneously load the dashboard files (the `.Rmd` file and all files of the `datadir` directory) into the container. To mount cutsom data into the container, make use of Docker's `-v` parameter to mount a host directory into the container. Inside the container, **i2dash** looks for external datasets in `/srv/shiny-server/`. Use the following code, where you exchange `/path/to/dashboard/files` with the respective path to the directory containing the `.Rmd` file and all files of the `datadir` directory.
+The next step is to run a container and simultaneously load the dashboard files (the `.Rmd` file and all files of the `datadir(dashboard)` directory) into the container. To mount custom data into the container, make use of Docker's `-v` parameter to mount a host directory into the container. Inside the container, **i2dash** looks for external datasets in `/srv/shiny-server/`. Use the following code, where you exchange `/path/to/dashboard/files` with the respective path to the directory containing the `.Rmd` file and all files of the `datadir(dashboard)` directory.
 
 ```docker run -d -p 3838:3838 -v '/path/to/dashboard/files':'/srv/shiny-server' docker.gitlab.gwdg.de/loosolab/container/i2dash.deployment:r3.6.3_bioc3.10```
 

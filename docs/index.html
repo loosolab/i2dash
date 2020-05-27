@@ -117,7 +117,7 @@
 <a href="#run-i2dash-using-docker" class="anchor"></a>Run i2dash using Docker</h2>
 <p>At first, install <a href="https://docs.docker.com/engine/install/">Docker</a>. Then pull the image of <strong>i2dash</strong>:</p>
 <p><code>docker pull docker.gitlab.gwdg.de/loosolab/container/i2dash.deployment:r3.6.3_bioc3.10</code></p>
-<p>The next step is to run a container and simultaneously load the dashboard files (the <code>.Rmd</code> file and all files of the <code>datadir</code> directory) into the container. To mount cutsom data into the container, make use of Docker’s <code>-v</code> parameter to mount a host directory into the container. Inside the container, <strong>i2dash</strong> looks for external datasets in <code>/srv/shiny-server/</code>. Use the following code, where you exchange <code>/path/to/dashboard/files</code> with the respective path to the directory containing the <code>.Rmd</code> file and all files of the <code>datadir</code> directory.</p>
+<p>The next step is to run a container and simultaneously load the dashboard files (the <code>.Rmd</code> file and all files of the <code><a href="reference/i2dashboard-methods.html">datadir(dashboard)</a></code> directory) into the container. To mount custom data into the container, make use of Docker’s <code>-v</code> parameter to mount a host directory into the container. Inside the container, <strong>i2dash</strong> looks for external datasets in <code>/srv/shiny-server/</code>. Use the following code, where you exchange <code>/path/to/dashboard/files</code> with the respective path to the directory containing the <code>.Rmd</code> file and all files of the <code><a href="reference/i2dashboard-methods.html">datadir(dashboard)</a></code> directory.</p>
 <p><code>docker run -d -p 3838:3838 -v '/path/to/dashboard/files':'/srv/shiny-server' docker.gitlab.gwdg.de/loosolab/container/i2dash.deployment:r3.6.3_bioc3.10</code></p>
 <p>Now, view the dashboard with your browser at <code>3838:3838</code>.</p>
 </div>
@@ -126,8 +126,7 @@
 <a href="#faq" class="anchor"></a>FAQ</h2>
 <ul>
 <li>
-<strong>The Rmd file of the dashboard contains pages and components but after rendering the dashboard remains empty:</strong> <em>Make sure you have a current version of pandoc installed and view the dashboard only with a modern browser.</em>
-</li>
+<strong>The Rmd file of the dashboard contains pages and components but after rendering the dashboard remains empty:</strong> Make sure you have a current version of pandoc installed and view the dashboard only with a modern browser.</li>
 </ul>
 </div>
 </div>
