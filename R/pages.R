@@ -61,5 +61,5 @@ setMethod("remove_page", "i2dashboard", function(dashboard, page) {
 #' @return A sanitized string.
 .create_page_name <- function(x) {
   . = NULL # workaround for R CMD check note: no visible binding for global variable '.'
-  x %>% tolower %>% gsub(x = ., pattern = " ", replacement = "_") %>% make.names %>% return
+  x %>% tolower %>% gsub(x = ., pattern = " ", replacement = "_") %>% make.names %>% return()
 }
