@@ -1,3 +1,11 @@
+## 6th resubmission 
+
+This is the sixth resubmission. In this version, we have:
+
+* Changed the function '.create_page_name()' so it does not give the NOTE for return without ().
+* Changed the email adress of the maintainer Arsenij Ustjanzewdue to change of employment.
+* Changed URLs in vignette from http to https
+
 ## 5th resubmission 
 
 This is the fifth resubmission. In this version, we have:

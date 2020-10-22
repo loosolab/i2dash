@@ -45,7 +45,7 @@ library(magrittr)
 
 # Introduction and scope
 
-Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. [R Markdown](https://rmarkdown.rstudio.com) enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from [R Shiny](http://shiny.rstudio.com/).
+Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. [R Markdown](https://rmarkdown.rstudio.com) enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from [R Shiny](https://shiny.rstudio.com/).
 R Studio's [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio's Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file.
 The R package i2dash provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. Dashboard content is organised in so-called **components** and can be added iteratively to the dashboard, *i.e.* as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard **pages** to organize scientific findings thematically. Ultimately, i2dash enables xxx and therefore integrates well into existing data analysis pipelines.
 
@@ -146,7 +146,7 @@ dashboard %<>%
 
 ## Adding content
 
-Content can be added to pages using **components**. A component can be a R object itself (*e.g.* a widget from [htmwlwidgets](http://gallery.htmlwidgets.org/)), a file path (*e.g.* to a markdown or image file) or a function that can be called to generate content. We'll use the `add_component` function to explore several options and fill `page1` iteratively with three R objects:
+Content can be added to pages using **components**. A component can be a R object itself (*e.g.* a widget from [htmwlwidgets](https://gallery.htmlwidgets.org/)), a file path (*e.g.* to a markdown or image file) or a function that can be called to generate content. We'll use the `add_component` function to explore several options and fill `page1` iteratively with three R objects:
 
 ```{r, eval=TRUE}
 library(leaflet)
@@ -296,7 +296,7 @@ Lets assume we have an experimental factor called year:
 year <- factor(c(2014, 2014, 2015, 2017, 2019, 2019), levels = c(2014:2021))
 ```
 
-To assign each level a color from the [sequential greens](http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=9) palette from the `r BiocStyle::CRANpkg("RColorBrewer")` package, we create a character vector with the colors and assign the levels as names.
+To assign each level a color from the [sequential greens](https://colorbrewer2.org/) palette from the `r BiocStyle::CRANpkg("RColorBrewer")` package, we create a character vector with the colors and assign the levels as names.
 
 ```{r, eval = FALSE}
 colors <- RColorBrewer::brewer.pal(8, "BuGn")
