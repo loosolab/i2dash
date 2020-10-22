@@ -48,14 +48,26 @@ library(magrittr)
 
 ## Directory structure
 
+```{r fig-1, fig.cap = "Figure 1: Directory structure for an extension R package.", eval = TRUE, echo = FALSE}
+knitr::include_graphics("/vignettes/images/file_sructure.png")
+```
 
-## Understanding of the system
+
+## Concept of extendibility
+
+```{r fig-2, fig.cap = "Figure 2: Concept of extending i2dash.", eval = TRUE, echo = FALSE}
+knitr::include_graphics("/vignettes/images/concept1.png", error = FALSE)
+```
+
+```{r fig-3, fig.cap = "Figure 2: Our example project in this concept.", eval = TRUE, echo = FALSE}
+knitr::include_graphics("/vignettes/images/concept2.png", error = FALSE)
+```
 
 # Main function
 
 # Template of the component
 
-## two visualization modes
+## Two visualization modes
 
 # Testing the package extension
 
