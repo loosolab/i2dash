@@ -6,7 +6,7 @@ author:
   email: jens.preussner@mpi-bn.mpg.de
 - name: Arsenij Ustjanzew
   affiliation: 
-  email: arsenij.ustjanzew@mpi-bn.mpg.de
+  email: arsenij.ustjanzew@gmail.com
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('i2dash')`"
 output: 
