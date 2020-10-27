@@ -45,23 +45,31 @@ library(magrittr)
 
 # Introduction and scope
 
-i2dash allows to automate the dashboard generation. The i2dashboard object, which acts as a storage container, is the basic framework for this task. Currently i2dash supports as input text, images, R objects such as HTML widgets and content generating functions. With our own content generating functions we can customize components more precisely. One level above is the possibility to design such functions in a way that they can be used repeatedly and the input data can be passed as parameters. This way we can make components with very specific visualizations reusable. Another advantage of using content generating functions is that we can use Shiny reactivity for the interactive mode of the dashboard and thus increase usability and interactivity. This principle of extensibility can be applied not only to components but also to entire predefined pages. For a better organization of the scripts needed for such an extension, the structure of an R package is suitable. This will also allow you to share your extension with others more easily.
+i2dash allows to programmatically generate interactive and flexible web-based dashboards. At its heart, the `i2dashboard` class acts as the basic framework for managing metadata, input and pages. 
+Currently i2dash supports plain text, images, R objects, such as HTML widgets, and functions as input. Such functions can be used to generate fully customized dashboard content, for example very specific and customizable visualizations. 
+Besides flexibility, advantages of using functions are their reusability, the possibility to implement interactivity and the possibility to extend to entire pages. 
 
-In this tutorial we will show you how to create your own R Package which extends the functionality of i2dash. We will develop a reusable component, that contains an interactive 3D scatter plot. In the 'interactive' mode of the dashboard the user can select the data plotted on the axes.
+In this vignette we will show how to extend the functionality of i2dash. We will develop a reusable component, that contains an interactive 3D scatter plot. In the 'interactive' mode of the dashboard the user can additionally select the data plotted on the axes. We chose to implement the extension in its own R package, which allows good code organization and easy sharing with others.
 
 ```{r fig-1, fig.cap = "Figure 1: Final customized and reusable component with Shiny input widgets.", eval = TRUE, echo = FALSE}
 knitr::include_graphics("./images/scatter3D_result_shiny.png")
 ```
 
+## Availability
+
+The directories, files and code created during this vignette is also available for download from [our S3 storage](s3.mpi-bn.mpg.de/data-i2dash-2020/MyExtension.zip).
+
 ## Directory structure
 
-For our new R package we should create the usual directory structure of a source package (if you want to learn more about package structure, see [here](https://r-pkgs.org/package-structure-state.html)). In figure 2 you can see that the folder 'MyExtension' contains subfolder 'R', 'inst', and 'man'. The 'R' folder contains the R scripts and functions. The Rmarkdown template of our component is stored under 'MyExtension/inst/templates/'. Further the folder 'MyExtension' contains important metadata files, e.g. 'DESCRIPTION'.
+For the new extension, we set up a directory structure of a source package (if you want to learn more about package structure, see [here](https://r-pkgs.org/package-structure-state.html)). 
+
+In figure 2 you can see that the folder 'MyExtension' contains subfolders 'R', 'inst', and 'man'. The 'R' folder contains the R scripts and functions. The Rmarkdown template of our component is stored under 'MyExtension/inst/templates/'. Further the folder 'MyExtension' contains important metadata files, e.g. 'DESCRIPTION'.
 
 ```{r fig-2, fig.cap = "Figure 2: Directory structure for an extension R package.", eval = TRUE, echo = FALSE}
 knitr::include_graphics("./images/file_structure.png")
 ```
 
-The easiest way to create the desired structure is to click in RStudio on **File** -> **New Project**. In the modal dialog we select **New Directory**, then **R Package**.
+The easiest way to create the desired structure in RStudio is to click **File** -> **New Project**. In the dialog we select **New Directory**, then **R Package**.
 
 ```{r fig-3, fig.cap = "Figure 3: ....", eval = TRUE, echo = FALSE}
 knitr::include_graphics("./images/RStudio_new_project.png")
@@ -71,7 +79,7 @@ knitr::include_graphics("./images/RStudio_new_project.png")
 knitr::include_graphics("./images/RStudio_new_project2.png")
 ```
 
-Finally, we set a package name, select the directory, where the new package structure will be created and click on **Create Project**.
+To conclude, we set a package name, select the directory, where the new package structure will be created and click on **Create Project**.
 
 ```{r fig-5, fig.cap = "Figure 5: ....", eval = TRUE, echo = FALSE}
 knitr::include_graphics("./images/RStudio_new_project3.png")
@@ -107,7 +115,7 @@ NULL
 NULL
 ```
 
-## Concept of extendibility
+## Concept of extensibility
 
 The ability of i2dash to generate R Markdown code can be extended with additional packages. Figure 6 demonstrates the concept of extensibility. In order to develop a component or a page with a pre-defined layout and specific composition of components as an extension, the developer needs to provide a method and an R Markdown template. The method takes the i2dashboard object and the data relevant for the component. It validates and stores the data in a suitable data structure in a file (e.g. RDS file). Furthermore the method generates an R Markdown string based on a template for the component or page and extends the i2dashboard object.
 
