@@ -6,7 +6,7 @@ author:
   email: jens.preussner@mpi-bn.mpg.de
 - name: Arsenij Ustjanzew
   affiliation: 
-  email: arsenij.ustjanzew@mpi-bn.mpg.de
+  email: arsenij.ustjanzew@gmail.com
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('i2dash')`"
 output: 
@@ -54,6 +54,12 @@ The R package i2dash provides classes and functionality to programatically creat
 The package can be installed with the `r BiocStyle::CRANpkg("remotes")` library:
 
 ```{r, eval=FALSE}
+install.packages("i2dash", dependencies = TRUE)
+```
+
+or the development version:
+
+```{r, eval=FALSE}
 remotes::install_git(url = "https://gitlab.gwdg.de/loosolab/software/i2dash.git", repos = BiocManager::repositories())
 ```
 
@@ -61,6 +67,11 @@ Once installed, the package can be loaded and attached to your current workspace
 
 ```{r, eval=TRUE}
 library(i2dash)
+```
+
+For this tutorial we need to install the following packages:
+```{r, eval=FALSE}
+install.packages(c("leaflet", "plotly", "ggplot2", "RColorBrewer"))
 ```
 
 # Working with i2dash
@@ -188,6 +199,14 @@ knitr::include_graphics("./images/example_page1.png")
 Text and images can be added to a **page** by calling the `add_component` function with a file path. The function will include file paths ending with `.[png|jpg|jpeg|gif]` as image content, and other files as text content:
 
 ```{r, eval = TRUE}
+# download the image & text or use the files in the package
+dir.create("images")
+dir.create("texts")
+img <- "http://www.desktopimages.org/pictures/2014/1010/1/orig_76044.jpg"
+download.file(img,'images/lemur.jpg', mode = 'wb')
+text <- readLines("https://en.wikipedia.org/wiki/Lemuriformes")
+cat(text[262],file="texts/lemurs.md",sep="\n")
+
 dashboard %<>%
   add_component(file.path("images/lemur.jpg"),
                 page = "page3",
@@ -320,7 +339,7 @@ dashboard %>%
   assemble(file = "MyDashboard.Rmd", pages = c("page1", "page3", "page4", "page5"))
 ```
 
-The resulting R Markdown file can be run with `r BiocStyle::CRANpkg("shiny")` or rendered with `r BiocStyle::CRANpkg("rmarkdown")`.
+The resulting R Markdown file can be run with `r BiocStyle::CRANpkg("shiny")` or rendered with `r BiocStyle::CRANpkg("rmarkdown")`. Alternatively, open the R Markdown file in RStudio and click on the "Knit"/ "Run Dockument" button.
 
 # Session Info {.unnumbered}
 
