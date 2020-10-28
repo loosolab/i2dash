@@ -26,13 +26,15 @@ install.packages("i2dash")
 
 ## Where to start
 
--  [**Basics**]() This tutorial gives on overview over the core functions of **i2dash** and explains how you can build your first dashboard.
+-  [**Basics**](https://loosolab.github.io/i2dash/articles/i2dash-intro.html) This tutorial gives on overview over the core functions of **i2dash** and explains how you can build your first dashboard.
+
+-  [**Custom extension**](https://loosolab.github.io/i2dash/articles/i2dash-extension.html) This tutorial teaches how to create custumized and reusable components for **i2dash**
 
 ## Extension
 
 It is possible to extend the core functionality of **i2dash** with templates for components and pre-defined pages. This enables to provide an enhanced user interactivity e.g. dynamic change of plot settings. Further, extensions allow an easier integration of complex calculations and data manipulation, hidden behind functions.
 
-- [**i2dash.scrnaseq**](https://gitlab.gwdg.de/loosolab/software/i2dash.scrnaseq) enables an enhanced user interactivity and contains simple but effective tools for the creation of an i2dashboard with focus on single-cell RNA-sequencing data visualization and exploration.
+- [**i2dash.scrnaseq**](https://loosolab/gitlab.gwdg.io/i2dash.scrnaseq/) enables an enhanced user interactivity and contains simple but effective tools for the creation of an i2dashboard with focus on single-cell RNA-sequencing data visualization and exploration.
 
 ## Run i2dash using Docker
 
