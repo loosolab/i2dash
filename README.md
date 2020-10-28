@@ -2,7 +2,7 @@
 
 ## Abstract <img src="vignettes/images/i2dash_logo.png" align="right" width="150px" />
 
-Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. The R package **i2dash** provides functionality to create customized, web-based dashboards for data presentation, exploration and sharing. **i2dash** integrates easily into existing data analysis pipelines and can organize scientific findings thematically across different pages and layouts.
+Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. The R package **i2dash** provides functionality to create customized, web-based dashboards for data presentation, exploration and sharing. **i2dash** integrates easily into existing data analysis pipelines and can organize scientific findings thematically across different pages and layouts. Ultimately, i2dash supports a wide range of R objects (e.g. 'htmlwidgets') and custom content generating functions as input and therefore integrates well into existing data analysis pipelines.
 
 ### Main features
 
