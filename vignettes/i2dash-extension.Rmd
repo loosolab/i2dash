@@ -57,7 +57,7 @@ knitr::include_graphics("./images/scatter3D_result_shiny.png")
 
 ## Availability
 
-The directories, files and code created during this vignette is also available for download from [our S3 storage](s3.mpi-bn.mpg.de/data-i2dash-2020/MyExtension.zip).
+The directories, files and code created during this vignette is also available for download from [our S3 storage](https://s3.mpi-bn.mpg.de/data-i2dash-2020/MyExtension.zip).
 
 ## Directory structure
 
