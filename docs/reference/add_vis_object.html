@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>General method to add an object as component to a page of an i2dashboard. — add_vis_object • i2dash</title>
+<title>General method to add an object as component to a page of an i2dashboard object. — add_vis_object • i2dash</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="General method to add an object as component to a page of an i2dashboard. — add_vis_object" />
-<meta property="og:description" content="General method to add an object as component to a page of an i2dashboard." />
+<meta property="og:title" content="General method to add an object as component to a page of an i2dashboard object. — add_vis_object" />
+<meta property="og:description" content="General method to add an object as component to a page of an i2dashboard object." />
 
 
 
@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">i2dash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -108,7 +108,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/loosolab/i2dash/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -122,16 +127,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>General method to add an object as component to a page of an i2dashboard.</h1>
-    
+    <h1>General method to add an object as component to a page of an <a href='i2dashboard-class.html'>i2dashboard</a> object.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/loosolab/i2dash/blob/master/R/vis_objects.R'><code>R/vis_objects.R</code></a></small>
     <div class="hidden name"><code>add_vis_object.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>General method to add an object as component to a page of an i2dashboard.</p>
+    <p>General method to add an object as component to a page of an <a href='i2dashboard-class.html'>i2dashboard</a> object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_vis_object</span>(<span class='no'>dashboard</span>, <span class='no'>object</span>, <span class='no'>package</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>add_vis_object</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>object</span>, <span class='va'>package</span>, page <span class='op'>=</span> <span class='st'>"default"</span>, title <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,7 +147,7 @@
     </tr>
     <tr>
       <th>object</th>
-      <td><p>The R visualization object to be addedd.</p></td>
+      <td><p>The R visualization object to be added.</p></td>
     </tr>
     <tr>
       <th>package</th>
@@ -158,6 +163,9 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Returns the modified <a href='i2dashboard-class.html'>i2dashboard</a> object, if the component was added, otherwise an unmodified <a href='i2dashboard-class.html'>i2dashboard</a> object.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -174,7 +182,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

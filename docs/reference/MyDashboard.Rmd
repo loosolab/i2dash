@@ -1,0 +1,50 @@
+[90m---
+[39m[32mauthor[39m[90m:[39m []
+[32mtitle[39m[90m:[39m i2dashboard
+[32moutput[39m[90m:[39m
+  [32mflexdashboard::flex_dashboard[39m[90m:[39m
+    [32mtheme[39m[90m:[39m yeti
+    [32msocial[39m[90m:[39m null
+    [32msource[39m[90m:[39m null
+    [32mnavbar[39m[90m:[39m []
+[90m---
+[39m
+
+```{r i2dash-global-setup}
+# Deal with operation within a switchr environment
+if (any(grepl(pattern = ".switchr", x = .libPaths()))) {
+  switchr::switchrNoUnload(TRUE)
+}
+
+# Make it possible to reuse chunk labels
+options(knitr.duplicate.label = "allow")
+
+# Set datadir variable, components should fetch their env from here!
+datadir <- "C:\\Users\\Acer\\AppData\\Local\\Temp\\Rtmpwv0Lqw"
+
+# Set up color mappings
+colormaps <- list()
+```
+
+Title 1 
+====================================================
+
+<!-- Page created on 2020-10-28 15:37:08 -->
+
+
+Column {.tabset}
+----------------------------------------------------
+
+
+
+Title 2 
+====================================================
+
+<!-- Page created on 2020-10-28 15:37:08 -->
+
+
+Column {.tabset}
+----------------------------------------------------
+
+
+
