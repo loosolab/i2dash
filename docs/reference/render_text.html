@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">i2dash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -104,11 +104,19 @@
     <li>
       <a href="../articles/i2dash-intro.html">Creating iterative and interactive dashboards with i2dash</a>
     </li>
+    <li>
+      <a href="../articles/i2dash-extension.html">Creating an extension package for i2dash</a>
+    </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/loosolab/i2dash/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -123,7 +131,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Method to embed content from a text file in a component/sidebar</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/loosolab/i2dash/blob/master/R/components.R'><code>R/components.R</code></a></small>
     <div class="hidden name"><code>render_text.Rd</code></div>
     </div>
 
@@ -131,7 +139,7 @@
     <p>Method to embed content from a text file in a component/sidebar</p>
     </div>
 
-    <pre class="usage"><span class='fu'>render_text</span>(<span class='no'>file</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>raw</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>render_text</span><span class='op'>(</span><span class='va'>file</span>, title <span class='op'>=</span> <span class='cn'>NULL</span>, raw <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -169,7 +177,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

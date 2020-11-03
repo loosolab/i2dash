@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">i2dash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -104,11 +104,19 @@
     <li>
       <a href="../articles/i2dash-intro.html">Creating iterative and interactive dashboards with i2dash</a>
     </li>
+    <li>
+      <a href="../articles/i2dash-extension.html">Creating an extension package for i2dash</a>
+    </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/loosolab/i2dash/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -123,7 +131,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>The i2dashboard S4 class.</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/loosolab/i2dash/blob/master/R/i2dashboard.R'><code>R/i2dashboard.R</code></a></small>
     <div class="hidden name"><code>i2dashboard-class.Rd</code></div>
     </div>
 
@@ -132,12 +140,12 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>initialize</span>(<span class='no'>.Object</span>, <span class='no'>...</span>)
+<span class='fu'>initialize</span><span class='op'>(</span><span class='va'>.Object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>show</span>(<span class='no'>object</span>)
+<span class='fu'>show</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
 
-<span class='fu'>i2dashboard</span>(<span class='no'>...</span>)</pre>
+<span class='fu'>i2dashboard</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,25 +166,24 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An i2dashboard object.</p>
+    <p>'<code>i2dashboard()</code>' returns an i2dashboard object with a default title, theme, and an empty 'default' page.</p>
+<p>'<code>show()</code>' returns text, describing the structure of the i2dashboard object.</p>
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 
     
 
-<dl'>
-<dt><code>title</code></dt><dd><p>The dashboards title</p></dd>
+<dl>
+<dt><code>title</code></dt><dd><p>The dashboards title (default 'i2dashboard').</p></dd>
 
-<dt><code>author</code></dt><dd><p>The author of the dashboard</p></dd>
+<dt><code>author</code></dt><dd><p>The author of the dashboard.</p></dd>
 
-<dt><code>interactive</code></dt><dd><p>If a shiny-based report should be created</p></dd>
+<dt><code>interactive</code></dt><dd><p>If a 'shiny'-based report should be created (default 'FALSE').</p></dd>
 
-<dt><code>theme</code></dt><dd><p>The theme of the dashboard (see the <a href='https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance'>documentation of flexdashboard</a> for available themes)</p></dd>
+<dt><code>theme</code></dt><dd><p>The theme of the dashboard (see the <a href='https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance'>documentation of 'flexdashboard'</a> for available themes) (default 'yeti').</p></dd>
 
-<dt><code>datadir</code></dt><dd><p>Path to the directory, where report data is stored.</p></dd>
+<dt><code>datadir</code></dt><dd><p>Path to the directory, where report data is stored (default 'tempdir()').</p></dd>
 
-<dt><code>file</code></dt><dd><p>The output filename (recommend that the suffix should be '.Rmd').</p></dd>
-
-<dt><code>pages</code></dt><dd><p>A list of dashboard pages</p></dd>
+<dt><code>pages</code></dt><dd><p>A list of dashboard pages.</p></dd>
 
 <dt><code>sidebar</code></dt><dd><p>Content of the global sidebar</p></dd>
 
@@ -184,12 +191,28 @@
 
 <dt><code>source</code></dt><dd><p>Either a logical value describing whether the source code should be embeded through an item in the navigation bar or a link to a URL where the source code can be found online.</p></dd>
 
-<dt><code>share</code></dt><dd><p>A vector with any number of the following services: “facebook”, “twitter”, “google-plus”, “linkedin”, and “pinterest”. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.</p></dd>
+<dt><code>share</code></dt><dd><p>A vector with any number of the following services: 'facebook', 'twitter', 'google-plus', 'linkedin', and 'pinterest'. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.</p></dd>
 
-<dt><code>navbar</code></dt><dd><p>A list of links in the navigation bar (see the <a href='https://rmarkdown.rstudio.com/flexdashboard/using.html#navigation_bar'>documentation of flexdashboard</a>).</p></dd>
+<dt><code>navbar</code></dt><dd><p>A list of links in the navigation bar (see the <a href='https://rmarkdown.rstudio.com/flexdashboard/using.html#navigation_bar'>documentation of 'flexdashboard'</a>).</p></dd>
 
 </dl>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='co'># \donttest{</span>
+<span class='va'>dashboard</span> <span class='op'>&lt;-</span> <span class='fu'>i2dashboard</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>dashboard</span> <span class='op'>&lt;-</span> <span class='fu'>i2dashboard</span><span class='op'>(</span>
+    title <span class='op'>=</span> <span class='st'>"Dashboard title"</span>,
+    author <span class='op'>=</span> <span class='st'>"John Doe"</span>,
+    interactive <span class='op'>=</span> <span class='cn'>TRUE</span>,
+    theme <span class='op'>=</span> <span class='st'>"cosmo"</span>,
+    datadir <span class='op'>=</span> <span class='st'>"path/to/workdir"</span>,
+    source <span class='op'>=</span> <span class='st'>"embed"</span>
+<span class='op'>)</span>
+<span class='co'># inspect dashboard:</span>
+<span class='fu'>show</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
+<span class='va'>dashboard</span>
+<span class='co'># }</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -205,7 +228,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

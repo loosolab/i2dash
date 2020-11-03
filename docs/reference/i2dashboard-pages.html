@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Methods to add and remove pages of an i2dashboard. — add_page • i2dash</title>
+<title>Methods to add and remove pages of an i2dashboard object. — add_page • i2dash</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Methods to add and remove pages of an i2dashboard. — add_page" />
-<meta property="og:description" content="add_page creates a page and adds it to the i2dashboard object.
-remove_page removes a page from the i2dashboard object." />
+<meta property="og:title" content="Methods to add and remove pages of an i2dashboard object. — add_page" />
+<meta property="og:description" content="'add_page()' creates a page and adds it to the i2dashboard object.
+'remove_page()' removes a page from the i2dashboard object." />
 
 
 
@@ -80,7 +80,7 @@ remove_page removes a page from the i2dashboard object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">i2dash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -105,11 +105,19 @@ remove_page removes a page from the i2dashboard object." />
     <li>
       <a href="../articles/i2dash-intro.html">Creating iterative and interactive dashboards with i2dash</a>
     </li>
+    <li>
+      <a href="../articles/i2dash-extension.html">Creating an extension package for i2dash</a>
+    </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/loosolab/i2dash/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -123,33 +131,33 @@ remove_page removes a page from the i2dashboard object." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Methods to add and remove pages of an i2dashboard.</h1>
-    
+    <h1>Methods to add and remove pages of an <a href='i2dashboard-class.html'>i2dashboard</a> object.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/loosolab/i2dash/blob/master/R/AllGenerics.R'><code>R/AllGenerics.R</code></a>, <a href='https://github.com/loosolab/i2dash/blob/master/R/pages.R'><code>R/pages.R</code></a></small>
     <div class="hidden name"><code>i2dashboard-pages.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>add_page</code> creates a page and adds it to the <a href='i2dashboard-class.html'>i2dashboard</a> object.
-<code>remove_page</code> removes a page from the <a href='i2dashboard-class.html'>i2dashboard</a> object.</p>
+    <p>'<code>add_page()</code>' creates a page and adds it to the <a href='i2dashboard-class.html'>i2dashboard</a> object.
+'<code>remove_page()</code>' removes a page from the <a href='i2dashboard-class.html'>i2dashboard</a> object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_page</span>(<span class='no'>dashboard</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>add_page</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>remove_page</span>(<span class='no'>dashboard</span>, <span class='no'>page</span>)
-
-<span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>add_page</span>(
-  <span class='no'>dashboard</span>,
-  <span class='no'>page</span>,
-  <span class='no'>title</span>,
-  <span class='kw'>layout</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
-  <span class='kw'>menu</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sidebar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
-)
+<span class='fu'>remove_page</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>page</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>remove_page</span>(<span class='no'>dashboard</span>, <span class='no'>page</span>)</pre>
+<span class='fu'>add_page</span><span class='op'>(</span>
+  <span class='va'>dashboard</span>,
+  <span class='va'>page</span>,
+  <span class='va'>title</span>,
+  layout <span class='op'>=</span> <span class='st'>"default"</span>,
+  menu <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sidebar <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
+
+<span class='co'># S4 method for i2dashboard</span>
+<span class='fu'>remove_page</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>page</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,14 +188,22 @@ remove_page removes a page from the i2dashboard object." />
     </tr>
     <tr>
       <th>sidebar</th>
-      <td><p>A Markdown string. Preferably, use the function add_to_sidebar.</p></td>
+      <td><p>A Markdown string. Preferably, use the function '<code><a href='add_component.html'>add_to_sidebar()</a></code>'.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The <a href='i2dashboard-class.html'>i2dashboard</a> object.</p>
+    <p>Returns the <a href='i2dashboard-class.html'>i2dashboard</a> object with a modified 'pages' slot.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='fu'><a href='i2dashboard-class.html'>i2dashboard</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+     <span class='fu'>add_page</span><span class='op'>(</span>page<span class='op'>=</span><span class='st'>"page1"</span>,
+         title<span class='op'>=</span><span class='st'>"Page Title"</span>,
+         layout <span class='op'>=</span> <span class='st'>"2x2_grid"</span>,
+         menu<span class='op'>=</span><span class='st'>"Menu A"</span><span class='op'>)</span> <span class='op'>-&gt;</span> <span class='va'>dashboard</span>
+<span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>remove_page</span><span class='op'>(</span>page<span class='op'>=</span><span class='st'>"page1"</span><span class='op'>)</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -203,7 +219,7 @@ remove_page removes a page from the i2dashboard object." />
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

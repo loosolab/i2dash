@@ -1,7 +1,8 @@
-pandoc: 2.9.2.1
+pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  i2dash-extension: i2dash-extension.html
   i2dash-intro: i2dash-intro.html
-last_built: 2020-10-28T14:36Z
+last_built: 2020-11-03T09:43Z
 

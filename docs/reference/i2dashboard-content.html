@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">i2dash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -104,11 +104,19 @@
     <li>
       <a href="../articles/i2dash-intro.html">Creating iterative and interactive dashboards with i2dash</a>
     </li>
+    <li>
+      <a href="../articles/i2dash-extension.html">Creating an extension package for i2dash</a>
+    </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/loosolab/i2dash/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -122,8 +130,8 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add content to an i2dashboard object.</h1>
-    
+    <h1>Add content to an <a href='i2dashboard-class.html'>i2dashboard</a> object.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/loosolab/i2dash/blob/master/R/AllGenerics.R'><code>R/AllGenerics.R</code></a>, <a href='https://github.com/loosolab/i2dash/blob/master/R/components.R'><code>R/components.R</code></a>, <a href='https://github.com/loosolab/i2dash/blob/master/R/colormap.R'><code>R/colormap.R</code></a>, and 1 more</small>
     <div class="hidden name"><code>i2dashboard-content.Rd</code></div>
     </div>
 
@@ -131,67 +139,67 @@
     <p>Content can be added to the dashboards pages, the sidebar or the navigation bar.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>add_component</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>add_to_sidebar</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='no'>...</span>)
+<span class='fu'>add_to_sidebar</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>add_colormap</span>(<span class='no'>dashboard</span>, <span class='no'>...</span>)
+<span class='fu'>add_colormap</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>add_link</span>(<span class='no'>dashboard</span>, <span class='no'>...</span>)
+<span class='fu'>add_link</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,character</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, page <span class='op'>=</span> <span class='st'>"default"</span>, copy <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,`function`</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, page <span class='op'>=</span> <span class='st'>"default"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,gg</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, page <span class='op'>=</span> <span class='st'>"default"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,gt_tbl</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, page <span class='op'>=</span> <span class='st'>"default"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,kableExtra</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, page <span class='op'>=</span> <span class='st'>"default"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,Heatmap</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, page <span class='op'>=</span> <span class='st'>"default"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,ANY</span>
-<span class='fu'>add_component</span>(<span class='no'>dashboard</span>, <span class='no'>component</span>, <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>, <span class='no'>...</span>)
+<span class='fu'>add_component</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>component</span>, page <span class='op'>=</span> <span class='st'>"default"</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>add_link</span>(
-  <span class='no'>dashboard</span>,
-  <span class='no'>href</span>,
-  <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>icon</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>align</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"right"</span>, <span class='st'>"left"</span>),
-  <span class='kw'>target</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)
+<span class='fu'>add_link</span><span class='op'>(</span>
+  <span class='va'>dashboard</span>,
+  <span class='va'>href</span>,
+  title <span class='op'>=</span> <span class='cn'>NULL</span>,
+  icon <span class='op'>=</span> <span class='cn'>NULL</span>,
+  align <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"right"</span>, <span class='st'>"left"</span><span class='op'>)</span>,
+  target <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>add_colormap</span>(<span class='no'>dashboard</span>, <span class='no'>map</span>, <span class='no'>name</span>)
+<span class='fu'>add_colormap</span><span class='op'>(</span><span class='va'>dashboard</span>, <span class='va'>map</span>, <span class='va'>name</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,character</span>
-<span class='fu'>add_to_sidebar</span>(
-  <span class='no'>dashboard</span>,
-  <span class='no'>component</span>,
-  <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
-  <span class='kw'>global</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)
+<span class='fu'>add_to_sidebar</span><span class='op'>(</span>
+  <span class='va'>dashboard</span>,
+  <span class='va'>component</span>,
+  page <span class='op'>=</span> <span class='st'>"default"</span>,
+  global <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  copy <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard,`function`</span>
-<span class='fu'>add_to_sidebar</span>(
-  <span class='no'>dashboard</span>,
-  <span class='no'>component</span>,
-  <span class='kw'>page</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
-  <span class='kw'>global</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>add_to_sidebar</span><span class='op'>(</span>
+  <span class='va'>dashboard</span>,
+  <span class='va'>component</span>,
+  page <span class='op'>=</span> <span class='st'>"default"</span>,
+  global <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  copy <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -252,25 +260,55 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The (modified) <a href='i2dashboard-class.html'>i2dashboard</a> object.</p>
+    <p>Returns the modified <a href='i2dashboard-class.html'>i2dashboard</a> object.</p><ul>
+<li><p>'<code>add_component()</code>' extends the list of components of the respective page, stored in the '<code>pages</code>' slot, by an R Markdown string containing the provided content.</p></li>
+<li><p>'<code>add_to_sidebar()</code>' extends either the '<code>sidebar</code>' slot or the '<code>sidebar</code>' entry of a single page by an R Markdown string containing the provided content.</p></li>
+<li><p>'<code>add_link()</code>' extends the '<code>navbar</code>' slot by a list of link properties.</p></li>
+<li><p>'<code>add_colormap()</code>' extends the '<code>colormaps</code>' slot by the new color mapping.</p></li>
+</ul><p>If something went wrong during the addition, the unmodified <a href='i2dashboard-class.html'>i2dashboard</a> object is returned.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The options to add content in detail:</p><ul>
-<li><p><strong><code>add_component</code></strong> adds content to a page of the dashboard by evaluating a function, or by including an object, a text or image file.</p></li>
-<li><p><strong><code>add_to_sidebar</code></strong> adds content to the dashboards global sidebar or to a pages local sidebar.</p></li>
-<li><p><strong><code>add_link</code></strong> adds a link to the navigation bar.</p></li>
-<li><p><strong><code>add_colormap</code></strong> adds a global color mapping to the dashboards colormaps.</p></li>
+<li><p><strong>'<code>add_component()</code>'</strong> adds content to a page of the dashboard by evaluating a function, or by including an object, a text or image file.</p></li>
+<li><p><strong>'<code>add_to_sidebar()</code>'</strong> adds content to the dashboards global sidebar or to a pages local sidebar.</p></li>
+<li><p><strong>'<code>add_link()</code>'</strong> adds a link to the navigation bar.</p></li>
+<li><p><strong>'<code>add_colormap()</code>'</strong> adds a global color mapping to the dashboards colormaps.</p></li>
 </ul>
 
-<p>The mechanism to add different types of content to a dashboards page or sidebar depends on the class of the object passed to the function <code>add_component</code> or <code>add_to_sidebar</code>:</p>
+<p>The mechanism to add different types of content to a dashboards page or sidebar depends on the class of the object passed to the function '<code>add_component()</code>' or '<code>add_to_sidebar()</code>':</p>
 <ul>
 <li><p>A function will be evaluated and its return value is used as content.</p></li>
 <li><p>A string that ends with <code>.md</code> or <code>.txt</code> will be used to open a file and use its content.</p></li>
 <li><p>A string that ends with <code>\.[png|jpg|jpeg|gif]</code> will be used to include an image as content.</p></li>
-<li><p>An R object (e.g. a htmlwidget) will be included if a suitable signature method is implemented.</p></li>
+<li><p>An R object (e.g. an 'htmlwidget') will be included if a suitable signature method is implemented.</p></li>
 </ul>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>magrittr</span><span class='op'>)</span>
+<span class='fu'><a href='i2dashboard-class.html'>i2dashboard</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-&gt;</span> <span class='va'>dashboard</span>
+<span class='va'>myFunction</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"### Generate component\n\n"</span>,
+    <span class='st'>"Lorem ipsum dolor sit amet\n"</span><span class='op'>)</span>
+
+<span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_component</span><span class='op'>(</span>component <span class='op'>=</span> <span class='va'>myFunction</span><span class='op'>)</span>
+<span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_component</span><span class='op'>(</span>component <span class='op'>=</span> <span class='fu'>plotly</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/plotly/man/plot_ly.html'>plot_ly</a></span><span class='op'>(</span><span class='va'>mtcars</span>, x<span class='op'>=</span><span class='op'>~</span><span class='va'>wt</span>, y<span class='op'>=</span><span class='op'>~</span><span class='va'>hp</span><span class='op'>)</span>,
+    title <span class='op'>=</span> <span class='st'>"Include htmlwidget"</span><span class='op'>)</span>
+<span class='co'># \donttest{</span>
+  <span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_component</span><span class='op'>(</span>component <span class='op'>=</span> <span class='st'>"sample.txt"</span>, title <span class='op'>=</span> <span class='st'>"Include text"</span><span class='op'>)</span>
+  <span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_component</span><span class='op'>(</span>component <span class='op'>=</span> <span class='st'>"sample.jpg"</span>, title <span class='op'>=</span> <span class='st'>"Include image"</span><span class='op'>)</span>
+<span class='co'># }</span>
+
+<span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_to_sidebar</span><span class='op'>(</span>component <span class='op'>=</span> <span class='va'>myFunction</span><span class='op'>)</span>
+<span class='co'># \donttest{</span>
+  <span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_to_sidebar</span><span class='op'>(</span>component <span class='op'>=</span> <span class='st'>"sample.txt"</span>, package<span class='op'>=</span><span class='st'>"i2dash"</span><span class='op'>)</span>
+  <span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_to_sidebar</span><span class='op'>(</span>component <span class='op'>=</span> <span class='st'>"sample.jpg"</span>, package<span class='op'>=</span><span class='st'>"i2dash"</span><span class='op'>)</span>
+<span class='co'># }</span>
+
+<span class='va'>colors</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"l1"</span> <span class='op'>=</span> <span class='st'>"#F7FCFD"</span>, <span class='st'>"l2"</span> <span class='op'>=</span><span class='st'>"#E5F5F9"</span>, <span class='st'>"l3"</span> <span class='op'>=</span> <span class='st'>"#CCECE6"</span><span class='op'>)</span>
+<span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_colormap</span><span class='op'>(</span>map <span class='op'>=</span> <span class='va'>colors</span>, name <span class='op'>=</span> <span class='st'>"test"</span><span class='op'>)</span>
+
+<span class='va'>dashboard</span> <span class='op'>%&lt;&gt;%</span> <span class='fu'>add_link</span><span class='op'>(</span>href <span class='op'>=</span> <span class='st'>"www.sample_url.net"</span>, title <span class='op'>=</span> <span class='st'>"MyLink"</span>, align <span class='op'>=</span> <span class='st'>"left"</span><span class='op'>)</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -286,7 +324,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">i2dash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -62,10 +62,20 @@
 <li>
       <a href="../articles/i2dash-intro.html">Creating iterative and interactive dashboards with i2dash</a>
     </li>
+    <li>
+      <a href="../articles/i2dash-extension.html">Creating an extension package for i2dash</a>
+    </li>
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/loosolab/i2dash/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -75,7 +85,8 @@
 
       
 
-      </header><link href="i2dash-intro_files/font-awesome-5.1.0/css/all.css" rel="stylesheet">
+      </header><script src="i2dash-intro_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="i2dash-intro_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="i2dash-intro_files/anchor-sections-1.0/anchor-sections.js"></script><link href="i2dash-intro_files/font-awesome-5.1.0/css/all.css" rel="stylesheet">
 <link href="i2dash-intro_files/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet">
 <div class="row">
   <div class="col-md-9 contents">
@@ -85,31 +96,39 @@
                   <a class="author_email" href="mailto:#"></a><a href="mailto:jens.preussner@mpi-bn.mpg.de" class="email">jens.preussner@mpi-bn.mpg.de</a>
       
                               <h4 class="author">Arsenij Ustjanzew</h4>
-                  <a class="author_email" href="mailto:#"></a><a href="mailto:arsenij.ustjanzew@mpi-bn.mpg.de" class="email">arsenij.ustjanzew@mpi-bn.mpg.de</a>
+                  <a class="author_email" href="mailto:#"></a><a href="mailto:arsenij.ustjanzew@gmail.com" class="email">arsenij.ustjanzew@gmail.com</a>
       
                   
-            <h4 class="date">24 April 2020</h4>
+            <h4 class="date">3 November 2020</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/loosolab/i2dash/blob/master/vignettes/i2dash-intro.Rmd"><code>vignettes/i2dash-intro.Rmd</code></a></small>
       <div class="hidden name"><code>i2dash-intro.Rmd</code></div>
 
     </div>
 
     
     
-<p>Vignette last complied on 2020-04-24. i2dash is licenced under MIT + file LICENSE.</p>
+<p>Vignette last complied on 2020-11-03. i2dash is licenced under MIT + file LICENSE.</p>
 <p><img src="images/i2dash_logo.png" align="center" width="150px"></p>
 <div id="introduction-and-scope" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction-and-scope" class="anchor"></a>Introduction and scope</h1>
-<p>Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. <a href="https://rmarkdown.rstudio.com">R Markdown</a> enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from <a href="http://shiny.rstudio.com/">R Shiny</a>. R Studio’s <a href="https://rmarkdown.rstudio.com/flexdashboard/">Flexdashboard</a> introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio’s Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file. The R package i2dash provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. Dashboard content is organised in so-called <strong>components</strong> and can be added iteratively to the dashboard, <em>i.e.</em> as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard <strong>pages</strong> to organize scientific findings thematically. Ultimately, i2dash enables xxx and therefore integrates well into existing data analysis pipelines.</p>
+<p>Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. <a href="https://rmarkdown.rstudio.com">R Markdown</a> enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from <a href="https://shiny.rstudio.com/">R Shiny</a>. R Studio’s <a href="https://rmarkdown.rstudio.com/flexdashboard/">Flexdashboard</a> introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio’s Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file. The R package <strong>i2dash</strong> provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. This enables users from different scientific disciplines to present their diverse data to the public in the form of organized dashboards. Dashboard content is organised in so-called <strong>components</strong> and can be added iteratively to the dashboard, <em>i.e.</em> as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard <strong>pages</strong> to organize scientific findings thematically. Ultimately, i2dash supports a wide range of R objects (e.g. ‘htmlwidgets’) and custom content generating functions as input and therefore integrates well into existing data analysis pipelines.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>The package can be installed with the <em><a href="https://CRAN.R-project.org/package=remotes">remotes</a></em> library:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_git.html">install_git</a></span>(<span class="kw">url</span> <span class="kw">=</span> <span class="st">"https://gitlab.gwdg.de/loosolab/software/i2dash.git"</span>, <span class="kw">repos</span> <span class="kw">=</span> <span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/repositories.html">repositories</a></span>())</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"i2dash"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
+<p>or the development version:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_git.html">install_git</a></span><span class="op">(</span>url <span class="op">=</span> <span class="st">"https://gitlab.gwdg.de/loosolab/software/i2dash.git"</span>, repos <span class="op">=</span> <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/repositories.html">repositories</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p>Once installed, the package can be loaded and attached to your current workspace as follows:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">i2dash</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://loosolab.github.io/i2dash/">i2dash</a></span><span class="op">)</span></pre></div>
+<p>For this tutorial we need to install the following packages:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"leaflet"</span>, <span class="st">"plotly"</span>, <span class="st">"ggplot2"</span>, <span class="st">"RColorBrewer"</span><span class="op">)</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="working-with-i2dash" class="section level1">
@@ -130,93 +149,97 @@
 <code>theme</code> - changes the appearance of the dashboard. A variety of themes are available at <a href="https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance">R Studio’s Flexdashboard</a> or <a href="https://semantic-ui-forest.com/themes/">Semantic UI forest</a>.</li>
 <li>
 <code>datadir</code> - defines the directory where dashboard files are stored.</li>
-<li>
-<code>file</code> - defines the file name of the dashboards R Markdown file.</li>
 </ul>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/i2dashboard-class.html">i2dashboard</a></span>(
-  <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Dashboard title"</span>,
-  <span class="kw">author</span> <span class="kw">=</span> <span class="st">"John Doe"</span>,
-  <span class="kw">interactive</span> <span class="kw">=</span> <span class="fl">FALSE</span>,
-  <span class="kw">theme</span> <span class="kw">=</span> <span class="st">"yeti"</span>,
-  <span class="kw">datadir</span> <span class="kw">=</span> <span class="st">"datadir"</span>,
-  <span class="kw">file</span> <span class="kw">=</span> <span class="st">"MyDashboard.Rmd"</span>) <span class="kw">-&gt;</span> <span class="no">dashboard</span></pre></body></html></div>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="fu"><a href="../reference/i2dashboard-class.html">i2dashboard</a></span><span class="op">(</span>
+  title <span class="op">=</span> <span class="st">"Dashboard title"</span>,
+  author <span class="op">=</span> <span class="st">"John Doe"</span>,
+  interactive <span class="op">=</span> <span class="cn">FALSE</span>,
+  theme <span class="op">=</span> <span class="st">"yeti"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">dashboard</span></pre></div>
 <p>We can examine the <code>i2dashboard</code> object by calling the object. The output shows the title of the dashboard, the number of saved pages and the number of components the page contains. By default the <code>i2dashboard</code> object contains the ‘default’ page without any components.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">dashboard</span>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="va">dashboard</span>
 <span class="co">#&gt; A flexdashboard with the title: Dashboard title</span>
 <span class="co">#&gt; ... containing  1 pages:</span>
-<span class="co">#&gt;  ... the page 'default' with the title 'Default page' contains 0 components.</span></pre></body></html></div>
+<span class="co">#&gt;  ... the page 'default' with the title 'Default page' contains 0 components.</span></pre></div>
 <p>With several accessor methods, it is also possible to change the slots <code>interactive</code>, <code>author</code>, <code>theme</code>, <code>datadir</code> and <code>title</code> of the <code>i2dashboard</code> object retrospectively:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/i2dashboard-methods.html">interactivity</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="fl">TRUE</span>
-<span class="fu"><a href="../reference/i2dashboard-methods.html">theme</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="st">"cosmo"</span>
-<span class="fu"><a href="../reference/i2dashboard-methods.html">author</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="st">"John Doe, MaxMustermann"</span>
-<span class="fu"><a href="../reference/i2dashboard-methods.html">title</a></span>(<span class="no">dashboard</span>) <span class="kw">&lt;-</span> <span class="st">"New dashboard title"</span></pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="fu"><a href="../reference/interactivity.html">interactivity</a></span><span class="op">(</span><span class="va">dashboard</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
+<span class="fu"><a href="../reference/interactivity.html">datadir</a></span><span class="op">(</span><span class="va">dashboard</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html">getwd</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/interactivity.html">theme</a></span><span class="op">(</span><span class="va">dashboard</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"cosmo"</span>
+<span class="fu"><a href="../reference/interactivity.html">author</a></span><span class="op">(</span><span class="va">dashboard</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"John Doe, MaxMustermann"</span>
+<span class="fu"><a href="../reference/interactivity.html">title</a></span><span class="op">(</span><span class="va">dashboard</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"New dashboard title"</span></pre></div>
 </div>
 <div id="adding-and-removing-pages" class="section level2">
 <h2 class="hasAnchor">
 <a href="#adding-and-removing-pages" class="anchor"></a>Adding and removing pages</h2>
-<p>We next use the <code><a href="../reference/i2dashboard-pages.html">add_page()</a></code> function to add two pages to the <code>dashboard</code> object. The first argument (<code>page</code>) sets an unique page identifier that will be used later to add components to it. The <code>title</code> defines a title of the page, which is shown in the navigation bar.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-pages.html">add_page</a></span>(
-    <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page1"</span>,
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Page 1"</span>,
-    <span class="kw">layout</span> <span class="kw">=</span> <span class="st">"focal_left"</span>,
-    <span class="kw">menu</span> <span class="kw">=</span> <span class="kw">NULL</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-pages.html">add_page</a></span>(
-    <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page2"</span>,
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Page 2"</span>,
-    <span class="kw">layout</span> <span class="kw">=</span> <span class="st">"focal_left"</span>,
-    <span class="kw">menu</span> <span class="kw">=</span> <span class="kw">NULL</span>)</pre></body></html></div>
+<p>We next use the <code><a href="../reference/add_page.html">add_page()</a></code> function to add two pages to the <code>dashboard</code> object. The first argument (<code>page</code>) sets an unique page identifier that will be used later to add components to it. The <code>title</code> defines a title of the page, which is shown in the navigation bar.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span> 
+  <span class="fu"><a href="../reference/add_page.html">add_page</a></span><span class="op">(</span>
+    page <span class="op">=</span> <span class="st">"page1"</span>,
+    title <span class="op">=</span> <span class="st">"Page 1"</span>,
+    layout <span class="op">=</span> <span class="st">"focal_left"</span>,
+    menu <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_page.html">add_page</a></span><span class="op">(</span>
+    page <span class="op">=</span> <span class="st">"page2"</span>,
+    title <span class="op">=</span> <span class="st">"Page 2"</span>,
+    layout <span class="op">=</span> <span class="st">"focal_left"</span>,
+    menu <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></pre></div>
 <p>We can use the <code>menu</code> parameter to group several pages under a common drop-down menu:</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-pages.html">add_page</a></span>(
-    <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page3"</span>,
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Lemurs"</span>,
-    <span class="kw">layout</span> <span class="kw">=</span> <span class="st">"focal_left"</span>,
-    <span class="kw">menu</span> <span class="kw">=</span> <span class="st">"Animals"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-pages.html">add_page</a></span>(
-    <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page4"</span>,
-    <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Tigers"</span>,
-    <span class="kw">layout</span> <span class="kw">=</span> <span class="st">"focal_left"</span>,
-    <span class="kw">menu</span> <span class="kw">=</span> <span class="st">"Animals"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span> 
+  <span class="fu"><a href="../reference/add_page.html">add_page</a></span><span class="op">(</span>
+    page <span class="op">=</span> <span class="st">"page3"</span>,
+    title <span class="op">=</span> <span class="st">"Lemurs"</span>,
+    layout <span class="op">=</span> <span class="st">"focal_left"</span>,
+    menu <span class="op">=</span> <span class="st">"Animals"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_page.html">add_page</a></span><span class="op">(</span>
+    page <span class="op">=</span> <span class="st">"page4"</span>,
+    title <span class="op">=</span> <span class="st">"Tigers"</span>,
+    layout <span class="op">=</span> <span class="st">"focal_left"</span>,
+    menu <span class="op">=</span> <span class="st">"Animals"</span><span class="op">)</span></pre></div>
 <div class="figure">
 <img src="images/navigation.png" alt="Figure 1: Navigation bar of the dashboard after adding several pages." width="400"><p class="caption">
 Figure 1: Navigation bar of the dashboard after adding several pages.
 </p>
 </div>
-<p>We can remove a page using the <code><a href="../reference/i2dashboard-pages.html">remove_page()</a></code> function. The <code>page</code> argument contains the unique page identifier of the page to be removed.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-pages.html">remove_page</a></span>(<span class="kw">page</span> <span class="kw">=</span> <span class="st">"page2"</span>)</pre></body></html></div>
+<p>We can remove a page using the <code><a href="../reference/add_page.html">remove_page()</a></code> function. The <code>page</code> argument contains the unique page identifier of the page to be removed.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
+  <span class="fu"><a href="../reference/add_page.html">remove_page</a></span><span class="op">(</span>page <span class="op">=</span> <span class="st">"page2"</span><span class="op">)</span></pre></div>
 </div>
 <div id="adding-content" class="section level2">
 <h2 class="hasAnchor">
 <a href="#adding-content" class="anchor"></a>Adding content</h2>
-<p>Content can be added to pages using <strong>components</strong>. A component can be a R object itself (<em>e.g.</em> a widget from <a href="http://gallery.htmlwidgets.org/">htmwlwidgets</a>), a file path (<em>e.g.</em> to a markdown or image file) or a function that can be called to generate content. We’ll use the <code>add_component</code> function to explore several options and fill <code>page1</code> iteratively with three R objects:</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">leaflet</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html">leaflet</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addTiles</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addMarkers</a></span>(<span class="kw">lng</span><span class="kw">=</span><span class="fl">174.768</span>, <span class="kw">lat</span><span class="kw">=</span>-<span class="fl">36.852</span>,
-             <span class="kw">popup</span><span class="kw">=</span><span class="st">"The birthplace of R"</span>) <span class="kw">-&gt;</span> <span class="no">leaftlet_map</span>
+<p>Content can be added to pages using <strong>components</strong>. A component can be a R object itself (<em>e.g.</em> a widget from <a href="https://gallery.htmlwidgets.org/">htmwlwidgets</a>), a file path (<em>e.g.</em> to a markdown or image file) or a function that can be called to generate content. Htmlwidgets are interactive visualizations embedded in HTML. There is a wide variety of R packages that offer htmlwidgets, ranging from various plots, heatmaps, networks, tables, geographical maps to specialized charts. Thus, the content of the dashboards is not limited to specific disciplines and can be designed in a maximum variety of ways. We’ll use the <code>add_component</code> function to explore several options and fill <code>page1</code> iteratively with three R objects:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://rstudio.github.io/leaflet/">leaflet</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addTiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>  
+  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addMarkers</a></span><span class="op">(</span>lng<span class="op">=</span><span class="fl">174.768</span>, lat<span class="op">=</span><span class="op">-</span><span class="fl">36.852</span>,
+             popup<span class="op">=</span><span class="st">"The birthplace of R"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">leaftlet_map</span>
 
-<span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="no">leaftlet_map</span>,
-                <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page1"</span>,
-                <span class="kw">title</span> <span class="kw">=</span> <span class="st">"A map from leaflet"</span>)
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_component</a></span><span class="op">(</span><span class="va">leaftlet_map</span>,
+                page <span class="op">=</span> <span class="st">"page1"</span>,
+                title <span class="op">=</span> <span class="st">"A map from leaflet"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">plotly</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plot_ly.html">plot_ly</a></span>(<span class="no">mtcars</span>, <span class="kw">x</span> <span class="kw">=</span> ~<span class="no">wt</span>, <span class="kw">y</span> <span class="kw">=</span> ~<span class="no">mpg</span>) <span class="kw">-&gt;</span> <span class="no">plotly_object</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://plotly-r.com">plotly</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plot_ly.html">plot_ly</a></span><span class="op">(</span><span class="va">mtcars</span>, x <span class="op">=</span> <span class="op">~</span><span class="va">wt</span>, y <span class="op">=</span> <span class="op">~</span><span class="va">mpg</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">plotly_object</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
-<span class="no">mtcars</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span><span class="kw">=</span><span class="no">mpg</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span>(<span class="kw">fill</span><span class="kw">=</span><span class="st">"darkgrey"</span>) <span class="kw">-&gt;</span> <span class="no">ggplot2_object</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="va">mtcars</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span>fill<span class="op">=</span><span class="st">"darkgrey"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">ggplot2_object</span>
 
-<span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="no">plotly_object</span>,
-                <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page1"</span>,
-                <span class="kw">title</span> <span class="kw">=</span> <span class="st">"A plot from plotly"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="no">ggplot2_object</span>,
-                <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page1"</span>,
-                <span class="kw">title</span> <span class="kw">=</span> <span class="st">"A plot from ggplot2"</span>)</pre></body></html></div>
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_component</a></span><span class="op">(</span><span class="va">plotly_object</span>,
+                page <span class="op">=</span> <span class="st">"page1"</span>,
+                title <span class="op">=</span> <span class="st">"A plot from plotly"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_component</a></span><span class="op">(</span><span class="va">ggplot2_object</span>,
+                page <span class="op">=</span> <span class="st">"page1"</span>,
+                title <span class="op">=</span> <span class="st">"A plot from ggplot2"</span><span class="op">)</span></pre></div>
 <p>This results in the following dashboard:</p>
 <div class="figure">
 <img src="images/example_page1.png" alt="Figure 2: The resulting page with three components added after assembly of the dashboard." width="400"><p class="caption">
@@ -226,14 +249,23 @@ Figure 2: The resulting page with three components added after assembly of the d
 <div id="adding-text-and-images" class="section level3">
 <h3 class="hasAnchor">
 <a href="#adding-text-and-images" class="anchor"></a>Adding text and images</h3>
-<p>Text and images can be added to a <strong>page</strong> by calling the <code>add_component</code> function with a file path. The function will include file paths ending with <code>.[png|jpg|jpeg|gif]</code> as image content, and other files as text content:</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"images/lemur.jpg"</span>),
-                <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page3"</span>,
-                <span class="kw">title</span> <span class="kw">=</span> <span class="st">"A picture of a Lemur"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"texts/lemurs.md"</span>),
-                <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page3"</span>,
-                <span class="kw">title</span> <span class="kw">=</span> <span class="st">"About Lemurs"</span>)</pre></body></html></div>
+<p>Custom text and images allow the dashboard developer to explain his findings, name sources or provide guidance to the reader. Text and images can be added to a <strong>page</strong> by calling the <code>add_component</code> function with a file path. The function will include file paths ending with <code>.[png|jpg|jpeg|gif]</code> as image content, and other files as text content:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="co"># download the image &amp; text or use the files in the package</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="st">"images"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="st">"texts"</span><span class="op">)</span>
+<span class="va">img</span> <span class="op">&lt;-</span> <span class="st">"http://www.desktopimages.org/pictures/2014/1010/1/orig_76044.jpg"</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span><span class="op">(</span><span class="va">img</span>,<span class="st">'images/lemur.jpg'</span>, mode <span class="op">=</span> <span class="st">'wb'</span><span class="op">)</span>
+<span class="va">text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span><span class="op">(</span><span class="st">"https://en.wikipedia.org/wiki/Lemuriformes"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="va">text</span><span class="op">[</span><span class="fl">262</span><span class="op">]</span>,file<span class="op">=</span><span class="st">"texts/lemurs.md"</span>,sep<span class="op">=</span><span class="st">"\n"</span><span class="op">)</span>
+
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_component</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"images/lemur.jpg"</span><span class="op">)</span>,
+                page <span class="op">=</span> <span class="st">"page3"</span>,
+                title <span class="op">=</span> <span class="st">"A picture of a Lemur"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_component</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"texts/lemurs.md"</span><span class="op">)</span>,
+                page <span class="op">=</span> <span class="st">"page3"</span>,
+                title <span class="op">=</span> <span class="st">"About Lemurs"</span><span class="op">)</span></pre></div>
 <p>This results in the following dashboard:</p>
 <div class="figure">
 <img src="images/example_page3.png" alt="Figure 3: The resulting page with an image and text from a file." width="400"><p class="caption">
@@ -245,16 +277,18 @@ Figure 3: The resulting page with an image and text from a file.
 <h3 class="hasAnchor">
 <a href="#adding-content-from-functions" class="anchor"></a>Adding content from functions</h3>
 <p>Near unlimited flexibility comes from the ability to pass functions to <code>add_component</code>. Functions can be used to <em>generate</em> content based on their parameters when they’re called. Lets create such a function:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">text_generator</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">dashboard</span>, <span class="no">n</span>) {
-  <span class="kw pkg">stringi</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_rand_lipsum.html">stri_rand_lipsum</a></span>(<span class="kw">nparagraphs</span> <span class="kw">=</span> <span class="no">n</span>) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="kw">collapse</span> <span class="kw">=</span> <span class="st">"\n\n"</span>) <span class="kw">-&gt;</span> <span class="no">content</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"### Generated content\n\n"</span>, <span class="no">content</span>)
-}</pre></body></html></div>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="va">text_generator</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dashboard</span>, <span class="va">n</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu">stringi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_rand_lipsum.html">stri_rand_lipsum</a></span><span class="op">(</span>nparagraphs <span class="op">=</span> <span class="va">n</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n\n"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">content</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"### Generated content\n\n"</span>, <span class="va">content</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 <p>The function <code>text_generator</code> from above can generate <code>n</code> paragraphs of Lorem Ipsum upon calling. We can include it’s return as content:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="no">text_generator</span>,
-                <span class="kw">page</span> <span class="kw">=</span> <span class="st">"page4"</span>,
-                <span class="kw">n</span> <span class="kw">=</span> <span class="fl">4</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_component</a></span><span class="op">(</span><span class="va">text_generator</span>,
+                page <span class="op">=</span> <span class="st">"page4"</span>,
+                n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></pre></div>
 <p>When writing your own generating functions, please keep it mind to set the <code>title</code> of the component within the function:</p>
 <div class="figure">
 <img src="images/example_page4.png" alt="Figure 4: The resulting page with content generated from a function." width="400"><p class="caption">
@@ -265,40 +299,43 @@ Figure 4: The resulting page with content generated from a function.
 <div id="linking-components" class="section level3">
 <h3 class="hasAnchor">
 <a href="#linking-components" class="anchor"></a>Linking components</h3>
-<p>The linking of several components enables an improvement in the communication of the structure of high-dimensional data. When linking several components, the data of the two visualizations are connected to each other by queries. Thus the interactive manipulation, e.g. selecting data points, of a component is transferred to the associated component.The package <code>plotly</code> enables us to link plotly charts in a client-side way (i.e., no special web server or callback to R is required). The following example demonstrates, how to link two plots together by using plotly. <a href="https://plotly-r.com/client-side-linking.html">Here</a> you can find a detailed explanation and further examples of the clint-sided linkink mechanism of <code>plotly</code>.</p>
+<p>The linking of several components enables an improvement in the communication of the structure of <strong>high-dimensional data</strong>, which plays a big role in most scientific fields. When linking several components, the data of the two visualizations are connected to each other by queries. Thus the interactive manipulation, e.g. selecting data points, of a component is transferred to the associated component.The package <code>plotly</code> enables us to link plotly charts in a client-side way (i.e., no special web server or callback to R is required). The following example demonstrates, how to link two plots together by using plotly. <a href="https://plotly-r.com/client-side-linking.html">Here</a> you can find a detailed explanation and further examples of the clint-sided linkink mechanism of <code>plotly</code>.</p>
 <p>First, we load the data and create an object of class <code><a href="https://rdrr.io/pkg/crosstalk/man/SharedData.html">crosstalk::SharedData</a></code> with the function <code>highlight_key</code>. This enables to query the data.</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># load the `txhousing` dataset</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">txhousing</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"ggplot2"</span>)
+<div class="sourceCode" id="cb15"><pre class="downlit">
+<span class="co"># load the `txhousing` dataset</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">txhousing</span>, package <span class="op">=</span> <span class="st">"ggplot2"</span><span class="op">)</span>
 
 <span class="co"># declare `city` as the SQL 'query by' column</span>
-<span class="no">tx</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/highlight_key.html">highlight_key</a></span>(<span class="no">txhousing</span>, ~<span class="no">city</span>)</pre></body></html></div>
+<span class="va">tx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/highlight_key.html">highlight_key</a></span><span class="op">(</span><span class="va">txhousing</span>, <span class="op">~</span><span class="va">city</span><span class="op">)</span></pre></div>
 <p>Next, we initiate a plotly object (<code>base</code>) with the data object. And create two further plots (<code>time_series</code> and <code>dot_plot</code>) based on the new plotly object.</p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># initiate a plotly object</span>
-<span class="no">base</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plot_ly.html">plot_ly</a></span>(<span class="no">tx</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span>(<span class="st">"black"</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/reexports.html">group_by</a></span>(<span class="no">city</span>)
+<div class="sourceCode" id="cb16"><pre class="downlit">
+<span class="co"># initiate a plotly object</span>
+<span class="va">base</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plot_ly.html">plot_ly</a></span><span class="op">(</span><span class="va">tx</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="st">"black"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">city</span><span class="op">)</span>
 
 <span class="co"># create a time series of median house price</span>
-<span class="no">time_series</span> <span class="kw">&lt;-</span> <span class="no">base</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/reexports.html">group_by</a></span>(<span class="no">city</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/add_trace.html">add_lines</a></span>(<span class="kw">x</span> <span class="kw">=</span> ~<span class="no">date</span>, <span class="kw">y</span> <span class="kw">=</span> ~<span class="no">median</span>)
+<span class="va">time_series</span> <span class="op">&lt;-</span> <span class="va">base</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">city</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/add_trace.html">add_lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">~</span><span class="va">date</span>, y <span class="op">=</span> <span class="op">~</span><span class="va">median</span><span class="op">)</span>
 
-<span class="no">dot_plot</span> <span class="kw">&lt;-</span> <span class="no">base</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/reexports.html">summarise</a></span>(<span class="kw">miss</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">median</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/reexports.html">filter</a></span>(<span class="no">miss</span> <span class="kw">&gt;</span> <span class="fl">0</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/add_trace.html">add_markers</a></span>(
-    <span class="kw">x</span> <span class="kw">=</span> ~<span class="no">miss</span>,
-    <span class="kw">y</span> <span class="kw">=</span> ~<span class="kw pkg">forcats</span><span class="kw ns">::</span><span class="fu">fct_reorder</span>(<span class="no">city</span>, <span class="no">miss</span>),
-    <span class="kw">hoverinfo</span> <span class="kw">=</span> <span class="st">"x+y"</span>
-  ) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/layout.html">layout</a></span>(
-    <span class="kw">xaxis</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"Number of months missing"</span>),
-    <span class="kw">yaxis</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">""</span>)
-  )</pre></body></html></div>
+<span class="va">dot_plot</span> <span class="op">&lt;-</span> <span class="va">base</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>miss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">median</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">miss</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/add_trace.html">add_markers</a></span><span class="op">(</span>
+    x <span class="op">=</span> <span class="op">~</span><span class="va">miss</span>,
+    y <span class="op">=</span> <span class="op">~</span><span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html">fct_reorder</a></span><span class="op">(</span><span class="va">city</span>, <span class="va">miss</span><span class="op">)</span>,
+    hoverinfo <span class="op">=</span> <span class="st">"x+y"</span>
+  <span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/layout.html">layout</a></span><span class="op">(</span>
+    xaxis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Number of months missing"</span><span class="op">)</span>,
+    yaxis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
+  <span class="op">)</span></pre></div>
 <p>Finally, we add a new page to our dashboard, create two components and provide the <code>plotly</code> objects as input.</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-pages.html">add_page</a></span>(<span class="kw">page</span><span class="kw">=</span><span class="st">"page5"</span>, <span class="kw">layout</span><span class="kw">=</span><span class="st">"2x2_grid"</span>, <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Linked components"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="kw">page</span><span class="kw">=</span><span class="st">"page5"</span>, <span class="kw">component</span><span class="kw">=</span><span class="no">dot_plot</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_component</a></span>(<span class="kw">page</span><span class="kw">=</span><span class="st">"page5"</span>, <span class="kw">component</span><span class="kw">=</span><span class="no">time_series</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb17"><pre class="downlit">
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
+  <span class="fu"><a href="../reference/add_page.html">add_page</a></span><span class="op">(</span>page<span class="op">=</span><span class="st">"page5"</span>, layout<span class="op">=</span><span class="st">"2x2_grid"</span>, title <span class="op">=</span> <span class="st">"Linked components"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_component</a></span><span class="op">(</span>page<span class="op">=</span><span class="st">"page5"</span>, component<span class="op">=</span><span class="va">dot_plot</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_component</a></span><span class="op">(</span>page<span class="op">=</span><span class="st">"page5"</span>, component<span class="op">=</span><span class="va">time_series</span><span class="op">)</span></pre></div>
 <p>This results in the following dashboard page. We can select a data point in the left component and the lines of the right plot will be colour highlightened according to the selection:</p>
 <div class="figure">
 <img src="images/example_page5.png" alt="Figure 5: The resulting page with two linked components." width="960"><p class="caption">
@@ -312,71 +349,73 @@ Figure 5: The resulting page with two linked components.
 <a href="#colormaps" class="anchor"></a>Colormaps</h2>
 <p>Data analysis often have certain experimental factors (<em>e.g.</em> year or category) that are included repeatedly in figure scales. When communicating findings from such analysis, it would be desirable to have consitent representation (<em>e.g.</em> by color) of those factors across different figures. In i2dash, we solve this problem by introducing <strong>colormaps</strong>. Colormaps can be used by components to look up color scales for experimental factors. Here, we briefly introduce how colormaps are added to the dashboard, but refer to the development vignette for further information.</p>
 <p>Lets assume we have an experimental factor called year:</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">year</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2014</span>, <span class="fl">2014</span>, <span class="fl">2015</span>, <span class="fl">2017</span>, <span class="fl">2019</span>, <span class="fl">2019</span>), <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2014</span>:<span class="fl">2021</span>))</pre></body></html></div>
-<p>To assign each level a color from the <a href="http://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=9">sequential greens</a> palette from the <em><a href="https://CRAN.R-project.org/package=RColorBrewer">RColorBrewer</a></em> package, we create a character vector with the colors and assign the levels as names.</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">colors</span> <span class="kw">&lt;-</span> <span class="kw pkg">RColorBrewer</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="fl">8</span>, <span class="st">"BuGn"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">colors</span>) <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(<span class="no">year</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb18"><pre class="downlit">
+<span class="va">year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2014</span>, <span class="fl">2014</span>, <span class="fl">2015</span>, <span class="fl">2017</span>, <span class="fl">2019</span>, <span class="fl">2019</span><span class="op">)</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2014</span><span class="op">:</span><span class="fl">2021</span><span class="op">)</span><span class="op">)</span></pre></div>
+<p>To assign each level a color from the <a href="https://colorbrewer2.org/">sequential greens</a> palette from the <em><a href="https://CRAN.R-project.org/package=RColorBrewer">RColorBrewer</a></em> package, we create a character vector with the colors and assign the levels as names.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit">
+<span class="va">colors</span> <span class="op">&lt;-</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span><span class="op">(</span><span class="fl">8</span>, <span class="st">"BuGn"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">colors</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span></pre></div>
 <p>The colormap can then be added to the dashboard. From there on, <strong>components</strong> can consume the colormap and use the desired colors for figure scales.</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&lt;&gt;%</span>
-  <span class="fu"><a href="../reference/i2dashboard-content.html">add_colormap</a></span>(<span class="kw">map</span> <span class="kw">=</span> <span class="no">colors</span>,
-               <span class="kw">name</span> <span class="kw">=</span> <span class="st">"year"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb20"><pre class="downlit">
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
+  <span class="fu"><a href="../reference/add_component.html">add_colormap</a></span><span class="op">(</span>map <span class="op">=</span> <span class="va">colors</span>,
+               name <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></pre></div>
 </div>
 <div id="dashboard-assembly" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dashboard-assembly" class="anchor"></a>Dashboard assembly</h2>
 <p>At any point in time, and particular when data analysis is finished, the <code>assemble</code> function can be used to generate representation of the dashboard in R markdown format. Using the <code>pages</code> parameter, we can define which pages will be included in the output.</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">dashboard</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/assemble.html">assemble</a></span>(<span class="kw">pages</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"page1"</span>, <span class="st">"page3"</span>, <span class="st">"page4"</span>, <span class="st">"page5"</span>))</pre></body></html></div>
-<p>The resulting R Markdown file can be run with <em><a href="https://CRAN.R-project.org/package=shiny">shiny</a></em> or rendered with <em><a href="https://CRAN.R-project.org/package=rmarkdown">rmarkdown</a></em>.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="va">dashboard</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/assemble.html">assemble</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"MyDashboard.Rmd"</span>, pages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"page1"</span>, <span class="st">"page3"</span>, <span class="st">"page4"</span>, <span class="st">"page5"</span><span class="op">)</span><span class="op">)</span></pre></div>
+<p>The resulting R Markdown file can be run with <em><a href="https://CRAN.R-project.org/package=shiny">shiny</a></em> or rendered with <em><a href="https://CRAN.R-project.org/package=rmarkdown">rmarkdown</a></em>. Alternatively, open the R Markdown file in RStudio and click on the “Knit”/ “Run Dockument” button.</p>
 </div>
 </div>
 <div id="session-info" class="section level1 unnumbered">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session Info</h1>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()
-<span class="co">#&gt; R version 3.6.2 (2019-12-12)</span>
-<span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">#&gt; Running under: Debian GNU/Linux 10 (buster)</span>
+<div class="sourceCode" id="cb22"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.0.2 (2020-06-22)</span>
+<span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span>
+<span class="co">#&gt; Running under: Windows 10 x64 (build 19041)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
-<span class="co">#&gt; BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/libopenblasp-r0.3.5.so</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; locale:</span>
-<span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             </span>
-<span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="co">#&gt; [1] LC_COLLATE=German_Germany.1252  LC_CTYPE=German_Germany.1252   </span>
+<span class="co">#&gt; [3] LC_MONETARY=German_Germany.1252 LC_NUMERIC=C                   </span>
+<span class="co">#&gt; [5] LC_TIME=German_Germany.1252    </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; attached base packages:</span>
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] plotly_4.9.2     ggplot2_3.3.0    leaflet_2.0.3    i2dash_0.2      </span>
-<span class="co">#&gt; [5] magrittr_1.5     BiocStyle_2.14.4</span>
+<span class="co">#&gt; [1] plotly_4.9.2.1   ggplot2_3.3.2    leaflet_2.0.3    i2dash_0.2.2    </span>
+<span class="co">#&gt; [5] magrittr_1.5     BiocStyle_2.16.1</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;  [1] tidyselect_1.0.0    xfun_0.13           purrr_0.3.4        </span>
-<span class="co">#&gt;  [4] colorspace_1.4-1    vctrs_0.2.4         viridisLite_0.3.0  </span>
-<span class="co">#&gt;  [7] htmltools_0.4.0     yaml_2.2.1          rlang_0.4.5        </span>
-<span class="co">#&gt; [10] pkgdown_1.5.1       later_1.0.0         pillar_1.4.3       </span>
-<span class="co">#&gt; [13] glue_1.4.0          withr_2.2.0         lifecycle_0.2.0    </span>
-<span class="co">#&gt; [16] stringr_1.4.0       munsell_0.5.0       gtable_0.3.0       </span>
-<span class="co">#&gt; [19] htmlwidgets_1.5.1   memoise_1.1.0       evaluate_0.14      </span>
-<span class="co">#&gt; [22] knitr_1.28          fastmap_1.0.1       httpuv_1.5.2       </span>
-<span class="co">#&gt; [25] crosstalk_1.0.0     highr_0.8           Rcpp_1.0.4.6       </span>
-<span class="co">#&gt; [28] xtable_1.8-4        promises_1.1.0      backports_1.1.6    </span>
-<span class="co">#&gt; [31] scales_1.1.0        BiocManager_1.30.10 desc_1.2.0         </span>
-<span class="co">#&gt; [34] jsonlite_1.6.1      mime_0.9            fs_1.4.1           </span>
-<span class="co">#&gt; [37] png_0.1-7           digest_0.6.25       stringi_1.4.6      </span>
-<span class="co">#&gt; [40] dplyr_0.8.4         shiny_1.4.0.2       rprojroot_1.3-2    </span>
-<span class="co">#&gt; [43] grid_3.6.2          tools_3.6.2         lazyeval_0.2.2     </span>
-<span class="co">#&gt; [46] tibble_3.0.1        tidyr_1.0.2         crayon_1.3.4       </span>
-<span class="co">#&gt; [49] pkgconfig_2.0.3     MASS_7.3-51.4       ellipsis_0.3.0     </span>
-<span class="co">#&gt; [52] data.table_1.12.8   httr_1.4.1          assertthat_0.2.1   </span>
-<span class="co">#&gt; [55] rmarkdown_2.1       rstudioapi_0.11     R6_2.4.1           </span>
-<span class="co">#&gt; [58] compiler_3.6.2</span></pre></body></html></div>
+<span class="co">#&gt;  [1] tidyselect_1.1.0    xfun_0.16           purrr_0.3.4        </span>
+<span class="co">#&gt;  [4] colorspace_1.4-1    vctrs_0.3.4         generics_0.0.2     </span>
+<span class="co">#&gt;  [7] htmltools_0.5.0     viridisLite_0.3.0   yaml_2.2.1         </span>
+<span class="co">#&gt; [10] rlang_0.4.8         later_1.1.0.1       pkgdown_1.6.1      </span>
+<span class="co">#&gt; [13] pillar_1.4.6        glue_1.4.2          withr_2.3.0        </span>
+<span class="co">#&gt; [16] lifecycle_0.2.0     stringr_1.4.0       munsell_0.5.0      </span>
+<span class="co">#&gt; [19] gtable_0.3.0        ragg_0.4.0          htmlwidgets_1.5.2  </span>
+<span class="co">#&gt; [22] memoise_1.1.0       evaluate_0.14       knitr_1.30         </span>
+<span class="co">#&gt; [25] fastmap_1.0.1       httpuv_1.5.4        crosstalk_1.1.0.1  </span>
+<span class="co">#&gt; [28] highr_0.8           Rcpp_1.0.5          xtable_1.8-4       </span>
+<span class="co">#&gt; [31] promises_1.1.1      scales_1.1.1        backports_1.1.9    </span>
+<span class="co">#&gt; [34] BiocManager_1.30.10 desc_1.2.0          jsonlite_1.7.1     </span>
+<span class="co">#&gt; [37] mime_0.9            systemfonts_0.3.2   fs_1.5.0           </span>
+<span class="co">#&gt; [40] textshaping_0.1.2   png_0.1-7           digest_0.6.25      </span>
+<span class="co">#&gt; [43] stringi_1.5.3       shiny_1.5.0         dplyr_1.0.2        </span>
+<span class="co">#&gt; [46] grid_4.0.2          rprojroot_1.3-2     tools_4.0.2        </span>
+<span class="co">#&gt; [49] lazyeval_0.2.2      tibble_3.0.3        crayon_1.3.4       </span>
+<span class="co">#&gt; [52] tidyr_1.1.2         pkgconfig_2.0.3     ellipsis_0.3.1     </span>
+<span class="co">#&gt; [55] data.table_1.13.0   assertthat_0.2.1    rmarkdown_2.5      </span>
+<span class="co">#&gt; [58] httr_1.4.2          rstudioapi_0.11     R6_2.5.0           </span>
+<span class="co">#&gt; [61] compiler_4.0.2</span></pre></div>
 </div>
   </div>
 
@@ -395,7 +434,7 @@ Figure 5: The resulting page with two linked components.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

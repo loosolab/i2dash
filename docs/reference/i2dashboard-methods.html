@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Accessor methods for slots of an <a href='i2dashboard-class.html'>i2dashboard</a> object. — interactivity • i2dash</title>
+<title>Accessor methods for slots of an i2dashboard object. — interactivity • i2dash</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Accessor methods for slots of an <a href='i2dashboard-class.html'>i2dashboard</a> object. — interactivity" />
+<meta property="og:title" content="Accessor methods for slots of an i2dashboard object. — interactivity" />
 <meta property="og:description" content="Getter and Setter methods can be used to directly manipulate properties (slots) of an i2dashboard object. See i2dashboard for details." />
 
 
@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">i2dash</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -104,11 +104,19 @@
     <li>
       <a href="../articles/i2dash-intro.html">Creating iterative and interactive dashboards with i2dash</a>
     </li>
+    <li>
+      <a href="../articles/i2dash-extension.html">Creating an extension package for i2dash</a>
+    </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/loosolab/i2dash/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -123,7 +131,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Accessor methods for slots of an <a href='i2dashboard-class.html'>i2dashboard</a> object.</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/loosolab/i2dash/blob/master/R/AllGenerics.R'><code>R/AllGenerics.R</code></a>, <a href='https://github.com/loosolab/i2dash/blob/master/R/get_set.R'><code>R/get_set.R</code></a></small>
     <div class="hidden name"><code>i2dashboard-methods.Rd</code></div>
     </div>
 
@@ -131,80 +139,80 @@
     <p>Getter and Setter methods can be used to directly manipulate properties (slots) of an <a href='i2dashboard-class.html'>i2dashboard</a> object. See <a href='i2dashboard-class.html'>i2dashboard</a> for details.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>interactivity</span>(<span class='no'>dashboard</span>)
+    <pre class="usage"><span class='fu'>interactivity</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
-<span class='fu'>interactivity</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>interactivity</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>title</span>(<span class='no'>dashboard</span>)
+<span class='fu'>title</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
-<span class='fu'>title</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>title</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>author</span>(<span class='no'>dashboard</span>)
+<span class='fu'>author</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
-<span class='fu'>author</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>author</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>theme</span>(<span class='no'>dashboard</span>)
+<span class='fu'>theme</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
-<span class='fu'>theme</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>theme</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>datadir</span>(<span class='no'>dashboard</span>)
+<span class='fu'>datadir</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
-<span class='fu'>datadir</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>datadir</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>share</span>(<span class='no'>dashboard</span>)
+<span class='fu'>share</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
-<span class='fu'>share</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>share</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>embed_source</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>embed_source</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>source</span>(<span class='no'>dashboard</span>)
+<span class='kw'>source</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
-<span class='fu'>source</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
-
-<span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>interactivity</span>(<span class='no'>dashboard</span>)
+<span class='kw'>source</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>interactivity</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>interactivity</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>title</span>(<span class='no'>dashboard</span>)
+<span class='fu'>interactivity</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>title</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>title</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>author</span>(<span class='no'>dashboard</span>)
+<span class='fu'>title</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>author</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>author</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>theme</span>(<span class='no'>dashboard</span>)
+<span class='fu'>author</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>theme</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>theme</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>datadir</span>(<span class='no'>dashboard</span>)
+<span class='fu'>theme</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>datadir</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>datadir</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>share</span>(<span class='no'>dashboard</span>)
+<span class='fu'>datadir</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>share</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='fu'>share</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>source</span>(<span class='no'>dashboard</span>)
+<span class='fu'>share</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>source</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+<span class='kw'>source</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span>
 
 <span class='co'># S4 method for i2dashboard</span>
-<span class='fu'>embed_source</span>(<span class='no'>dashboard</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
+<span class='kw'>source</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+
+<span class='co'># S4 method for i2dashboard</span>
+<span class='fu'>embed_source</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -219,7 +227,23 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>The Getter methods return the value of the respective slot of the <a href='i2dashboard-class.html'>i2dashboard</a> object. The Setter methods return the <a href='i2dashboard-class.html'>i2dashboard</a> object containing the modified slot.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='va'>dashboard</span> <span class='op'>&lt;-</span> <span class='fu'><a href='i2dashboard-class.html'>i2dashboard</a></span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'>title</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"New dashboard title"</span>
+<span class='fu'>author</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"John Doe"</span>
+<span class='fu'>theme</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"cosmo"</span>
+<span class='fu'>datadir</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"path/to/workdir/"</span>
+<span class='fu'>interactivity</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='cn'>TRUE</span>
+<span class='fu'>share</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"menu"</span>
+<span class='fu'>embed_source</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='cn'>TRUE</span>
+<span class='kw'>source</span><span class='op'>(</span><span class='va'>dashboard</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='st'>"www.url_to_souce_code.net"</span>
+
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -235,7 +259,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
