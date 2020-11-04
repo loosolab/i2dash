@@ -34,7 +34,7 @@ install.packages("i2dash")
 
 It is possible to extend the core functionality of **i2dash** with templates for components and pre-defined pages. This enables to provide an enhanced user interactivity e.g. dynamic change of plot settings. Further, extensions allow an easier integration of complex calculations and data manipulation, hidden behind functions.
 
-- [**i2dash.scrnaseq**](https://loosolab/gitlab.gwdg.io/i2dash.scrnaseq/) enables an enhanced user interactivity and contains simple but effective tools for the creation of an i2dashboard with focus on single-cell RNA-sequencing data visualization and exploration.
+- [**i2dash.scrnaseq**](https://loosolab.github.io/i2dash.scrnaseq/) enables an enhanced user interactivity and contains simple but effective tools for the creation of an i2dashboard with focus on single-cell RNA-sequencing data visualization and exploration.
 
 ## Run i2dash using Docker
 

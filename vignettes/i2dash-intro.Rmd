@@ -47,7 +47,7 @@ library(magrittr)
 
 Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. [R Markdown](https://rmarkdown.rstudio.com) enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from [R Shiny](https://shiny.rstudio.com/).
 R Studio's [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio's Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file.
-The R package i2dash provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. Dashboard content is organised in so-called **components** and can be added iteratively to the dashboard, *i.e.* as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard **pages** to organize scientific findings thematically. Ultimately, i2dash supports a wide range of R objects (e.g. 'htmlwidgets') and custom content generating functions as input and therefore integrates well into existing data analysis pipelines.
+The R package **i2dash** provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. This enables users from different scientific disciplines to present their diverse data to the public in the form of organized dashboards. Dashboard content is organised in so-called **components** and can be added iteratively to the dashboard, *i.e.* as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard **pages** to organize scientific findings thematically. Ultimately, i2dash supports a wide range of R objects (e.g. 'htmlwidgets') and custom content generating functions as input and therefore integrates well into existing data analysis pipelines.
 
 ## Installation
 
@@ -157,7 +157,7 @@ dashboard %<>%
 
 ## Adding content
 
-Content can be added to pages using **components**. A component can be a R object itself (*e.g.* a widget from [htmwlwidgets](https://gallery.htmlwidgets.org/)), a file path (*e.g.* to a markdown or image file) or a function that can be called to generate content. We'll use the `add_component` function to explore several options and fill `page1` iteratively with three R objects:
+Content can be added to pages using **components**. A component can be a R object itself (*e.g.* a widget from [htmwlwidgets](https://gallery.htmlwidgets.org/)), a file path (*e.g.* to a markdown or image file) or a function that can be called to generate content. Htmlwidgets are interactive visualizations embedded in HTML. There is a wide variety of R packages that offer htmlwidgets, ranging from various plots, heatmaps, networks, tables, geographical maps to specialized charts. Thus, the content of the dashboards is not limited to specific disciplines and can be designed in a maximum variety of ways. We'll use the `add_component` function to explore several options and fill `page1` iteratively with three R objects:
 
 ```{r, eval=TRUE}
 library(leaflet)
@@ -196,7 +196,7 @@ knitr::include_graphics("./images/example_page1.png")
 
 ### Adding text and images
 
-Text and images can be added to a **page** by calling the `add_component` function with a file path. The function will include file paths ending with `.[png|jpg|jpeg|gif]` as image content, and other files as text content:
+Custom text and images allow the dashboard developer to explain his findings, name sources or provide guidance to the reader. Text and images can be added to a **page** by calling the `add_component` function with a file path. The function will include file paths ending with `.[png|jpg|jpeg|gif]` as image content, and other files as text content:
 
 ```{r, eval = TRUE}
 # download the image & text or use the files in the package
@@ -251,7 +251,7 @@ knitr::include_graphics("./images/example_page4.png")
 
 ### Linking components
 
-The linking of several components enables an improvement in the communication of the structure of high-dimensional data. When linking several components, the data of the two visualizations are connected to each other by queries. Thus the interactive manipulation, e.g. selecting data points, of a component is transferred to the associated component.The package `plotly` enables us to link plotly charts in a client-side way (i.e., no special web server or callback to R is required). The following example demonstrates, how to link two plots together by using plotly. [Here](https://plotly-r.com/client-side-linking.html) you can find a detailed explanation and further examples of the clint-sided linkink mechanism of `plotly`. 
+The linking of several components enables an improvement in the communication of the structure of **high-dimensional data**, which plays a big role in most scientific fields. When linking several components, the data of the two visualizations are connected to each other by queries. Thus the interactive manipulation, e.g. selecting data points, of a component is transferred to the associated component.The package `plotly` enables us to link plotly charts in a client-side way (i.e., no special web server or callback to R is required). The following example demonstrates, how to link two plots together by using plotly. [Here](https://plotly-r.com/client-side-linking.html) you can find a detailed explanation and further examples of the clint-sided linkink mechanism of `plotly`. 
 
 
 First, we load the data and create an object of class `crosstalk::SharedData` with the function `highlight_key`. This enables to query the data.

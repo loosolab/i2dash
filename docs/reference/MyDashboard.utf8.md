@@ -21,7 +21,7 @@ if (any(grepl(pattern = ".switchr", x = .libPaths()))) {
 options(knitr.duplicate.label = "allow")
 
 # Set datadir variable, components should fetch their env from here!
-datadir <- "C:\\Users\\Acer\\AppData\\Local\\Temp\\Rtmpwv0Lqw"
+datadir <- "C:\\Users\\austjanz\\AppData\\Local\\Temp\\Rtmp6F7u59"
 
 # Set up color mappings
 colormaps <- list()
@@ -30,7 +30,7 @@ colormaps <- list()
 Title 1 
 ====================================================
 
-<!-- Page created on 2020-10-28 15:37:08 -->
+<!-- Page created on 2020-11-03 10:17:50 -->
 
 
 Column {.tabset}
@@ -41,7 +41,7 @@ Column {.tabset}
 Title 2 
 ====================================================
 
-<!-- Page created on 2020-10-28 15:37:08 -->
+<!-- Page created on 2020-11-03 10:17:50 -->
 
 
 Column {.tabset}

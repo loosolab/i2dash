@@ -2,7 +2,7 @@
 
 ## Abstract <img src="vignettes/images/i2dash_logo.png" align="right" width="150px" />
 
-Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. The R package **i2dash** provides functionality to create customized, web-based dashboards for data presentation, exploration and sharing. **i2dash** integrates easily into existing data analysis pipelines and can organize scientific findings thematically across different pages and layouts.
+Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. The R package **i2dash** provides functionality to create customized, web-based dashboards for data presentation, exploration and sharing. **i2dash** integrates easily into existing data analysis pipelines and can organize scientific findings thematically across different pages and layouts. Ultimately, i2dash supports a wide range of R objects (e.g. 'htmlwidgets') and custom content generating functions as input and therefore integrates well into existing data analysis pipelines.
 
 ### Main features
 
@@ -12,6 +12,10 @@ Scientific communication and data visualization are important aspects to illustr
 - Creation of web-based, sharable, static or interactive dashboards
 - Enables a flexible and iterative cycle of dashboard development
 
+![](vignettes/images/i2dash_intro.png)
+
+*(A) dashboard is initialized at the beginning of a data analysis pipeline. During the pipeline run, new content, results, or data visualizations are iteratively added to the dashboard’s pages. The final dashboard is rendered into a static or interactive document. (B) Pages added to the dashboard can be arranged in a flexible manner from a selection of predefined layouts. (C) Examples of programmatically created dashboards. (D) The i2dash docker container, providing all dependencies for interactive, shiny based apps, can be used to easily deploy individual data interpretations on a cloud infrastructure, such as Kubernetes, as a micro service.*
+
 ## Installation
 
 The package can be installed with:
@@ -20,11 +24,17 @@ The package can be installed with:
 install.packages("i2dash")
 ```
 
+## Where to start
+
+-  [**Basics**](https://loosolab.github.io/i2dash/articles/i2dash-intro.html) This tutorial gives on overview over the core functions of **i2dash** and explains how you can build your first dashboard.
+
+-  [**Custom extension**](https://loosolab.github.io/i2dash/articles/i2dash-extension.html) This tutorial teaches how to create custumized and reusable components for **i2dash**
+
 ## Extension
 
 It is possible to extend the core functionality of **i2dash** with templates for components and pre-defined pages. This enables to provide an enhanced user interactivity e.g. dynamic change of plot settings. Further, extensions allow an easier integration of complex calculations and data manipulation, hidden behind functions.
 
-- [**i2dash.scrnaseq**](https://gitlab.gwdg.de/loosolab/software/i2dash.scrnaseq) enables an enhanced user interactivity and contains simple but effective tools for the creation of an i2dashboard with focus on single-cell RNA-sequencing data visualization and exploration.
+- [**i2dash.scrnaseq**](https://loosolab.github.io/i2dash.scrnaseq/) enables an enhanced user interactivity and contains simple but effective tools for the creation of an i2dashboard with focus on single-cell RNA-sequencing data visualization and exploration.
 
 ## Run i2dash using Docker
 
@@ -37,6 +47,16 @@ The next step is to run a container and simultaneously load the dashboard files 
 ```docker run -d -p 3838:3838 -v '/path/to/dashboard/files':'/srv/shiny-server' docker.gitlab.gwdg.de/loosolab/container/i2dash.deployment:r3.6.3_bioc3.10```
 
 Now, view the dashboard with your browser at `3838:3838`.
+
+## How to cite
+
+If you use **i2dash** or **i2dash.scrnaseq** in your work, please cite:
+
+Ustjanzew A., Preussner J., Bentsen M., Kuenne C., and Looso M. i2dash: creation of flexible, interactive and web-based dashboards from data analysis pipelines. *tba* (2020)
+
+## License
+
+This project is licensed under the MIT license.
 
 ## FAQ
 

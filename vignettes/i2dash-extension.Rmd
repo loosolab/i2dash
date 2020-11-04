@@ -46,7 +46,8 @@ library(magrittr)
 # Introduction and scope
 
 i2dash allows to programmatically generate interactive and flexible web-based dashboards. At its heart, the `i2dashboard` class acts as the basic framework for managing metadata, input and pages. 
-Currently i2dash supports plain text, images, R objects, such as HTML widgets, and functions as input. Such functions can be used to generate fully customized dashboard content, for example very specific and customizable visualizations. 
+Currently i2dash supports plain text, images, R objects, such as HTML widgets, and functions as input. Such functions can be used to generate fully customized dashboard content, for example very specific and customizable visualizations. This allows data from specific disciplines to be visualized in a targeted manner and component functionality to be adapted to the needs of different users. Thus we used the principle to develop extensions shown below and created the package [i2dash.scrnaseq](https://loosolab.github.io/i2dash.scrnaseq/), which allows the visualization and exploration of single-cell RNA-seq data.
+
 Besides flexibility, advantages of using functions are their reusability, the possibility to implement interactivity and the possibility to extend to entire pages. 
 
 In this vignette we will show how to extend the functionality of i2dash. We will develop a reusable component, that contains an interactive 3D scatter plot. In the 'interactive' mode of the dashboard the user can additionally select the data plotted on the axes. We chose to implement the extension in its own R package, which allows good code organization and easy sharing with others.
