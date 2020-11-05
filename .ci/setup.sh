@@ -5,7 +5,7 @@ set -eo pipefail
 ##### Debian #####
 # update package list
 apt-get update -y
-apt-get upgrade -y
+apt-get dist-upgrade -y
 
 while IFS= read -r package;
 do
