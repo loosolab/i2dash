@@ -4,18 +4,23 @@ set -eo pipefail
 
 ##### Debian #####
 # update package list
+echo "==================== apt-get update & dist-upgrade ===================="
 apt-get update -y
 apt-get dist-upgrade -y
+echo "================================ done ================================"
 
+echo "==================== apt-get install requirements ===================="
 while IFS= read -r package;
 do
   apt-get install -y $package
 done < ".ci/apt-requirements.txt"
+echo "================================ done ================================"
 
 ##### R #####
 # check if Rdevel is available
 if test -z $(which RD)
 then
+  echo "==================== install r-base requirements ===================="
   # install BiocManager
   Rscript -e 'install.packages("BiocManager", repos="http://cran.r-project.org")'
   # install r dependencies
@@ -25,6 +30,7 @@ then
     Rscript -e "BiocManager::install('"$package"', update = TRUE, ask = FALSE)";
   done < ".ci/r-requirements.txt"
 else
+  echo "==================== install r-devel requirements ===================="
   # install BiocManager
   RDscript -e 'install.packages("BiocManager", repos="http://cran.r-project.org")'
   # update BiocManager to devel
@@ -38,3 +44,4 @@ else
     RDscript -e "BiocManager::install('"$package"', update = TRUE, ask = FALSE)";
   done < ".ci/r-requirements.txt"
 fi
+echo "================================ done ================================"
