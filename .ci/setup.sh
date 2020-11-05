@@ -9,7 +9,7 @@ apt-get update -y
 
 DEBIAN_FRONTEND=noninteractive \
 apt-get \
--o Dpkg::Options::="--force-confnew --force-confdef" \
+-o Dpkg::Options::="--force-confnew" \
 --allow-downgrades \
 --allow-remove-essential \
 --allow-change-held-packages \
@@ -17,7 +17,7 @@ apt-get \
 --show-upgraded \
 --yes \
 dist-upgrade
-# Dpkg::Options = if a config changed install default option or new version for no default
+# Dpkg::Options = if a config changed install new version
 echo "================================ done ================================"
 
 echo "==================== apt-get install requirements ===================="
