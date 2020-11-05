@@ -6,3 +6,4 @@ libcairo2-dev
 netbase
 qpdf
 pandoc
+libxt-dev
