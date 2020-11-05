@@ -12,7 +12,9 @@ echo "================================ done ================================"
 echo "==================== apt-get install requirements ===================="
 while IFS= read -r package;
 do
+  echo "------------ installing $package ------------"
   apt-get install -y $package
+  echo "---------- done installing $package ----------"
 done < ".ci/apt-requirements.txt"
 echo "================================ done ================================"
 
@@ -27,7 +29,9 @@ then
   # https://www.cyberciti.biz/faq/unix-howto-read-line-by-line-from-file/
   while IFS= read -r package;
   do
+    echo "------------ installing R $package ------------"
     Rscript -e "BiocManager::install('"$package"', update = TRUE, ask = FALSE)";
+    echo "---------- done installing R $package ----------"
   done < ".ci/r-requirements.txt"
 else
   echo "==================== install r-devel requirements ===================="
@@ -41,7 +45,9 @@ else
   # https://www.cyberciti.biz/faq/unix-howto-read-line-by-line-from-file/
   while IFS= read -r package;
   do
+    echo "------------ installing R $package ------------"
     RDscript -e "BiocManager::install('"$package"', update = TRUE, ask = FALSE)";
+    echo "---------- done installing R $package ----------"
   done < ".ci/r-requirements.txt"
 fi
 echo "================================ done ================================"
