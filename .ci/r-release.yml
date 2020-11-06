@@ -24,7 +24,7 @@ check:
   tags:
     - docker
   variables:
-    http_proxy: 207.154.231.213:8080
+    http_proxy: 176.9.119.170:3128
 #    R_ZIPCMD: /opt/conda/bin/zip
     _R_CHECK_FORCE_SUGGESTS_: 0
   script:
