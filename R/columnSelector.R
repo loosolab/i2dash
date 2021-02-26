@@ -99,7 +99,7 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
 
     if (is.element("label", names(type_columns_r()))) {
       label_id <- input$select_column
-      label_label <- type_columns_r()[type_columns_r()[["key"]] %in% input$select_column][["label"]]
+      label_label <- type_columns_r()[match(input$select_column, type_columns_r()[["key"]])][["label"]]
 
       # replace id with label
       label <- ifelse(label_label == "", label_id, label_label)
@@ -110,7 +110,7 @@ columnSelector <- function(input, output, session, type.columns, type = NULL, co
 
     # add sub_label
     if (is.element("sub_label", names(type_columns_r()))) {
-      label <- paste(label, type_columns_r()[type_columns_r()[["key"]] %in% input$select_column][["sub_label"]])
+      label <- paste(label, type_columns_r()[match(input$select_column, type_columns_r()[["key"]])][["sub_label"]])
     }
 
     label <- paste(label, collapse = sep)
