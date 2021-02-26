@@ -1,3 +1,5 @@
+# wilson 2.4.1
+- columnSelector and Clarion bugfix
 # wilson 2.4.0
 - implemented text-to-selection feature for orTextual
 - added several convenience functions to Clarion-class (e.g. write)
