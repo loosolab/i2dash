@@ -326,7 +326,7 @@ Clarion <- R6::R6Class("Clarion",
                            if (!isTRUE(all.equal(self$metadata[["key"]], names(self$data)))) {
                              # re-order metadata to match data column order
                              if (solve) {
-                               self$metadata <- self$metadata[match(names(self$data), self$metadata[["key"]])]
+                               self$metadata <- self$metadata[na.omit(match(names(self$data), self$metadata[["key"]]))]
                              }
                              warning("Metadata: Order between metadata keys and data columns differ. This is discouraged as it can eventually lead to problems.", if (solve) "\nAdjusting metadata order.")
                            }
