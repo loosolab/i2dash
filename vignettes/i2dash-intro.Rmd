@@ -202,7 +202,7 @@ Custom text and images allow the dashboard developer to explain his findings, na
 # download the image & text or use the files in the package
 dir.create("images")
 dir.create("texts")
-img <- "http://www.desktopimages.org/pictures/2014/1010/1/orig_76044.jpg"
+img <- "https://upload.wikimedia.org/wikipedia/commons/7/77/Lemurs.jpg"
 download.file(img,'images/lemur.jpg', mode = 'wb')
 text <- readLines("https://en.wikipedia.org/wiki/Lemuriformes")
 cat(text[262],file="texts/lemurs.md",sep="\n")
