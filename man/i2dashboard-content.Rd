@@ -137,16 +137,16 @@ myFunction <- function(dashboard) paste0("### Generate component\n\n",
 dashboard \%<>\% add_component(component = myFunction)
 dashboard \%<>\% add_component(component = plotly::plot_ly(mtcars, x=~wt, y=~hp),
     title = "Include htmlwidget")
-\donttest{
-  dashboard \%<>\% add_component(component = "sample.txt", title = "Include text")
-  dashboard \%<>\% add_component(component = "sample.jpg", title = "Include image")
-}
+
+## Similarly, it is possible to insert files and images into components:
+## dashboard \%<>\% add_component(component = "sample.txt", title = "Include text")
+## dashboard \%<>\% add_component(component = "sample.jpg", title = "Include image")
 
 dashboard \%<>\% add_to_sidebar(component = myFunction)
-\donttest{
-  dashboard \%<>\% add_to_sidebar(component = "sample.txt", package="i2dash")
-  dashboard \%<>\% add_to_sidebar(component = "sample.jpg", package="i2dash")
-}
+
+## Similarly, it is possible to insert files and images into the sidebar:
+## dashboard \%<>\% add_to_sidebar(component = "sample.txt", package="i2dash")
+## dashboard \%<>\% add_to_sidebar(component = "sample.jpg", package="i2dash")
 
 colors <- c("l1" = "#F7FCFD", "l2" ="#E5F5F9", "l3" = "#CCECE6")
 dashboard \%<>\% add_colormap(map = colors, name = "test")
