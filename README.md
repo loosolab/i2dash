@@ -52,7 +52,9 @@ Now, view the dashboard with your browser at `3838:3838`.
 
 If you use **i2dash** or **i2dash.scrnaseq** in your work, please cite:
 
-Ustjanzew A., Preussner J., Bentsen M., Kuenne C., and Looso M. i2dash: creation of flexible, interactive and web-based dashboards from data analysis pipelines. *tba* (2020)
+i2dash: Creation of Flexible, Interactive and Web-based Dashboards for Visualization of Omics-pipeline Results
+Arsenij Ustjanzew, Jens Preussner, Mette Bentsen, Carsten Kuenne, Mario Looso
+bioRxiv 2020.07.06.189563; doi: https://doi.org/10.1101/2020.07.06.189563
 
 ## License
 
