@@ -1,7 +1,7 @@
 Package: i2dash
 Type: Package
 Title: Iterative and Interactive Dashboards
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: c(
     person(given = "Arsenij", family = "Ustjanzew", email = "arsenij.ustjanzew@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-1014-4521")),
     person(given = "Jens", family = "Preussner", email = "jens.preussner@mpi-bn.mpg.de", role = c("aut", "cph"), comment = c(ORCID = "0000-0003-1927-3458")),
@@ -18,7 +18,6 @@ Imports:
     magrittr,
     knitr,
     flexdashboard,
-    yaml,
     assertive.sets,
     assertive.types,
     rmarkdown,
@@ -28,13 +27,13 @@ Imports:
     ymlthis,
     methods,
     stats,
-    utils
+    utils,
+    xfun,
+    htmltools
 Suggests: 
     switchr,
     plotly,
     BiocStyle,
-    xfun,
-    htmltools,
     testthat,
     ComplexHeatmap,
     digest,
@@ -43,13 +42,14 @@ Suggests:
     kableExtra,
     forcats,
     leaflet
-Collate: 
+Collate:
     'i2dashboard.R'
     'AllGenerics.R'
     'assemble.R'
     'components.R'
     'colormap.R'
     'get_set.R'
+    'i2dash-pkg.R'
     'pages.R'
     'reexports.R'
     'sidebar.R'

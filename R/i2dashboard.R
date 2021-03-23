@@ -1,15 +1,3 @@
-#' 'i2dash': A package for programmatic creation of interactive, web-based dashboards
-#'
-#' 'i2dash' relies on the widely used R packages 'flexdashboard', 'knitr' and 'rmarkdown'. 'i2dash' introduces a new class from R's S4 object system named \linkS4class{i2dashboard}, which by design provides the main functionality of the package. Besides global properties such as the dashboard title, author and theme, an instance of the \linkS4class{i2dashboard} class also stores individual dashboard pages and the navigation menu, as well as all components that make up the content of individual pages.
-#'
-#' @section Citation:
-#'
-#' When using the package in your work, please cite: tba.
-#'
-#' @docType package
-#' @name i2dash
-NULL
-
 #' The \linkS4class{i2dashboard} S4 class.
 #'
 #' The \linkS4class{i2dashboard} S4 class provides main functionality of the package. Besides global properties such as the dashboard title, author and theme, an instance of the i2dashboard class also stores individual dashboard pages and the navigation menu, as well as all components that make up the content of individual pages. A new instance can be created using the \code{i2dashboard} function.
@@ -66,7 +54,7 @@ setMethod("initialize", "i2dashboard", function(.Object, ...) {
   .Object <- methods::callNextMethod()
 
   # Create working directory and directory for environments
-  dir.create(.Object@datadir, showWarnings = FALSE, recursive = T)
+  dir.create(.Object@datadir, showWarnings = FALSE, recursive = TRUE)
 
   # Validate object - tbd
   return(.Object)
