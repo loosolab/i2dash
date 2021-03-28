@@ -2,6 +2,8 @@
 
 This is the seventh resubmission. In this version, we have:
 
+* reduced tarball size
+* removed 'LazyData' from DESCRIPTION
 * Fixed the ERROR occurring during checking examples with --run-donttest
 * Fixed invalid link in the vignette
 * Added citation
