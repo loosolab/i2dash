@@ -42,7 +42,7 @@ setMethod("assemble", "i2dashboard", function(dashboard, file, pages = names(das
   }
 
   # Add YAML header
-  ymlthis::yml(date = F) %>%
+  ymlthis::yml(date = FALSE) %>%
     ymlthis::yml_title(dashboard@title) %>%
     ymlthis::yml_author(dashboard@author) %>%
     ymlthis::yml_output(flexdashboard::flex_dashboard(theme = !!dashboard@theme, social = !!social, source = !!source, navbar = !!dashboard@navbar)) %>%

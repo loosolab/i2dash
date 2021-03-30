@@ -34,7 +34,7 @@ test_that("adding a colorbar to the dashboard works as expected",{
 #
 test_that("adding sidebar content to the dashboard works as expected",{
   text_generator <- function(dashboard) paste0("Lorem ipsum dolor sit amet\n")
-  base_sidebar <- function(component, global=F) i2dashboard() %>% add_to_sidebar(component = component, global=global) -> dashboard
+  base_sidebar <- function(component, global=FALSE) i2dashboard() %>% add_to_sidebar(component = component, global=global) -> dashboard
 
   # add text to local sidebar
   expect_s4_class(base_sidebar("input-data/sample.txt"), "i2dashboard")

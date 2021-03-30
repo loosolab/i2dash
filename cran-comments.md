@@ -1,3 +1,23 @@
+## 7th resubmission 
+
+This is the seventh resubmission. In this version, we have:
+
+* reduced tarball size
+* removed 'LazyData' from DESCRIPTION
+* Fixed the ERROR occurring during checking examples with --run-donttest
+* Fixed invalid link in the vignette
+* Added citation
+* Fixed NOTE where Namespaces in Imports field were not imported from several packages by adding the i2dash-pkg.R file
+* changed T / F to TRUE / FALSE
+
+## 5th resubmission 
+
+This is the fifth resubmission. In this version, we have:
+
+* Removed changing the user's options
+* Omitted any default path in writing functions.
+
+
 ## 6th resubmission 
 
 This is the sixth resubmission. In this version, we have:
