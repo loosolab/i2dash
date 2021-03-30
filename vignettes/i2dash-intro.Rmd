@@ -10,7 +10,8 @@ author:
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('i2dash')`"
 output: 
-  rmarkdown::html_document:
+  html_document:
+    self_contained: false
     toc: true
     toc_float: true
     fig_caption: true
@@ -41,7 +42,7 @@ htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 library(magrittr)
 ```
 
-<img src="images/i2dash_logo.png" align="center" width="150px"/>
+<img src="https://github.com/loosolab/i2dash/blob/master/vignettes/images/i2dash_logo.png?raw=true" align="center" width="150px"/>
 
 # Introduction and scope
 
@@ -144,8 +145,8 @@ dashboard %<>%
     menu = "Animals")
 ```
 
-```{r fig-1, fig.cap = "Figure 1: Navigation bar of the dashboard after adding several pages.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/navigation.png")
+```{r fig-1, fig.cap = "Figure 1: Navigation bar of the dashboard after adding several pages.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/navigation.png?raw=true")
 ```
 
 We can remove a page using the `remove_page()` function. The `page` argument contains the unique page identifier of the page to be removed.
@@ -190,8 +191,8 @@ dashboard %<>%
 
 This results in the following dashboard:
 
-```{r fig-2, fig.cap = "Figure 2: The resulting page with three components added after assembly of the dashboard.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/example_page1.png")
+```{r fig-2, fig.cap = "Figure 2: The resulting page with three components added after assembly of the dashboard.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/example_page1.png?raw=true")
 ```
 
 ### Adding text and images
@@ -202,10 +203,16 @@ Custom text and images allow the dashboard developer to explain his findings, na
 # download the image & text or use the files in the package
 dir.create("images")
 dir.create("texts")
-img <- "https://upload.wikimedia.org/wikipedia/commons/7/77/Lemurs.jpg"
-download.file(img,'images/lemur.jpg', mode = 'wb')
-text <- readLines("https://en.wikipedia.org/wiki/Lemuriformes")
-cat(text[277],file="texts/lemurs.md",sep="\n")
+
+if(!file.exists("images/lemur.jpg")){
+  img <- "https://upload.wikimedia.org/wikipedia/commons/7/77/Lemurs.jpg"
+  download.file(img,'images/lemur.jpg', mode = 'wb')
+}
+
+if(!file.exists("texts/lemurs.md")){
+  text <- readLines("https://en.wikipedia.org/wiki/Lemuriformes")
+  cat(text[277],file="texts/lemurs.md",sep="\n")
+}
 
 dashboard %<>%
   add_component(file.path("images/lemur.jpg"),
@@ -218,8 +225,8 @@ dashboard %<>%
 
 This results in the following dashboard:
 
-```{r fig-3, fig.cap = "Figure 3: The resulting page with an image and text from a file.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/example_page3.png")
+```{r fig-3, fig.cap = "Figure 3: The resulting page with an image and text from a file.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/example_page3.png?raw=true")
 ```
 
 ### Adding content from functions
@@ -245,8 +252,8 @@ dashboard %<>%
 
 When writing your own generating functions, please keep it mind to set the `title` of the component within the function: 
 
-```{r fig-4, fig.cap = "Figure 4: The resulting page with content generated from a function.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/example_page4.png")
+```{r fig-4, fig.cap = "Figure 4: The resulting page with content generated from a function.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/example_page4.png?raw=true")
 ```
 
 ### Linking components
@@ -301,8 +308,8 @@ dashboard %<>%
 
 This results in the following dashboard page. We can select a data point in the left component and the lines of the right plot will be colour highlightened according to the selection:
 
-```{r fig-5, fig.cap = "Figure 5: The resulting page with two linked components.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/example_page5.png")
+```{r fig-5, fig.cap = "Figure 5: The resulting page with two linked components.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/example_page5.png?raw=true")
 ```
 
 ## Colormaps

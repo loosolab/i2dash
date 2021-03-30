@@ -10,7 +10,8 @@ author:
 date: "`r BiocStyle::doc_date()`"
 package: "`r BiocStyle::pkg_ver('i2dash')`"
 output: 
-  rmarkdown::html_document:
+  html_document:
+    self_contained: false
     toc: true
     toc_float: true
     fig_caption: true
@@ -23,7 +24,7 @@ vignette: >
 
 Vignette last complied on `r Sys.Date()`. i2dash is licenced under `r utils::packageDescription("i2dash")[["License"]]`.
 
-```{r style, echo = FALSE, results = 'asis', include = FALSE}
+```{r style, echo = FALSE, rcdesults = 'asis', include = FALSE}
 BiocStyle::markdown()
 ```
 
@@ -41,7 +42,7 @@ htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 library(magrittr)
 ```
 
-<img src="images/i2dash_logo.png" align="center" width="150px"/>
+<img src="https://github.com/loosolab/i2dash/blob/master/vignettes/images/i2dash_logo.png?raw=true" align="center" width="150px"/>
 
 # Introduction and scope
 
@@ -52,8 +53,8 @@ Besides flexibility, advantages of using functions are their reusability, the po
 
 In this vignette we will show how to extend the functionality of i2dash. We will develop a reusable component, that contains an interactive 3D scatter plot. In the 'interactive' mode of the dashboard the user can additionally select the data plotted on the axes. We chose to implement the extension in its own R package, which allows good code organization and easy sharing with others.
 
-```{r fig-1, fig.cap = "Figure 1: Final customized and reusable component with Shiny input widgets.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/scatter3D_result_shiny.png")
+```{r fig-1, fig.cap = "Figure 1: Final customized and reusable component with Shiny input widgets.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/scatter3D_result_shiny.png?raw=true")
 ```
 
 ## Availability
@@ -66,24 +67,24 @@ For the new extension, we set up a directory structure of a source package (if y
 
 In figure 2 you can see that the folder 'MyExtension' contains subfolders 'R', 'inst', and 'man'. The 'R' folder contains the R scripts and functions. The Rmarkdown template of our component is stored under 'MyExtension/inst/templates/'. Further the folder 'MyExtension' contains important metadata files, e.g. 'DESCRIPTION'.
 
-```{r fig-2, fig.cap = "Figure 2: Directory structure for an extension R package.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/file_structure.png")
+```{r fig-2, fig.cap = "Figure 2: Directory structure for an extension R package.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/file_structure.png?raw=true")
 ```
 
 The easiest way to create the desired structure in RStudio is to click **File** -> **New Project**. In the dialog we select **New Directory**, then **R Package**.
 
-```{r fig-3, fig.cap = "Figure 3: ....", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/RStudio_new_project.png")
+```{r fig-3, fig.cap = "Figure 3:", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/RStudio_new_project.png?raw=true")
 ```
 
-```{r fig-4, fig.cap = "Figure 4: .....", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/RStudio_new_project2.png")
+```{r fig-4, fig.cap = "Figure 4:", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/RStudio_new_project2.png?raw=true")
 ```
 
 To conclude, we set a package name, select the directory, where the new package structure will be created and click on **Create Project**.
 
-```{r fig-5, fig.cap = "Figure 5: ....", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/RStudio_new_project3.png")
+```{r fig-5, fig.cap = "Figure 5:", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/RStudio_new_project3.png?raw=true")
 ```
 
 RStudio creates the directory and several metadata files. To make this directory look like the one in figure 2, we delete the file 'hello.R' from the 'R' folder and create the subfolder 'templates' under 'inst'.
@@ -120,14 +121,14 @@ NULL
 
 The ability of i2dash to generate R Markdown code can be extended with additional packages. Figure 6 demonstrates the concept of extensibility. In order to develop a component or a page with a pre-defined layout and specific composition of components as an extension, the developer needs to provide a method and an R Markdown template. The method takes the i2dashboard object and the data relevant for the component. It validates and stores the data in a suitable data structure in a file (e.g. RDS file). Furthermore the method generates an R Markdown string based on a template for the component or page and extends the i2dashboard object.
 
-```{r fig-6, fig.cap = "Figure 6: Concept of extending i2dash.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/concept1.png", error = FALSE)
+```{r fig-6, fig.cap = "Figure 6: Concept of extending i2dash.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/concept1.png?raw=true", error = FALSE)
 ```
 
 Figure 7 shows this principle applied to our objectives. The method 'scatter3D' will be stored in the 'scatter3d.R' file. When the user applies this method, to add the component to his dashboard, the method will use the Rmarkdown template stored in the file 'scatter3D.R' to generate the component. 
 
-```{r fig-7, fig.cap = "Figure 7: Our example project applied to this concept.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/concept2.png", error = FALSE)
+```{r fig-7, fig.cap = "Figure 7: Our example project applied to this concept.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/concept2.png?raw=true", error = FALSE)
 ```
 
 # Main function
@@ -271,8 +272,8 @@ library(magrittr)
 
 In this section, we will write the code chunk responsible for the static mode of the dashboard. The plotly plot will be interactive but there are no drop-down selections for selecting the data. The first column of each input data.frame (**x**, **y**, **z**, **colour**) will be used as the data for the 3D scatter plot.
 
-```{r fig-8, fig.cap = "Figure 8: ....", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/scatter3D_result_static.png")
+```{r fig-8, fig.cap = "Figure 8", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/scatter3D_result_static.png?raw=true")
 ```
 
 The following R code chunk is also in the same file `scatter3D.Rmd`. This code chunk will be executed, if Shiny is not used.
@@ -375,8 +376,8 @@ can contain HTML elements or input widgets for user-application interaction. Shi
 
 In a flexdashboard the code for the UI as well as the server code can be used within the same code chunk.The webpage of flexdashboard provides a good description how to use Shiny with flexdashboard (see [here](https://rmarkdown.rstudio.com/flexdashboard/shiny.html)).
 
-```{r fig-9, fig.cap = "Figure 9: Final customized and reusable component with Shiny input widgets.", eval = TRUE, echo = FALSE}
-knitr::include_graphics("./images/scatter3D_result_shiny.png")
+```{r fig-9, fig.cap = "Figure 9: Final customized and reusable component with Shiny input widgets.", eval = TRUE, echo = FALSE, out.width = "80%"}
+knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/scatter3D_result_shiny.png?raw=true")
 ```
 
 First we create Shiny `selectInput()` widgets if the target data.frame has more than one column. Also a download button will be provided, so the user can download the data that is used for the created plot. 
