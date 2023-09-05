@@ -38,7 +38,7 @@ The \linkS4class{i2dashboard} S4 class provides main functionality of the packag
 
 \item{\code{interactive}}{If a 'shiny'-based report should be created (default 'FALSE').}
 
-\item{\code{theme}}{The theme of the dashboard (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes) (default 'yeti').}
+\item{\code{theme}}{The theme of the dashboard (see the \href{https://pkgs.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes) (default 'yeti').}
 
 \item{\code{datadir}}{Path to the directory, where report data is stored (default 'tempdir()').}
 
@@ -52,7 +52,7 @@ The \linkS4class{i2dashboard} S4 class provides main functionality of the packag
 
 \item{\code{share}}{A vector with any number of the following services: 'facebook', 'twitter', 'google-plus', 'linkedin', and 'pinterest'. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.}
 
-\item{\code{navbar}}{A list of links in the navigation bar (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#navigation_bar}{documentation of 'flexdashboard'}).}
+\item{\code{navbar}}{A list of links in the navigation bar (see the \href{https://pkgs.rstudio.com/flexdashboard/using.html#navigation_bar}{documentation of 'flexdashboard'}).}
 }}
 
 \examples{

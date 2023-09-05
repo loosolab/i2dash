@@ -374,7 +374,7 @@ By adding Shiny to a flexdashboard, we create a dashboard that enables the user 
 A Shiny application consists of two parts, a user interface (UI) function, and a server function. The UI determines the structure and layout of the application and
 can contain HTML elements or input widgets for user-application interaction. Shiny also provides a group of functions that convert R objects into output widgets that are displayed on the UI. The server function defines the server-side logic of the Shiny application and is the "live" connection between input values on the client and outputs generated on the web server. The server function contains functions that map user inputs to various kinds of output.
 
-In a flexdashboard the code for the UI as well as the server code can be used within the same code chunk.The webpage of flexdashboard provides a good description how to use Shiny with flexdashboard (see [here](https://rmarkdown.rstudio.com/flexdashboard/shiny.html)).
+In a flexdashboard the code for the UI as well as the server code can be used within the same code chunk.The webpage of flexdashboard provides a good description how to use Shiny with flexdashboard (see [here](https://pkgs.rstudio.com/flexdashboard/shiny.html)).
 
 ```{r fig-9, fig.cap = "Figure 9: Final customized and reusable component with Shiny input widgets.", eval = TRUE, echo = FALSE, out.width = "80%"}
 knitr::include_graphics("https://github.com/loosolab/i2dash/blob/master/vignettes/images/scatter3D_result_shiny.png?raw=true")

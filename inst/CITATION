@@ -1,19 +1,29 @@
 citHeader("To cite i2dash or i2dash.scrnaseq in publications use:")
 
-citEntry(entry = "Article",
-  title        = "i2dash: creation of flexible, interactive and web-based dashboards from data analysis pipelines",
-  author       = personList(as.person("Arsenij Ustjanzew"),
+bibentry(bibtype  = "Article",
+  title        = "i2dash: Creation of Flexible, Interactive, and Web-based Dashboards for Visualization of Omics Data",
+  author       = c(as.person("Arsenij Ustjanzew"),
                    as.person("Jens Preussner"),
                    as.person("Mette Bentsen"),
                    as.person("Carsten Kuenne"),
                    as.person("Mario Looso")),
-  journal      = "tba",
-  year         = "2020",
-  volume       = "40",
+  journal      = "Genomics, Proteomics & Bioinformatics",
+  year         = "2022",
+  volume       = "20",
   number       = "3",
-  pages        = "1--25",
+  pages        = "568-577",
+  doi          = "10.1016/j.gpb.2021.01.007",
 
   textVersion  =
-  paste("Ustjanzew A., Preussner J., Bentsen M., Kuenne C., and Looso M.",
-        "i2dash: creation of flexible, interactive and web-based dashboards from data analysis pipelines.")
+  "Arsenij Ustjanzew, Jens Preussner, Mette Bentsen, Carsten Kuenne, Mario Looso,
+i2dash: Creation of Flexible, Interactive, and Web-based Dashboards for Visualization of Omics Data,
+Genomics, Proteomics & Bioinformatics,
+Volume 20, Issue 3,
+2022,
+Pages 568-577,
+ISSN 1672-0229,
+https://doi.org/10.1016/j.gpb.2021.01.007.
+(https://www.sciencedirect.com/science/article/pii/S1672022921001492)
+Abstract: Data visualization and interactive data exploration are important aspects of illustrating complex concepts and results from analyses of omics data. A suitable visualization has to be intuitive and accessible. Web-based dashboards have become popular tools for the arrangement, consolidation, and display of such visualizations. However, the combination of automated data processing pipelines handling omics data and dynamically generated, interactive dashboards is poorly solved. Here, we present i2dash, an R package intended to encapsulate functionality for the programmatic creation of customized dashboards. It supports interactive and responsive (linked) visualizations across a set of predefined graphical layouts. i2dash addresses the needs of data analysts/software developers for a tool that is compatible and attachable to any R-based analysis pipeline, thereby fostering the separation of data visualization on one hand and data analysis tasks on the other hand. In addition, the generic design of i2dash enables the development of modular extensions for specific needs. As a proof of principle, we provide an extension of i2dash optimized for single-cell RNA sequencing analysis, supporting the creation of dashboards for the visualization needs of such experiments. Equipped with these features, i2dash is suitable for extensive use in large-scale sequencing/bioinformatics facilities. Along this line, we provide i2dash as a containerized solution, enabling a straightforward large-scale deployment and sharing of dashboards using cloud services. i2dash is freely available via the R package archive CRAN (https://CRAN.R-project.org/package=i2dash).
+Keywords: Data visualization; Dashboard; Cloud; Data analysis; Automation"
 )

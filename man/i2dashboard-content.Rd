@@ -85,7 +85,7 @@ add_link(dashboard, ...)
 
 \item{title}{The link title.}
 
-\item{icon}{An optional link icon (see https://rmarkdown.rstudio.com/flexdashboard/using.html#icon-sets)}
+\item{icon}{An optional link icon (see https://pkgs.rstudio.com/flexdashboard/using.html#icon-sets)}
 
 \item{align}{Optional argument that can be “left” or “right” (defaults = “right”) defining the alignment of the links in the navigation bar}
 

@@ -46,7 +46,7 @@
 <li>
   <a href="../index.html">
     <span class="fas fa fas fa-home fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -55,7 +55,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -72,7 +72,7 @@
 <li>
   <a href="https://github.com/loosolab/i2dash/">
     <span class="fab fa fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -83,7 +83,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><script src="i2dash-intro_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="i2dash-intro_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
 <script src="i2dash-intro_files/anchor-sections-1.0/anchor-sections.js"></script><link href="i2dash-intro_files/font-awesome-5.1.0/css/all.css" rel="stylesheet">
@@ -94,26 +94,26 @@
       <h1 data-toc-skip>Creating iterative and interactive dashboards with i2dash</h1>
                         <h4 class="author">Jens Preussner</h4>
                   <a class="author_email" href="mailto:#"></a><a href="mailto:jens.preussner@mpi-bn.mpg.de" class="email">jens.preussner@mpi-bn.mpg.de</a>
-      
+
                               <h4 class="author">Arsenij Ustjanzew</h4>
                   <a class="author_email" href="mailto:#"></a><a href="mailto:arsenij.ustjanzew@gmail.com" class="email">arsenij.ustjanzew@gmail.com</a>
-      
-                  
+
+
             <h4 class="date">3 November 2020</h4>
-      
+
       <small class="dont-index">Source: <a href="https://github.com/loosolab/i2dash/blob/master/vignettes/i2dash-intro.Rmd"><code>vignettes/i2dash-intro.Rmd</code></a></small>
       <div class="hidden name"><code>i2dash-intro.Rmd</code></div>
 
     </div>
 
-    
-    
+
+
 <p>Vignette last complied on 2020-11-03. i2dash is licenced under MIT + file LICENSE.</p>
 <p><img src="images/i2dash_logo.png" align="center" width="150px"></p>
 <div id="introduction-and-scope" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction-and-scope" class="anchor"></a>Introduction and scope</h1>
-<p>Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. <a href="https://rmarkdown.rstudio.com">R Markdown</a> enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from <a href="https://shiny.rstudio.com/">R Shiny</a>. R Studio’s <a href="https://rmarkdown.rstudio.com/flexdashboard/">Flexdashboard</a> introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio’s Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file. The R package <strong>i2dash</strong> provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. This enables users from different scientific disciplines to present their diverse data to the public in the form of organized dashboards. Dashboard content is organised in so-called <strong>components</strong> and can be added iteratively to the dashboard, <em>i.e.</em> as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard <strong>pages</strong> to organize scientific findings thematically. Ultimately, i2dash supports a wide range of R objects (e.g. ‘htmlwidgets’) and custom content generating functions as input and therefore integrates well into existing data analysis pipelines.</p>
+<p>Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. <a href="https://rmarkdown.rstudio.com">R Markdown</a> enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from <a href="https://shiny.posit.co/">R Shiny</a>. R Studio’s <a href="https://pkgs.rstudio.com/flexdashboard/">Flexdashboard</a> introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio’s Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file. The R package <strong>i2dash</strong> provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. This enables users from different scientific disciplines to present their diverse data to the public in the form of organized dashboards. Dashboard content is organised in so-called <strong>components</strong> and can be added iteratively to the dashboard, <em>i.e.</em> as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard <strong>pages</strong> to organize scientific findings thematically. Ultimately, i2dash supports a wide range of R objects (e.g. ‘htmlwidgets’) and custom content generating functions as input and therefore integrates well into existing data analysis pipelines.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -146,7 +146,7 @@
 <li>
 <code>interactive</code> - if set to <code>TRUE</code> a shiny-based dashboard will be created, otherwise a static HTML file.</li>
 <li>
-<code>theme</code> - changes the appearance of the dashboard. A variety of themes are available at <a href="https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance">R Studio’s Flexdashboard</a> or <a href="https://semantic-ui-forest.com/themes/">Semantic UI forest</a>.</li>
+<code>theme</code> - changes the appearance of the dashboard. A variety of themes are available at <a href="https://pkgs.rstudio.com/flexdashboard/using.html#appearance">R Studio’s Flexdashboard</a> or <a href="https://semantic-ui-forest.com/themes/">Semantic UI forest</a>.</li>
 <li>
 <code>datadir</code> - defines the directory where dashboard files are stored.</li>
 </ul>
@@ -175,7 +175,7 @@
 <a href="#adding-and-removing-pages" class="anchor"></a>Adding and removing pages</h2>
 <p>We next use the <code><a href="../reference/add_page.html">add_page()</a></code> function to add two pages to the <code>dashboard</code> object. The first argument (<code>page</code>) sets an unique page identifier that will be used later to add components to it. The <code>title</code> defines a title of the page, which is shown in the navigation bar.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span> 
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
   <span class="fu"><a href="../reference/add_page.html">add_page</a></span><span class="op">(</span>
     page <span class="op">=</span> <span class="st">"page1"</span>,
     title <span class="op">=</span> <span class="st">"Page 1"</span>,
@@ -188,7 +188,7 @@
     menu <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></pre></div>
 <p>We can use the <code>menu</code> parameter to group several pages under a common drop-down menu:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span> 
+<span class="va">dashboard</span> <span class="op">%&lt;&gt;%</span>
   <span class="fu"><a href="../reference/add_page.html">add_page</a></span><span class="op">(</span>
     page <span class="op">=</span> <span class="st">"page3"</span>,
     title <span class="op">=</span> <span class="st">"Lemurs"</span>,
@@ -216,7 +216,7 @@ Figure 1: Navigation bar of the dashboard after adding several pages.
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://rstudio.github.io/leaflet/">leaflet</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addTiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>  
+  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addTiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addMarkers</a></span><span class="op">(</span>lng<span class="op">=</span><span class="fl">174.768</span>, lat<span class="op">=</span><span class="op">-</span><span class="fl">36.852</span>,
              popup<span class="op">=</span><span class="st">"The birthplace of R"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">leaftlet_map</span>
 
@@ -440,7 +440,7 @@ Figure 5: The resulting page with two linked components.
       </footer>
 </div>
 
-  
+
 
 
   </body>

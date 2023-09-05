@@ -46,7 +46,7 @@
 <li>
   <a href="../index.html">
     <span class="fas fa fas fa-home fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -55,7 +55,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -72,7 +72,7 @@
 <li>
   <a href="https://github.com/loosolab/i2dash/">
     <span class="fab fa fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -83,7 +83,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><script src="i2dash-extension_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="i2dash-extension_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
 <script src="i2dash-extension_files/anchor-sections-1.0/anchor-sections.js"></script><link href="i2dash-extension_files/font-awesome-5.1.0/css/all.css" rel="stylesheet">
@@ -94,20 +94,20 @@
       <h1 data-toc-skip>Creating an extension package for i2dash</h1>
                         <h4 class="author">Jens Preussner</h4>
                   <a class="author_email" href="mailto:#"></a><a href="mailto:jens.preussner@mpi-bn.mpg.de" class="email">jens.preussner@mpi-bn.mpg.de</a>
-      
+
                               <h4 class="author">Arsenij Ustjanzew</h4>
                   <a class="author_email" href="mailto:#"></a><a href="mailto:arsenij.ustjanzew@gmail.com" class="email">arsenij.ustjanzew@gmail.com</a>
-      
-                  
+
+
             <h4 class="date">3 November 2020</h4>
-      
+
       <small class="dont-index">Source: <a href="https://github.com/loosolab/i2dash/blob/master/vignettes/i2dash-extension.Rmd"><code>vignettes/i2dash-extension.Rmd</code></a></small>
       <div class="hidden name"><code>i2dash-extension.Rmd</code></div>
 
     </div>
 
-    
-    
+
+
 <p>Vignette last complied on 2020-11-03. i2dash is licenced under MIT + file LICENSE.</p>
 <p><img src="images/i2dash_logo.png" align="center" width="150px"></p>
 <div id="introduction-and-scope" class="section level1">
@@ -329,10 +329,10 @@ Figure 8: ….
 <p>Next, the plotly chart is created by the <code><a href="https://rdrr.io/pkg/plotly/man/plot_ly.html">plotly::plot_ly()</a></code> function. Finally a data.frame is created, that will be then provided as download.</p>
 <pre>
 ```{r, eval=!is_shiny}
-# set variables 
+# set variables
 # the first column is always used
 x_{{ env_id }} %
-  plotly::add_markers() %&gt;% 
+  plotly::add_markers() %&gt;%
   plotly::layout(scene = list(
     xaxis = list(title = x_title_{{ env_id }}),
     yaxis = list(title = y_title_{{ env_id }}),
@@ -341,7 +341,7 @@ x_{{ env_id }} %
 
 # Provide data for download
 if(is.null(colour_{{ env_id }})){
-  df_{{ env_id }} 
+  df_{{ env_id }}
 <div id="installing-testing-the-static-mode" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installing-testing-the-static-mode" class="anchor"></a>Installing &amp; testing the static mode</h3>
@@ -379,7 +379,7 @@ if(is.null(colour_{{ env_id }})){
 <a href="#the-interactive-mode-with-r-shiny" class="anchor"></a>The interactive mode with R Shiny</h2>
 <p>By adding Shiny to a flexdashboard, we create a dashboard that enables the user to change underlying parameters and see the results immediately. In our case we provide the possibility to select the values that should be mapped to the x-, y- and z-axis as well as the values, that should be used for the colouring.</p>
 <p>A Shiny application consists of two parts, a user interface (UI) function, and a server function. The UI determines the structure and layout of the application and can contain HTML elements or input widgets for user-application interaction. Shiny also provides a group of functions that convert R objects into output widgets that are displayed on the UI. The server function defines the server-side logic of the Shiny application and is the “live” connection between input values on the client and outputs generated on the web server. The server function contains functions that map user inputs to various kinds of output.</p>
-<p>In a flexdashboard the code for the UI as well as the server code can be used within the same code chunk.The webpage of flexdashboard provides a good description how to use Shiny with flexdashboard (see <a href="https://rmarkdown.rstudio.com/flexdashboard/shiny.html">here</a>).</p>
+<p>In a flexdashboard the code for the UI as well as the server code can be used within the same code chunk.The webpage of flexdashboard provides a good description how to use Shiny with flexdashboard (see <a href="https://pkgs.rstudio.com/flexdashboard/shiny.html">here</a>).</p>
 <div class="figure">
 <img src="images/scatter3D_result_shiny.png" alt="Figure 9: Final customized and reusable component with Shiny input widgets." width="474"><p class="caption">
 Figure 9: Final customized and reusable component with Shiny input widgets.
@@ -399,7 +399,7 @@ ui_list  1){
   ui_list  1){
   ui_list  1)
   ui_list %
-  plotly::add_markers() %&gt;% 
+  plotly::add_markers() %&gt;%
   plotly::layout(scene = list(
     xaxis = list(title = x_title),
     yaxis = list(title = y_title),
@@ -506,7 +506,7 @@ shiny::fillRow(flex = c(NA, 1),
       </footer>
 </div>
 
-  
+
 
 
   </body>

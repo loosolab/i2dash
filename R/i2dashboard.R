@@ -9,14 +9,14 @@
 #' @slot title The dashboards title (default 'i2dashboard').
 #' @slot author The author of the dashboard.
 #' @slot interactive If a 'shiny'-based report should be created (default 'FALSE').
-#' @slot theme The theme of the dashboard (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes) (default 'yeti').
+#' @slot theme The theme of the dashboard (see the \href{https://pkgs.rstudio.com/flexdashboard/using.html#appearance}{documentation of 'flexdashboard'} for available themes) (default 'yeti').
 #' @slot datadir Path to the directory, where report data is stored (default 'tempdir()').
 #' @slot pages A list of dashboard pages.
 #' @slot sidebar Content of the global sidebar
 #' @slot colormaps A named list with color mappings.
 #' @slot source Either a logical value describing whether the source code should be embeded through an item in the navigation bar or a link to a URL where the source code can be found online.
 #' @slot share A vector with any number of the following services: 'facebook', 'twitter', 'google-plus', 'linkedin', and 'pinterest'. You can also specify “menu” to provide a generic sharing drop-down menu that includes all of the services.
-#' @slot navbar A list of links in the navigation bar (see the \href{https://rmarkdown.rstudio.com/flexdashboard/using.html#navigation_bar}{documentation of 'flexdashboard'}).
+#' @slot navbar A list of links in the navigation bar (see the \href{https://pkgs.rstudio.com/flexdashboard/using.html#navigation_bar}{documentation of 'flexdashboard'}).
 #'
 #' @return '\code{i2dashboard()}' returns an \linkS4class{i2dashboard} object with a default title, theme, and an empty 'default' page.
 #'

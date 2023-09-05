@@ -2,6 +2,8 @@
 #'
 #' 'i2dash' relies on the widely used R packages 'flexdashboard', 'knitr' and 'rmarkdown'. 'i2dash' introduces a new class from R's S4 object system named \linkS4class{i2dashboard}, which by design provides the main functionality of the package. Besides global properties such as the dashboard title, author and theme, an instance of the \linkS4class{i2dashboard} class also stores individual dashboard pages and the navigation menu, as well as all components that make up the content of individual pages.
 #'
+#' @keywords internal
+"_PACKAGE"
 #' @author Arsenij Ustjanzew \email{arsenij.ustjanzew@@gmail.com}
 #' @author Jens Preussner \email{Jens.Preussner@@mpi-bn.mpg.de}
 #' @author Mario Looso \email{Mario.Looso@@mpi-bn.mpg.de}
