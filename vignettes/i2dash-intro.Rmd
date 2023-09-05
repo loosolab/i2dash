@@ -46,8 +46,8 @@ library(magrittr)
 
 # Introduction and scope
 
-Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. [R Markdown](https://rmarkdown.rstudio.com) enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from [R Shiny](https://shiny.rstudio.com/).
-R Studio's [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio's Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file.
+Scientific communication and data visualization are important aspects to illustrate complex concepts and results from data analyses. [R Markdown](https://rmarkdown.rstudio.com) enables weaving together narrative text and code into rich and reproducible documents, that can also run interactive widgets from [R Shiny](https://shiny.posit.co/).
+R Studio's [Flexdashboard](https://pkgs.rstudio.com/flexdashboard/) introduces dashboards to publish a group of related data visualizations, tables, images and narrative text in row and column-based layouts. Both, R Markdown and R Studio's Flexdashboard require authors to manually create Markdown documents and assemble content at the right position in the file.
 The R package **i2dash** provides classes and functionality to programatically create customized, web-based flexdashboards for data presentation, exploration and sharing. This enables users from different scientific disciplines to present their diverse data to the public in the form of organized dashboards. Dashboard content is organised in so-called **components** and can be added iteratively to the dashboard, *i.e.* as data or visualizations become available along the analysis pipeline. Components are reusable and can be distributed across different dashboard **pages** to organize scientific findings thematically. Ultimately, i2dash supports a wide range of R objects (e.g. 'htmlwidgets') and custom content generating functions as input and therefore integrates well into existing data analysis pipelines.
 
 ## Installation
@@ -84,7 +84,7 @@ i2dash introduces a new S4 class called `i2dashboard`. We start by creating an i
 - `title` - the dashboard's title, as it will appear in the left corner of the navigation bar.
 - `author`- the name of the dashboard author, it will also appear in the navigation bar.
 - `interactive` - if set to `TRUE` a shiny-based dashboard will be created, otherwise a static HTML file.
-- `theme` - changes the appearance of the dashboard. A variety of themes are available at [R Studio's Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance) or [Semantic UI forest](https://semantic-ui-forest.com/themes/).
+- `theme` - changes the appearance of the dashboard. A variety of themes are available at [R Studio's Flexdashboard](https://pkgs.rstudio.com/flexdashboard/using.html#appearance) or [Semantic UI forest](https://semantic-ui-forest.com/themes/).
 - `datadir` - defines the directory where dashboard files are stored.
 
 ```{r, eval=TRUE}

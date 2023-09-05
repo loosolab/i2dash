@@ -162,7 +162,7 @@ setMethod("add_component",
 
 #' @param href The target of the link.
 #' @param title The link title.
-#' @param icon An optional link icon (see https://rmarkdown.rstudio.com/flexdashboard/using.html#icon-sets)
+#' @param icon An optional link icon (see https://pkgs.rstudio.com/flexdashboard/using.html#icon-sets)
 #' @param align Optional argument that can be “left” or “right” (defaults = “right”) defining the alignment of the links in the navigation bar
 #' @param target An optional target (e.g. "_blank")
 #'

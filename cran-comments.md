@@ -4,6 +4,7 @@ This is the eight resubmission. In this version, we have:
 
 * solved the CRAN request to update the @docType -package problem
 * updated CITATION file
+* updated URLs
 
 ## 7th resubmission 
 
